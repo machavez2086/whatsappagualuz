@@ -1,0 +1,3 @@
+registroentrada_homepage:
+    path:     /
+    defaults: { _controller: RegistroentradaBundle:Default:index }

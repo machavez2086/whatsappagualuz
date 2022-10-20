@@ -1,0 +1,32 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+{% form_theme form  'SonataUserBundle::form_fields.html.twig' %}
+<form action="{{ path('sonata_user_profile_edit_authentication') }}" method="POST" class="" >
+    <div class="sonata-ba-collapsed-fields">
+        <div class="form-group {% if form.username.vars.errors|length > 0 %} has-error{% endif %}">
+            {{ form_label(form.username) }}
+            {{ form_widget(form.username, {'attr':{'class': ' form-control'}}) }}
+            {{ form_errors(form.username) }}
+        </div>
+        <div class="form-group {% if form.email.vars.errors|length > 0 %} has-error{% endif %}">
+            {{ form_label(form.email) }}
+            {{ form_widget(form.email, {'attr':{'class': ' form-control'}}) }}
+            {{ form_errors(form.email) }}
+        </div>
+        <div class="form-group {% if form.current_password.vars.errors|length > 0 %} has-error{% endif %}">
+            {{ form_label(form.current_password) }}
+            {{ form_widget(form.current_password, {'attr':{'class': ' form-control'}}) }}
+            {{ form_errors(form.current_password) }}
+        </div>
+    {{ form_rest(form) }}
+</div>
+    <button type="submit" name="submit" class="btn btn-primary btn-round btn-lg btn-block">{{ 'sonata_user_submit'|trans({}, 'SonataUserBundle') }}</button>
+</form>

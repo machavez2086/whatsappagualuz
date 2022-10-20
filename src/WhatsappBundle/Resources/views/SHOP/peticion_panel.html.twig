@@ -1,0 +1,955 @@
+{% extends 'WhatsappBundle::standard_layout.html.twig' %}
+{% block sonata_breadcrumb %}
+    <div class="hidden-xs">
+        <ol class="nav navbar-top-links breadcrumb">
+            <li>
+                <a href="{{ path('sonata_admin_dashboard', {action:"list"}) }}">
+                    <i class="fa fa-home"></i>
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('admin_whatsapp_peticion_list') }}">
+                    Tickets
+                </a>
+            </li>
+
+            <li class="active"><span>Panel de ticket</span></li>
+        </ol>
+    </div>
+{% endblock sonata_breadcrumb %}
+{% block sonata_admin_content %}
+
+    {% include '@SonataCore/FlashMessage/render.html.twig' %}
+    <style type="text/css">
+        {##container {
+                min-width: 310px;
+                max-width: 800px;
+                height: 400px;
+                margin: 0 auto
+        }#}
+
+    </style>
+    <link rel="stylesheet" type="text/css" href="https://printjs-4de6.kxcdn.com/print.min.css">
+
+
+    <div class="sonata-ba-form">
+
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="box box-primary">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="{%if activeTab == "generaldata"%}active{%endif%}"><a href="#generaldata" aria-controls="generaldata" role="tab" data-toggle="tab">Ticket</a></li>
+                        <li role="presentation" class="{%if activeTab == "conversations"%}active{%endif%}"><a href="#conversations" aria-controls="conversations" role="tab" data-toggle="tab">Conversaciones</a></li>
+                        <li role="presentation" class="{%if activeTab == "messagearea"%}active{%endif%}"><a href="#messagearea" aria-controls="messagearea" role="tab" data-toggle="tab">Mensajes a areas</a></li>
+                        <li role="presentation" class="{%if activeTab == "productrecepted"%}active{%endif%}"><a href="#productrecepted" aria-controls="productrecepted" role="tab" data-toggle="tab">Recepción de producto</a></li>
+                        <li role="presentation" class="{%if activeTab == "productsended"%}active{%endif%}"><a href="#productsended" aria-controls="productsended" role="tab" data-toggle="tab">Envío de producto</a></li>
+                        <li role="presentation" class="{%if activeTab == "obleas"%}active{%endif%}"><a href="#obleas" aria-controls="obleas" role="tab" data-toggle="tab">Obleas</a></li>
+                            {#                                        <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>#}
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane {%if activeTab == "generaldata"%}active{%endif%}" id="generaldata">
+                            <div class="box-header">
+                                <h4 class="box-title"> {{ 'Datos del ticket'|trans({}, 'WhatsappBundle') }} </h4>
+
+                            </div>          
+                            <div class="box-body">
+
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <div class="collapse in" id="generalData" >
+                                            <ul class="nav nav-tabs" role="tablist">
+                                                <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Datos generales</a></li>
+                                                <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Datos del cliente</a></li>
+                                                <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Datos del producto</a></li>
+                                                <li role="presentation"><a href="#lote" aria-controls="lote" role="tab" data-toggle="tab">Lote</a></li>
+                                            </ul>
+                                            <div class="tab-content">
+                                                <div role="tabpanel" class="tab-pane active" id="home">
+                                                    <div class="box-body table-responsive no-padding">
+                                                        <table class="table table-bordered table-striped sonata-ba-list">
+                                                            <tbody>
+                                                                <tr class="">
+                                                                    <td class="">
+                                                                        <b>Número de reclamo:</b>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{peticion.nroReclamo}}
+                                                                    </td>
+                                                                </tr>
+                                                                {#<tr class="">
+                                                                    <td class="">
+                                                                        <b>Tipos de reclamos:</b>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{peticion.claimTypes | join(', ')}}
+                                                                    </td>
+                                                                </tr>#}
+                                                                <tr class="">
+                                                                    <td class="">
+                                                                        <b>Tipo de petición:</b>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{peticion.peticionType}}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr class="">
+                                                                    <td class="">
+                                                                        <b>Categoría:</b>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{peticion.category}}
+                                                                    </td>
+                                                                </tr>
+
+
+                                                                <tr class="">
+                                                                    <td class="">
+                                                                        <b>Motivo:</b>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{peticion.motive}}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr class="">
+                                                                    <td class="">
+                                                                        <b>Apertura de Motivos:</b>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{peticion.elementType}}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr class="">
+                                                                    <td class="">
+                                                                        <b>Observaciones:</b>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{peticion.observations}}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr class="">
+                                                                    <td class="">
+                                                                        <b>Terminado:</b>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{peticion.isFininshed}}
+                                                                    </td>
+                                                                </tr>
+                                                                {#<tr class="" >
+                                                                    <td class="">
+                                                                        <b> Sufijo:</b> <i class="fa fa-question-circle" title="Todos los nombres de grupos de esta empresa deben terminar con este sufijo."></i>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{configuration.prefix}}
+                                                                    </td>
+                                                                </tr>#}
+
+                                                            </tbody>
+
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div role="tabpanel" class="tab-pane" id="profile">
+                                                    <div class="box-body table-responsive no-padding">
+                                                        <table class="table table-bordered table-striped sonata-ba-list">
+                                                            <tbody>
+
+                                                                <tr class="">
+                                                                    <td class="">
+                                                                        <b>Actitud del cliente:</b>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{peticion.clientActitud}}
+                                                                    </td>
+                                                                    <td class="">
+                                                                        <b>Nombre:</b>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{peticion.whatsappGroup.name}}
+                                                                    </td>
+                                                                </tr>
+
+                                                                <tr class="">
+                                                                    <td class="">
+                                                                        <b>Teléfono:</b>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{peticion.whatsappGroup.phoneNumber}}
+                                                                    </td>
+                                                                    <td class="">
+                                                                        <b>Correo:</b>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{peticion.whatsappGroup.email}}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr class="">
+                                                                    <td class="">
+                                                                        <b>Domicilio:</b>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{peticion.whatsappGroup.domicilio}}
+                                                                    </td>
+                                                                    <td class="">
+                                                                        <b>Localidad:</b>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{peticion.whatsappGroup.localidad}}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr class="">
+                                                                    <td class="">
+                                                                        <b>Provincia:</b>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{peticion.whatsappGroup.provincia}}
+                                                                    </td>
+                                                                    <td class="">
+                                                                        <b>Codigo postal:</b>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{peticion.whatsappGroup.codigopostal}}
+                                                                    </td>
+                                                                </tr>
+
+                                                                {#<tr class="" >
+                                                                    <td class="">
+                                                                        <b> Sufijo:</b> <i class="fa fa-question-circle" title="Todos los nombres de grupos de esta empresa deben terminar con este sufijo."></i>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{configuration.prefix}}
+                                                                    </td>
+                                                                </tr>#}
+
+                                                            </tbody>
+
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div role="tabpanel" class="tab-pane" id="messages">
+                                                    <div class="box-body table-responsive no-padding">
+                                                        <table class="table table-bordered table-striped sonata-ba-list">
+                                                            <tbody>
+
+                                                                <tr class="">
+                                                                    <td class="">
+                                                                        <b>Producto:</b>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{peticion.product}}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr class="">
+                                                                    <td class="">
+                                                                        <b>Fecha de vencimiento del producto:</b>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{peticion.expirationDate | date("d/m/y h:i")}}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr class="">
+                                                                    <td class="">
+                                                                        <b>Cantidad:</b>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{peticion.cant}}
+                                                                    </td>
+                                                                </tr>
+                                                                
+
+                                                            </tbody>
+
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div role="tabpanel" class="tab-pane" id="lote">
+                                                    <div class="box-body table-responsive no-padding">
+                                                        <table class="table table-bordered table-striped sonata-ba-list">
+                                                            <tbody>
+
+                                                                <tr class="">
+                                                                    <td class="">
+                                                                        <b>Fecha de expiración:</b>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{peticion.expirationDateStr}}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr class="">
+                                                                    <td class="">
+                                                                        <b>No:</b>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{peticion.loteNo}}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr class="">
+                                                                    <td class="">
+                                                                        <b>Hora:</b>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{peticion.loteHour}}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr class="">
+                                                                    <td class="">
+                                                                        <b>Maquina:</b>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{peticion.loteMaquina}}
+                                                                    </td>
+                                                                </tr>
+                                                                {#<tr class="">
+                                                                    <td class="">
+                                                                        <b>Presentación:</b>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{peticion.presentation}}
+                                                                    </td>
+                                                                </tr>#}
+
+                                                                {#<tr class="" >
+                                                                    <td class="">
+                                                                        <b> Sufijo:</b> <i class="fa fa-question-circle" title="Todos los nombres de grupos de esta empresa deben terminar con este sufijo."></i>
+                                                                    </td>
+                                                                    <td class="">
+                                                                        {{configuration.prefix}}
+                                                                    </td>
+                                                                </tr>#}
+
+                                                            </tbody>
+
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                {#<div class="box-footer">
+                                    {%if myRole == "Administrador" or is_granted('ROLE_SUPER_ADMIN')%}
+                                        <a class="btn btn-warning pull-right" href="{{ path('my_companies_edit_general_data', {id:configuration.id}) }}"><i class="fa fa-pencil" aria-hidden="true"></i> Editar</a>
+                                    {%endif%}
+                                </div>#}
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane {%if activeTab == "conversations"%}active{%endif%}" id="conversations">
+                            <div class="box-header">
+                                <h4 class="box-title"> {{ 'Conversaciones'|trans({}, 'WhatsappBundle') }} </h4>
+
+                            </div>          
+                            <div class="box-body">
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="box-body table-responsive no-padding">
+                                            <table class="table table-bordered table-striped sonata-ba-list">
+                                                <thead>
+                                                    <tr class="sonata-ba-list-field-header">
+                                                        <th class="sonata-ba-list-field-header-">
+                                                            {{ 'Fecha'|trans({}, 'WhatsappBundle') }}
+                                                        </th>
+                                                        <th class="sonata-ba-list-field-header-">
+                                                            {{ 'Teléfonos'|trans({}, 'WhatsappBundle') }}
+                                                        </th>
+                                                        <th class="sonata-ba-list-field-header-">
+                                                            {{ 'Tipo de conversación'|trans({}, 'WhatsappBundle') }}
+                                                        </th>
+                                                        <th class="sonata-ba-list-field-header-">
+                                                            {{ 'Descripcion'|trans({}, 'WhatsappBundle') }}
+                                                        </th>
+                                                        <th class="sonata-ba-list-field-header-">
+                                                            {{ 'Recursos'|trans({}, 'WhatsappBundle') }}
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    {% for conversation in peticion.conversations%}
+                                                        <tr class="">
+                                                            <td class="">
+                                                                {{conversation.day | date("d/m/y h:i")}}
+                                                            </td>
+                                                            <td class="">
+                                                                {{conversation.phone}}
+                                                            </td>
+                                                            <td class="">
+                                                                {{conversation.conversationType}}
+                                                            </td>
+                                                            <td class="">
+                                                                {{conversation.description}}
+                                                            </td>
+                                                            <td class="">
+                                                                {% for file in conversation.files%}
+                                                                    <a class="btn btn-info btn-sm btn-block"
+                                                                       href="{{ path('sonata_media_download', {'id': (file.media.id)}) }}">
+                                                                        {{file.media.name}}
+                                                                    </a>
+                                                                    {%if file.fileType == "Sonido"%}
+                                                                    <audio src="{% path file.media, 'reference' %}" controls="controls" type="audio/wave" preload="preload">
+                                                                    </audio>
+                                                                    {%elseif file.fileType == "Imagen"%}
+                                                                        <div class="text-center">
+                                                                            <img class="img-responsive center-block" src="{{ path('sonata_media_download', {'id': (file.media.id)}) }}">
+                                                                        </div>
+                                                                    {%elseif file.fileType == "Video"%}
+                                                                        <video src="{% path file.media, 'reference' %}" controls="controls" type="video/mp4" preload="preload">
+                                                                        </video>
+                                                                    {%endif%}
+                                                                {%endfor%}
+                                                            </td>
+
+                                                        </tr>
+                                                    {%endfor%}
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane {%if activeTab == "messagearea"%}active{%endif%}" id="messagearea">
+                            <div class="box-header">
+                                <h4 class="box-title"> {{ 'Envio de mensaje a un area'|trans({}, 'WhatsappBundle') }} </h4>
+                                {# <a class="btn" role="button" data-toggle="collapse" href="#messageToArea" aria-expanded="false" aria-controls="collapseExample">
+                                     <i class="fa fa-eye" aria-hidden="true"></i>
+                                 </a>#}
+                                <a class="btn btn-warning pull-right" href="{{ path('new_ticket_sendend_area_user', {peticion:peticion.id}) }}"><i class="fa fa-pencil" aria-hidden="true"></i> Envio de mensaje a area</a>
+
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <div class="collapse in" id="messageToArea">
+                                        <div class="box-body table-responsive no-padding">
+
+                                            <table class="table table-bordered table-striped sonata-ba-list">
+
+                                                <thead>
+                                                    <tr class="sonata-ba-list-field-header">
+                                                        <th class="sonata-ba-list-field-header-">
+                                                            {{ 'Mensaje'|trans({}, 'WhatsappBundle') }}
+                                                        </th>
+                                                        <th class="sonata-ba-list-field-header-">
+                                                            {{ 'Area'|trans({}, 'WhatsappBundle') }}
+                                                        </th>
+                                                        <th class="sonata-ba-list-field-header-">
+                                                            {{ 'Creado por'|trans({}, 'WhatsappBundle') }}
+                                                        </th>
+                                                        <th class="sonata-ba-list-field-header-">
+                                                            {{ 'Fecha de creación'|trans({}, 'WhatsappBundle') }}
+                                                        </th>
+                                                        <th class="sonata-ba-list-field-header-">
+                                                            {{ 'Actualizado por'|trans({}, 'WhatsappBundle') }}
+                                                        </th>
+                                                        <th class="sonata-ba-list-field-header-">
+                                                            {{ 'Respuesta'|trans({}, 'WhatsappBundle') }}
+                                                        </th>
+
+                                                        <th class="sonata-ba-list-field-header-">
+                                                            {{ 'Usuario que responde'|trans({}, 'WhatsappBundle') }}
+                                                        </th>
+                                                        <th class="sonata-ba-list-field-header-">
+                                                            {{ 'Fecha de respuesta'|trans({}, 'WhatsappBundle') }}
+                                                        </th>
+                                                        {%if myRole == "Administrador" or is_granted('ROLE_SUPER_ADMIN')%}
+                                                            <th class="sonata-ba-list-field-header-">
+                                                                {{ 'Acciones'|trans({}, 'WhatsappBundle') }}
+                                                            </th>
+                                                        {%endif%}
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    {% for ticketSendendArea in peticion.ticketSendedAreas%}
+                                                        <tr class="">
+                                                            <td class="">
+                                                                {{ticketSendendArea.ask}}
+                                                            </td>
+                                                            <td class="">
+                                                                {{ticketSendendArea.area}}
+                                                            </td>
+                                                            <td class="">
+                                                                {{ticketSendendArea.createdBy}}
+                                                            </td>
+                                                            <td class="">
+                                                                {%if ticketSendendArea.createdAt is not null%}
+                                                                    {{ticketSendendArea.createdAt | date("d/m/y h:i")}}
+                                                                {%endif%}
+                                                            </td>
+                                                            <td class="">
+                                                                {{ticketSendendArea.updatedBy   }}
+                                                            </td>
+                                                            <td class="">
+                                                                {{ticketSendendArea.answer}}
+                                                            </td>
+
+                                                            <td class="">
+                                                                {{ticketSendendArea.user}}
+                                                            </td>
+
+                                                            <td class="">
+                                                                {%if ticketSendendArea.answeredAt is not null%}
+                                                                    {{ticketSendendArea.answeredAt | date("d/m/y h:i")}}
+                                                                {%endif%}
+                                                            </td>
+
+
+                                                            {%if myRole == "Administrador" or is_granted('ROLE_SUPER_ADMIN')%}
+                                                                <td class="">
+                                                                    <a title="Editar" class="btn btn-sm btn-default edit_link" href="{{ path('edit_ticket_sendend_area_user', {ticketSendedArea:ticketSendendArea.id}) }}">
+                                                                        <i aria-hidden="true" class="fa fa-pencil"></i>
+                                                                        Editar
+                                                                    </a>
+
+                                                                    <a title="Borrar" class="btn btn-sm btn-default delete_link" href="{{ path('answer_ticket_sendend_area_user', {ticketSendedArea: ticketSendendArea.id})}}">
+                                                                        <i aria-hidden="true" class="fa fa-times"></i>
+                                                                        Responder
+                                                                    </a>
+                                                                    <a title="Borrar" class="btn btn-sm btn-default delete_link" href="{{ path('delete_ticket_sendend_area', {ticketSendedArea: ticketSendendArea.id})}}">
+                                                                        <i aria-hidden="true" class="fa fa-times"></i>
+                                                                        Borrar
+                                                                    </a>
+                                                                </td>
+                                                            {%endif%}
+                                                        </tr>
+                                                    {%endfor%}
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane {%if activeTab == "productrecepted"%}active{%endif%}" id="productrecepted">
+                                <div class="box-header">
+                                    <h4 class="box-title"> {{ 'Recepción de productos'|trans({}, 'WhatsappBundle') }} </h4>
+
+                                    <a class="btn btn-warning pull-right" href="{{ path('new_ticket_product_recepted', {peticion:peticion.id}) }}"><i class="fa fa-pencil" aria-hidden="true"></i> Registro de producto recibido</a>
+
+                                </div>          
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="collapse in" id="productReceived">
+                                            <div class="box-body table-responsive no-padding">
+
+                                                <table class="table table-bordered table-striped sonata-ba-list">
+
+                                                    <thead>
+                                                        <tr class="sonata-ba-list-field-header">
+                                                            <th class="sonata-ba-list-field-header-">
+                                                                {{ 'Fecha'|trans({}, 'WhatsappBundle') }}
+                                                            </th>
+                                                            <th class="sonata-ba-list-field-header-">
+                                                                {{ 'Descripción'|trans({}, 'WhatsappBundle') }}
+                                                            </th>
+                                                            <th class="sonata-ba-list-field-header-">
+                                                                {{ 'Creado por'|trans({}, 'WhatsappBundle') }}
+                                                            </th>
+                                                            <th class="sonata-ba-list-field-header-">
+                                                                {{ 'Actualizado por'|trans({}, 'WhatsappBundle') }}
+                                                            </th>
+                                                            <th class="sonata-ba-list-field-header-">
+                                                                {{ 'Estado'|trans({}, 'WhatsappBundle') }}
+                                                            </th>
+
+
+                                                            {%if myRole == "Administrador" or is_granted('ROLE_SUPER_ADMIN')%}
+                                                                <th class="sonata-ba-list-field-header-">
+                                                                    {{ 'Acciones'|trans({}, 'WhatsappBundle') }}
+                                                                </th>
+                                                            {%endif%}
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        {% for productRecepted in peticion.productRecepteds%}
+                                                            {#                                            {%if peticion.productRecepted%}#}
+                                                            <tr class="">
+                                                                <td class="">
+                                                                    {{productRecepted.recivedAt | date()}}
+                                                                </td>
+                                                                <td class="">
+                                                                    {{productRecepted.description}}
+                                                                </td>
+                                                                <td class="">
+                                                                    {{productRecepted.createdBy}}
+                                                                </td>
+                                                                <td class="">
+                                                                    {{productRecepted.updatedBy   }}
+                                                                </td>
+                                                                <td class="">
+                                                                    {{productRecepted.receptedStatus}}
+                                                                </td>
+
+
+                                                                {%if myRole == "Administrador" or is_granted('ROLE_SUPER_ADMIN')%}
+                                                                    <td class="">
+                                                                        <a title="Editar" class="btn btn-sm btn-default edit_link" href="{{ path('edit_ticket_product_recepted', {productRecepted:productRecepted.id}) }}">
+                                                                            <i aria-hidden="true" class="fa fa-pencil"></i>
+                                                                            Editar
+                                                                        </a>
+                                                                        <a title="Borrar" class="btn btn-sm btn-default delete_link" href="{{ path('delete_ticket_product_recepted', {productRecepted: productRecepted.id})}}">
+                                                                            <i aria-hidden="true" class="fa fa-times"></i>
+                                                                            Borrar
+                                                                        </a>
+                                                                    </td>
+                                                                {%endif%}
+                                                            </tr>
+                                                            {#                                                {%endif%}#}
+                                                        {%endfor%}
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                {#<div class="row">
+                                    <div class="col-md-6">
+                                        <div class="box-footer">
+                                            {%if myRole == "Administrador" or is_granted('ROLE_SUPER_ADMIN')%}
+                                                <a class="btn btn-success pull-right" href="{{ path('my_companies_add_email', {id:configuration.id}) }}">Agregar correo</a>
+                                            {%endif%}
+            
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="box-footer">
+                                            {%if myRole == "Administrador" or is_granted('ROLE_SUPER_ADMIN')%}
+                                                <a class="btn btn-success pull-right" href="{{ path('my_companies_add_phone', {id:configuration.id}) }}">Agregar teléfono</a>
+                                            {%endif%}
+                                        </div>   
+                                    </div>   
+                                </div>#}
+                        </div>
+                        <div role="tabpanel" class="tab-pane {%if activeTab == "productsended"%}active{%endif%}" id="productsended">
+                            <div class="box-header">
+                                <h4 class="box-title"> {{ 'Envío de productos'|trans({}, 'WhatsappBundle') }} </h4>
+
+                                <a class="btn btn-warning pull-right" href="{{ path('new_ticket_product_sended', {peticion:peticion.id}) }}"><i class="fa fa-pencil" aria-hidden="true"></i> Registro de producto enviado</a>
+                            </div>          
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="collapse in" id="productSended">
+                                        <div class="box-body table-responsive no-padding">
+
+                                            <table class="table table-bordered table-striped sonata-ba-list">
+
+                                                <thead>
+                                                    <tr class="sonata-ba-list-field-header">
+                                                        <th class="sonata-ba-list-field-header-">
+                                                            {{ 'Fecha'|trans({}, 'WhatsappBundle') }}
+                                                        </th>
+                                                        <th class="sonata-ba-list-field-header-">
+                                                            {{ 'Descripción'|trans({}, 'WhatsappBundle') }}
+                                                        </th>
+                                                        <th class="sonata-ba-list-field-header-">
+                                                            {{ 'Creado por'|trans({}, 'WhatsappBundle') }}
+                                                        </th>
+                                                        <th class="sonata-ba-list-field-header-">
+                                                            {{ 'Actualizado por'|trans({}, 'WhatsappBundle') }}
+                                                        </th>
+                                                        <th class="sonata-ba-list-field-header-">
+                                                            {{ 'Estado'|trans({}, 'WhatsappBundle') }}
+                                                        </th>
+                                                        {#<th class="sonata-ba-list-field-header-">
+                                                            {{ 'Número de oblea de correo'|trans({}, 'WhatsappBundle') }}
+                                                        </th>#}
+
+                                                        {%if myRole == "Administrador" or is_granted('ROLE_SUPER_ADMIN')%}
+                                                            <th class="sonata-ba-list-field-header-">
+                                                                {{ 'Acciones'|trans({}, 'WhatsappBundle') }}
+                                                            </th>
+                                                        {%endif%}
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    {% for productSended in peticion.productSendeds%}
+                                                        {#                                            {%if peticion.productSended%}#}
+                                                        <tr class="">
+                                                            <td class="">
+                                                                {{productSended.sendedAt | date()}}
+                                                            </td>
+                                                            <td class="">
+                                                                {{productSended.description}}
+                                                            </td>
+                                                            <td class="">
+                                                                {{productSended.createdBy}}
+                                                            </td>
+                                                            <td class="">
+                                                                {{productSended.updatedBy   }}
+                                                            </td>
+                                                            <td class="">
+                                                                {{productSended.sendedStatus}}
+                                                            </td>
+                                                            {#<td class="">
+                                                                {{productSended.noOblea}}
+                                                            </td>#}
+
+
+                                                            {%if myRole == "Administrador" or is_granted('ROLE_SUPER_ADMIN')%}
+                                                                <td class="">
+                                                                    <a title="Editar" class="btn btn-sm btn-default edit_link" href="{{ path('edit_ticket_product_sended', {productSended:productSended.id}) }}">
+                                                                        <i aria-hidden="true" class="fa fa-pencil"></i>
+                                                                        Editar
+                                                                    </a>
+                                                                    <a title="Borrar" class="btn btn-sm btn-default delete_link" href="{{ path('delete_ticket_product_sended', {productSended: productSended.id})}}">
+                                                                        <i aria-hidden="true" class="fa fa-times"></i>
+                                                                        Borrar
+                                                                    </a>
+                                                                </td>
+                                                            {%endif%}
+                                                        </tr>
+                                                        {#                                                {%endif%}#}
+                                                    {%endfor%}
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane {%if activeTab == "obleas"%}active{%endif%}" id="obleas">
+                            <div class="box-header">
+                                <h4 class="box-title"> {{ 'Oblea de envío'|trans({}, 'WhatsappBundle') }} </h4>
+
+                                <a class="btn btn-warning pull-right" href="{{ path('new_oblea_sended', {peticion:peticion.id}) }}"><i class="fa fa-pencil" aria-hidden="true"></i> Nueva oblea de envío</a>
+                            </div>          
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="collapse in" id="productSended">
+                                        <div class="box-body table-responsive no-padding">
+
+                                            <table class="table table-bordered table-striped sonata-ba-list">
+
+                                                <thead>
+                                                    <tr class="sonata-ba-list-field-header">
+                                                        <th class="sonata-ba-list-field-header-">
+                                                            {{ 'Fecha'|trans({}, 'WhatsappBundle') }}
+                                                        </th>
+
+                                                        <th class="sonata-ba-list-field-header-">
+                                                            {{ 'Creado por'|trans({}, 'WhatsappBundle') }}
+                                                        </th>
+                                                        <th class="sonata-ba-list-field-header-">
+                                                            {{ 'Actualizado por'|trans({}, 'WhatsappBundle') }}
+                                                        </th>
+
+
+                                                        {%if myRole == "Administrador" or is_granted('ROLE_SUPER_ADMIN')%}
+                                                            <th class="sonata-ba-list-field-header-">
+                                                                {{ 'Acciones'|trans({}, 'WhatsappBundle') }}
+                                                            </th>
+                                                        {%endif%}
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    {% for obleaEnvio in peticion.obleaEnvios%}
+                                                        {#                                            {%if peticion.productSended%}#}
+                                                        <tr class="">
+                                                            <td class="">
+                                                                {{obleaEnvio.createdAt | date()}}
+                                                            </td>
+                                                            <td class="">
+                                                                {{obleaEnvio.createdBy}}
+                                                            </td>
+                                                            <td class="">
+                                                                {{obleaEnvio.updatedBy   }}
+                                                            </td>
+
+                                                            {%if myRole == "Administrador" or is_granted('ROLE_SUPER_ADMIN')%}
+                                                                <td class="">
+                                                                    <a target="blank" title="Borrar" class="btn btn-sm btn-default delete_link" href="{{ path('ticket_oblea_envio_print_preview', {obleaEnvio: obleaEnvio.id})}}">
+                                                                        <i aria-hidden="true" class="fa fa-picture-o"></i>
+                                                                        Vista de impresión
+                                                                    </a>
+                                                                    <a title="Borrar" class="btn btn-sm btn-default delete_link" href="{{ path('ticket_oblea_envio_print', {obleaEnvio: obleaEnvio.id})}}">
+                                                                        <i aria-hidden="true" class="fa fa-file-pdf-o"></i>
+                                                                        Descargar PDF
+                                                                    </a>
+                                                                    <a title="Borrar" class="btn btn-sm btn-default delete_link" href="{{ path('ticket_oblea_envio_export_xls', {obleaEnvio: obleaEnvio.id})}}">
+                                                                        <i aria-hidden="true" class="fa fa-file-excel-o"></i>
+                                                                        Descargar XLS
+                                                                    </a>
+                                                                    {#                                                                        <iframe id="pdf" name="pdf" src="{{ url('ticket_oblea_envio_print', {obleaEnvio: obleaEnvio.id})}}"></iframe>#}
+                                                                    <button class="btn btn-sm btn-default delete_link" type="button" onclick="printJS('{{ url('ticket_oblea_envio_print', {obleaEnvio: obleaEnvio.id})}}')"
+                                                                            ><i aria-hidden="true" class="fa fa-print"></i> Imprimir</button>
+{#                                                                    <iframe id="iFramePdf" src='{{ url('ticket_oblea_envio_print', {obleaEnvio: obleaEnvio.id})}}' style="dispaly:none;"></iframe>#}
+{#                                                                    <input type="button" value="Print" onclick="printTrigger('iFramePdf');" />#}
+                                                                    <a title="Editar" class="btn btn-sm btn-default edit_link" href="{{ path('edit_ticket_oblea_envio', {obleaEnvio:obleaEnvio.id}) }}">
+                                                                        <i aria-hidden="true" class="fa fa-pencil"></i>
+                                                                        Editar
+                                                                    </a>
+
+                                                                    <a title="Borrar" class="btn btn-sm btn-default delete_link" href="{{ path('delete_ticket_oblea_envio', {obleaEnvio: obleaEnvio.id})}}">
+                                                                        <i aria-hidden="true" class="fa fa-times"></i>
+                                                                        Borrar
+                                                                    </a>
+                                                                </td>
+                                                            {%endif%}
+                                                        </tr>
+                                                        {#                                                {%endif%}#}
+                                                    {%endfor%}
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <hr/>
+                            <div class="box-header">
+                                <h4 class="box-title"> {{ 'Oblea de retiro'|trans({}, 'WhatsappBundle') }} </h4>
+
+                                <a class="btn btn-warning pull-right" href="{{ path('new_oblea_retiro', {peticion:peticion.id}) }}"><i class="fa fa-pencil" aria-hidden="true"></i> Nueva oblea de retiro</a>
+                            </div>          
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="collapse in" id="productSended">
+                                        <div class="box-body table-responsive no-padding">
+
+                                            <table class="table table-bordered table-striped sonata-ba-list">
+
+                                                <thead>
+                                                    <tr class="sonata-ba-list-field-header">
+                                                        <th class="sonata-ba-list-field-header-">
+                                                            {{ 'Fecha'|trans({}, 'WhatsappBundle') }}
+                                                        </th>
+
+                                                        <th class="sonata-ba-list-field-header-">
+                                                            {{ 'Creado por'|trans({}, 'WhatsappBundle') }}
+                                                        </th>
+                                                        <th class="sonata-ba-list-field-header-">
+                                                            {{ 'Actualizado por'|trans({}, 'WhatsappBundle') }}
+                                                        </th>
+
+
+                                                        {%if myRole == "Administrador" or is_granted('ROLE_SUPER_ADMIN')%}
+                                                            <th class="sonata-ba-list-field-header-">
+                                                                {{ 'Acciones'|trans({}, 'WhatsappBundle') }}
+                                                            </th>
+                                                        {%endif%}
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    {% for obleaRetiro in peticion.obleaRetiros%}
+                                                        {#                                            {%if peticion.productSended%}#}
+                                                        <tr class="">
+                                                            <td class="">
+                                                                {{obleaRetiro.createdAt | date()}}
+                                                            </td>
+                                                            <td class="">
+                                                                {{obleaRetiro.createdBy}}
+                                                            </td>
+                                                            <td class="">
+                                                                {{obleaRetiro.updatedBy   }}
+                                                            </td>
+
+                                                            {%if myRole == "Administrador" or is_granted('ROLE_SUPER_ADMIN')%}
+                                                                <td class="">
+                                                                    <a target="blank" title="Borrar" class="btn btn-sm btn-default delete_link" href="{{ path('ticket_oblea_retiro_print_preview', {obleaRetiro: obleaRetiro.id})}}">
+                                                                        <i aria-hidden="true" class="fa fa-picture-o"></i>
+                                                                        Vista de impresión
+                                                                    </a>
+                                                                    <a title="Borrar" class="btn btn-sm btn-default delete_link" href="{{ path('ticket_oblea_retiro_print', {obleaRetiro: obleaRetiro.id})}}">
+                                                                        <i aria-hidden="true" class="fa fa-file-pdf-o"></i>
+                                                                        Descargar PDF
+                                                                    </a>
+                                                                    <a title="Borrar" class="btn btn-sm btn-default delete_link" href="{{ path('ticket_oblea_retiro_export_xls', {obleaRetiro: obleaRetiro.id})}}">
+                                                                        <i aria-hidden="true" class="fa fa-file-excel-o"></i>
+                                                                        Descargar XLS
+                                                                    </a>
+                                                                    <button class="btn btn-sm btn-default delete_link" type="button" onclick="printJS('{{ url('ticket_oblea_retiro_print', {obleaRetiro: obleaRetiro.id})}}')"
+                                                                        ><i aria-hidden="true" class="fa fa-print"></i> Imprimir</button>
+                                                                    
+                                                                        
+                                                                    <a title="Editar" class="btn btn-sm btn-default edit_link" href="{{ path('edit_ticket_oblea_retiro', {obleaRetiro:obleaRetiro.id}) }}">
+                                                                        <i aria-hidden="true" class="fa fa-pencil"></i>
+                                                                        Editar
+                                                                    </a>
+
+                                                                    <a title="Borrar" class="btn btn-sm btn-default delete_link" href="{{ path('delete_ticket_oblea_retiro', {obleaRetiro: obleaRetiro.id})}}">
+                                                                        <i aria-hidden="true" class="fa fa-times"></i>
+                                                                        Borrar
+                                                                    </a>
+                                                                </td>
+                                                            {%endif%}
+                                                        </tr>
+                                                        {#                                                {%endif%}#}
+                                                    {%endfor%}
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        {%if is_granted('ROLE_SUPER_ADMIN')%}
+            <script>
+                jQuery(document).ready(function ($) {
+                    var a = $("html body.sonata-bc.skin-black.fixed div.wrapper aside.main-sidebar div.slimScrollDiv section.sidebar ul.sidebar-menu li.treeview:nth-child(2)");
+                    console.log(a);
+                    a.toggleClass("active")
+                    $("html body.sonata-bc.skin-black.fixed div.wrapper aside.main-sidebar div.slimScrollDiv section.sidebar ul.sidebar-menu li.treeview.active ul.active.treeview-menu.menu_level_1 li.first").toggleClass("active");
+                    a.trigger("click");
+                });
+
+            </script>
+        {%else%}
+            <script>
+                jQuery(document).ready(function ($) {
+
+                    var a = $("html body.sonata-bc.skin-black.fixed div.wrapper aside.main-sidebar div.slimScrollDiv section.sidebar ul.sidebar-menu li.treeview:nth-child(0)");
+                    console.log(a);
+                    a.toggleClass("active")
+                    $("html body.sonata-bc.skin-black.fixed div.wrapper aside.main-sidebar div.slimScrollDiv section.sidebar ul.sidebar-menu li.treeview.active ul.active.treeview-menu.menu_level_1 li.first").toggleClass("active");
+                    a.trigger("click");
+                });
+
+            </script>
+        {%endif%}
+        <script>
+            function printTrigger(elementId) {
+                var getMyFrame = document.getElementById(elementId);
+                getMyFrame.focus();
+                getMyFrame.contentWindow.print();
+            }
+        </script>
+        <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+    {% endblock %}
+
+    {% block inlinejavascript %}
+
+
+
+    {% endblock %}

@@ -1,0 +1,589 @@
+{% extends 'WhatsappBundle::standard_layout.html.twig' %}
+{% block sonata_breadcrumb %}
+    <div class="hidden-xs">
+        <ol class="nav navbar-top-links breadcrumb">
+            <li>
+                <a href="{{ path('sonata_admin_dashboard', {action:"list"}) }}">
+                    <i class="fa fa-home"></i>
+                </a>
+            </li>
+            <li class="active"><span>Sumario</span></li>
+        </ol>
+    </div>
+{% endblock sonata_breadcrumb %}
+{% block sonata_admin_content %}
+    
+    {% include '@SonataCore/FlashMessage/render.html.twig' %}
+    <style type="text/css">
+        {##container {
+                min-width: 310px;
+                max-width: 800px;
+                height: 400px;
+                margin: 0 auto
+        }#}
+    </style>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination month-change">
+                    <li title="Evaluar" data-toggle="tooltip" class="page-item">
+                        <a href="{{ path('report_month', {month:prevMonth}) }}" title="Mes anterior" class="anterior_periodo page-link arrow-period">
+                            <i class="fa fa-angle-left"></i>
+                        </a>
+                    </li> 
+                    <li data-toggle="tooltip" data-placement="top" title="{{actualMonth}}" class="page-item active">
+                        <a href="#" class="page-link">{{actualMonth}}</a>
+                    </li>
+                    <li class="page-item"><a href="{{ path('report_month', {month:nextMonth}) }}" title="Mes siguiente" class="siguiente_periodo page-link arrow-period">
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="sonata-ba-form">
+        <div class="row well">
+            <div class="col-md-12">
+                <div id="piePeticionType" class="col-md-4"></div>
+                <div id="graphicPeticionTypeDay" class="col-md-8"></div>
+            </div>
+        </div>
+        <br>
+        <div class="row well">
+            <div class="col-md-12">
+                <div id="pieCategory" class="col-md-4"></div>
+                <div id="graphicCategoryDay" class="col-md-8"></div>
+            </div>
+        </div>
+        <br>
+        <div class="row well">
+            <div class="col-md-12">
+                <div id="pieClientActitud" class="col-md-4"></div>
+                <div id="graphicClientActitudDay" class="col-md-8"></div>
+            </div>
+        </div>
+        <br>
+        <div class="row well">
+            <div class="col-md-12">
+                <div id="pieProduct" class="col-md-4"></div>
+                <div id="graphicProductDay" class="col-md-8"></div>
+            </div>
+        </div>
+        <div class="row well">
+            <div class="col-md-12">
+                <div id="pieMotive" class="col-md-4"></div>
+                <div id="graphicMotiveDay" class="col-md-8"></div>
+            </div>
+        </div>
+    </div>
+
+   
+
+{% endblock %}
+
+{% block inlinejavascript %}
+    <script src="{{ asset('Highcharts-6.0.5/code/highcharts.js') }}"></script>
+    <script src="{{ asset('Highcharts-6.0.5/code/highcharts-3d.js') }}"></script>
+    <script src="{{ asset('Highcharts-6.0.5/code/modules/exporting.js') }}"></script>
+    <script type="text/javascript">
+        Highcharts.chart('piePeticionType', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Tipos de peticiones'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
+                    }
+                }
+            },
+            series: [{
+                name: 'Brands',
+                colorByPoint: true,
+                data: {{ piegroupTicketsThisMonthByPeticionType|json_encode|raw }}
+            }],
+            exporting: {
+                enabled: true,
+                sourceWidth: 900
+            }
+            {#series: [{
+                name: 'Brands',
+                colorByPoint: true,
+                data: [{
+                    name: 'IE',
+                    y: 56.33
+                }, {
+                    name: 'Chrome',
+                    y: 24.03,
+                    sliced: true,
+                    selected: true
+                }, {
+                    name: 'Firefox',
+                    y: 10.38
+                }, {
+                    name: 'Safari',
+                    y: 4.77
+                }, {
+                    name: 'Opera',
+                    y: 0.91
+                }, {
+                    name: 'Other',
+                    y: 0.2
+                }]
+            }]#}
+        });
+    </script>
+    <script type="text/javascript">
+        Highcharts.chart('pieCategory', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Categorías'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
+                    }
+                }
+            },
+            series: [{
+                name: 'Brands',
+                colorByPoint: true,
+                data: {{ piegroupTicketsThisMonthByCategory|json_encode|raw }}
+            }],
+            exporting: {
+                enabled: true,
+                sourceWidth: 900
+            }
+            
+        });
+    </script>
+    <script type="text/javascript">
+        Highcharts.chart('pieClientActitud', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Actitud del cliente/consumidor'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
+                    }
+                }
+            },
+            series: [{
+                name: 'Brands',
+                colorByPoint: true,
+                data: {{ piegroupTicketsThisMonthByClientActitud|json_encode|raw }}
+            }],
+            exporting: {
+                enabled: true,
+                sourceWidth: 900
+            }
+            
+        });
+    </script>
+    <script type="text/javascript">
+        Highcharts.chart('pieProduct', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Productos'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
+                    }
+                }
+            },
+            series: [{
+                name: 'Brands',
+                colorByPoint: true,
+                data: {{ piegroupTicketsThisMonthByProduct|json_encode|raw }}
+            }],
+            exporting: {
+                enabled: true,
+                sourceWidth: 900
+            }
+            
+        });
+    </script>
+    <script type="text/javascript">
+        Highcharts.chart('pieMotive', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Motivos'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
+                    }
+                }
+            },
+            series: [{
+                name: 'Brands',
+                colorByPoint: true,
+                data: {{ piegroupTicketsThisMonthByMotive|json_encode|raw }}
+            }],
+            exporting: {
+                enabled: true,
+                sourceWidth: 900
+            }
+            
+        });
+    </script>
+    <script type="text/javascript">
+        console.log({{ stdObjectTypeLineArray|json_encode|raw }});
+        Highcharts.chart('graphicPeticionTypeDay', {
+            chart: {
+                type: 'column',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               } 
+            }, title: {
+                text: ''
+            },
+            xAxis: {
+                categories: {{ stdObjectTypeLineArrayCategories|json_encode|raw }},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Cantidad'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                {#series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }#}
+                column: {
+                    stacking: 'normal',
+                    dataLabels: {
+                        enabled: true,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                    }
+                }
+            },
+            series:{{ stdObjectTypeLineArray|json_encode|raw }}
+        });
+    </script>
+    
+    <script type="text/javascript">
+        console.log({{ stdObjectTypeLineArray|json_encode|raw }});
+        Highcharts.chart('graphicCategoryDay', {
+            chart: {
+                type: 'column',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               } 
+            }, title: {
+                text: ''
+            },
+            xAxis: {
+                categories: {{ stdObjectTypeLineArrayCategories|json_encode|raw }},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Cantidad'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                {#series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }#}
+                column: {
+                    stacking: 'normal',
+                    dataLabels: {
+                        enabled: true,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                    }
+                }
+            },
+            series:{{ stdObjectCategoryArray|json_encode|raw }}
+        });
+    </script>
+    
+    <script type="text/javascript">
+        console.log({{ stdObjectTypeLineArray|json_encode|raw }});
+        Highcharts.chart('graphicClientActitudDay', {
+            chart: {
+                type: 'column',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               } 
+            }, title: {
+                text: ''
+            },
+            xAxis: {
+                categories: {{ stdObjectTypeLineArrayCategories|json_encode|raw }},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Cantidad'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                {#series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }#}
+                column: {
+                    stacking: 'normal',
+                    dataLabels: {
+                        enabled: true,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                    }
+                }
+            },
+            series:{{ stdObjectClientActitudArray|json_encode|raw }}
+        });
+    </script>
+    
+    <script type="text/javascript">
+        console.log({{ stdObjectTypeLineArray|json_encode|raw }});
+        Highcharts.chart('graphicProductDay', {
+            chart: {
+                type: 'column',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               } 
+            }, title: {
+                text: ''
+            },
+            xAxis: {
+                categories: {{ stdObjectTypeLineArrayCategories|json_encode|raw }},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Cantidad'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                {#series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }#}
+                column: {
+                    stacking: 'normal',
+                    dataLabels: {
+                        enabled: true,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                    }
+                }
+            },
+            series:{{ stdObjectProductArray|json_encode|raw }}
+        });
+    </script>
+    
+    <script type="text/javascript">
+        console.log({{ stdObjectTypeLineArray|json_encode|raw }});
+        Highcharts.chart('graphicMotiveDay', {
+            chart: {
+                type: 'column',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               } 
+            }, title: {
+                text: ''
+            },
+            xAxis: {
+                categories: {{ stdObjectTypeLineArrayCategories|json_encode|raw }},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Cantidad'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                {#series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }#}
+                column: {
+                    stacking: 'normal',
+                    dataLabels: {
+                        enabled: true,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                    }
+                }
+            },
+            series:{{ stdObjectMotiveArray|json_encode|raw }}
+        });
+    </script>
+    
+    
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends admin.getTemplate('base_list_field') %}
+
+{% block field %}
+    <div class="btn-group">
+                {% for conversation in object.conversations%}
+                    {% for file in conversation.files%}
+                        {%if file.fileType == "Sonido"%}
+                            <audio src="{% path file.media, 'reference' %}" controls="controls" type="audio/wave" preload="preload">
+                            </audio>
+                        {%elseif file.fileType == "Imagen"%}
+                            <div class="text-center">
+                                <img class="img-responsive center-block" src="{{ path('sonata_media_download', {'id': (file.media.id)}) }}">
+                            </div>
+                        {%elseif file.fileType == "Video"%}
+                            <video src="{% path file.media, 'reference' %}" controls="controls" type="video/mp4" preload="preload">
+                            </video>
+                        {%endif%}
+                    {%endfor%}
+                {%endfor%}
+</div>
+        
+{% endblock %}

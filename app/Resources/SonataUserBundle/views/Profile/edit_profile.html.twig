@@ -1,0 +1,67 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{% extends 'WhatsappBundle:Default:home.html.twig' %}
+{% block contenido_especifico %}
+    <div class="page-header" filter-color="orange">
+        <div class="page-header-image" style="background-image: url({{ asset('bundles/whatsapp/img/img-home/img/whatsapp-2.jpg')  }});"></div>
+        <div class="container">
+            <div class="col-md-12 content-center-edit-profile perfil">
+                <div class="card card-login card-plain">
+                    {% block sonata_profile_content %}
+                    {% if form.vars.errors|length > 0 %}
+                        <div class="sonata-ba-form-error">
+                            {{ form_errors(form) }}
+                        </div>
+                    {% endif %}
+                    {% for flashMessage in app.session.flashbag.get('error') %}
+                        <div class="alert alert-warning">
+                            {{ flashMessage | trans({}, 'RegistroentradaBundle')}}
+                        </div>
+                    {% endfor %}
+
+                    {% for flashMessage in app.session.flashbag.get('sonata_user_success') %}
+                        <div class="alert alert-success">
+                            {{ flashMessage | trans({}, 'SonataUserBundle')}}
+                        </div>
+                    {% endfor %}
+                    <div class="row">
+                        <div class="col-xs-12 col-md-12">
+
+                            <div class="box box-primary">
+                                <div class="box-header">
+                                    <h4 class="box-title"> Perfil de Usuario </h4>
+                                </div>
+                                <div class="box-body">
+
+                                    {{ form_errors(form) }}
+                                    {% form_theme form _self %}
+                                    {% include "SonataUserBundle:Profile:edit_profile_content.html.twig" %}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                {% endblock %}
+                <a style="float: left;" class="nav-link" href="{{ path('home') }}"><i class="fa fa-arrow-circle-o-left"></i></a>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+
+
+{% block footer%}
+{% endblock %}
+
+

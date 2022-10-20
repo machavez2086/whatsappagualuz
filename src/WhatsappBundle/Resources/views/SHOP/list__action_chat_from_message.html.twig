@@ -1,0 +1,7 @@
+
+{%if object.conversation is not null%}
+<a class="btn btn-sm btn-default edit_link" target="blank"  href="{{ path('chat_conversation', {
+  'conversation': object.conversation.id}) }}" class="btn btn-small">Chat</a>
+{%endif%}
+
+

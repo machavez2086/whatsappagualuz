@@ -1,0 +1,378 @@
+{% extends 'WhatsappBundle::report_layout.html.twig' %}
+
+{% block child_title %}Dashboard{% endblock %}
+
+ {% block content %}
+     <div class="container-fluid">
+         
+	     {#Primera fila#}
+         <div class="row">
+             <div class="col-lg-6 col-xlg-6 time">
+                 <h3 class="card-title">Tiempo
+                        <img src="{{ asset('bundles/whatsapp/img/load.gif') }}" id="rolling"></h3>
+                 <div class="card">
+                     <div class="card-body grande">
+                         <div class="row">
+                             <div class="col-lg-4">
+                                 <h6 class="text-muted m-t-10 m-b-0">Desde la última petición</h6>
+                                 <div class="card">
+                                     <div class="card-body transcurrido">
+                                         <div class="d-flex no-block">
+                                             <div class="align-self-center">
+                                                 <h1 class="m-t-0 reloj">{{ minutesSinceLastTicket }}</h1>
+                                             </div>
+                                         </div>
+
+                                         <i class="fa fa-clock-o pull-right"></i>
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="col-lg-8 tablas">
+                                 <h6 class="text-muted m-t-10 m-b-0">Promedios</h6>
+                                 <div class="card">
+                                     <div class="card-body">
+                                         <div class="d-flex">
+                                         </div>
+                                         <div class="table-responsive m-t-20">
+                                             <table class="table vm no-th-brd no-wrap pro-of-month peticiones_abiertas">
+                                                 <thead>
+                                                 <tr>
+                                                     <th scope="col"></th>
+                                                     <th scope="col dia">Día</th>
+                                                     <th scope="col semana">Semana</th>
+                                                 </tr>
+                                                 </thead>
+                                                 <tbody>
+                                                     <tr class="respuesta">
+                                                         <td><span class="label label-info">Tiempo de Respuesta</span></td>
+                                                         <td class="dia">{{mediaAnswerTimeThisDay}} min</td>
+                                                         <td class="semana">{{mediaAnswerTimeThisWeek}} min</td>
+                                                     </tr>
+                                                     <tr class="resolucion">
+                                                         <td ><span class="label label-primary">Tiempo de Desarrollo</span></td>
+                                                         <td class="dia">{{mediaDevelopTimeThisDay}} min</td>
+                                                         <td class="semana">{{mediaDevelopTimeThisWeek}} min</td>
+                                                     </tr>
+                                                     <tr class="desarrollo">
+                                                         <td><span class="label label-danger">Tiempo de Validación</span></td>
+                                                         <td class="dia">{{mediaValidationTimeThisDay}} min</td>
+                                                         <td class="semana">{{mediaValidationTimeThisWeek}} min</td>
+                                                     </tr>
+                                                     <tr class="validacion">
+                                                         <td><span class="label label-success">Tiempo de Resolución</span></td>
+                                                         <td class="dia">{{mediaResolutionTimeThisDay}} min</td>
+                                                         <td class="semana">{{mediaResolutionTimeThisWeek}} min</td>
+                                                     </tr>
+                                                     <tr class="sentiment">
+                                                         <td><span class="label label-orange">Análisis de Sentimiento</span></td>
+                                                         <td class="dia{%if sumSentimentThisDay < 50%} sentiment-neg-color {%elseif sumSentimentThisDay > 60 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}">{{sumSentimentThisDay}} %</td>
+                                                         <td class="semana{%if mediaSentimentThisWeek < 50%} sentiment-neg-color {%elseif mediaSentimentThisWeek > 60 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}">{{mediaSentimentThisWeek}} %</td>
+                                                     </tr>
+                                                     <tr class="evaluation">
+                                                         <td><span class="label label-warning">Evaluación</span></td>
+                                                         <td class="columna_resolucion{%if mediaEvaluationThisDay > 0%} {%if mediaEvaluationThisDay <= 7%} sentiment-neg-color {%elseif mediaEvaluationThisDay >= 9 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}{%endif%}">{%if mediaEvaluationThisDay > 0%}{{mediaEvaluationThisDay}} ({{cantEvaluationThisDay}}){%else%}-{%endif%} </td>
+                                                         <td class="columna_resolucion{%if mediaEvaluationThisWeek > 0%} {%if mediaEvaluationThisWeek <= 7%} sentiment-neg-color {%elseif mediaEvaluationThisWeek >= 9 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}{%endif%}">{%if mediaEvaluationThisWeek > 0%}{{mediaEvaluationThisWeek}} ({{cantEvaluationThisWeek}}){%else%}-{%endif%} </td>
+                                                     </tr>
+                                                 </tbody>
+                                             </table>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+
+             {#Peticiones#}
+             <div class="col-lg-3 peticiones">
+                 <h3>Total Peticiones</h3>
+                 <div class="row">
+                     <div class="col-lg-6">
+                         <div class="card">
+                             <div class="card-body">
+                                 <h4 class="card-title peticiones">Día:</h4>
+                                 <div class="d-flex">
+                                     <div class="align-self-center">
+                                         <h1><i
+                                                     class="ti-angle-up text-success"></i>{{ cantTicketsThisDay }}</h1>
+                                     </div>
+                                     <div class="ml-auto">
+                                         <div id="spark8"><i class="fa fa-line-chart"></i></div>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                     <div class="col-lg-6">
+                         <div class="card">
+                             <div class="card-body">
+                                 <h4 class="card-title peticiones">Semana:</h4>
+                                 <div class="d-flex">
+                                     <div class="align-self-center">
+                                         <h1>{{ cantTicketsThisWeek }}
+                                         </h1></div>
+                                     <div class="ml-auto">
+                                         <div id="spark9"><i class="fa fa-area-chart"></i></div>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+                 <div class="row">
+                     <div class="col-lg-6">
+                         <div class="card">
+                             <div class="card-body">
+                                 <h4 class="card-title peticiones">Mes:</h4>
+                                 <div class="d-flex">
+                                     <div class="align-self-center">
+                                         <h1>{{ cantTicketsThisMonth }}
+                                         </h1></div>
+                                     <div class="ml-auto">
+                                         <div id="spark10"><i class="fa fa-pie-chart"></i></div>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                     <div class="col-lg-6 ">
+                         <div class="card {%if cantTicketsOpened > 0%} ticket-opened {%endif%}">
+                             <div class="card-body">
+                                 <h4 class="card-title peticiones {%if cantTicketsOpened > 0%} ticket-opened {%endif%}">Abiertas:</h4>
+                                 <div class="d-flex">
+                                     <div class="align-self-center {%if cantTicketsOpened > 0%} ticket-opened {%endif%}">
+                                         <h1>{{ cantTicketsOpened }} </h1>
+                                     </div>
+                                     <div class="ml-auto">
+                                         <div id="spark10"><i class="fa fa-bar-chart-o {%if cantTicketsOpened > 0%} ticket-opened {%endif%}"></i></div>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+
+         {#Alerta#}
+              <div class="col-lg-3 col-xlg-3 alertas">
+                <h3 class="card-title">Alertas</h3>
+                 
+                    <div class="row">
+                  <div class="col-lg-6 col-xlg-4">
+                      <div class="card bg-theme alertas">
+                     <div class="card-body">
+                            <i class="fa fa-bell text-center {%if alertsAnswer["cantAlertOpen"] > 0%}alert_opened{%endif%}"te abrio></i>
+                             <table class="table browser m-t-30 no-border tabla_alertas">
+                             <tbody>
+                             <h6 class="text-muted m-t-10 m-b-0">Respuesta</h6>
+
+                             <tr>
+                                 <td style="width:40px"><i class="fa fa-circle text-danger"></i></td>
+                                 <td><h3 class="alertas">Abiertas:</h3></td>
+                                 <td class="text-right"><div class="alertas">{{ alertsAnswer["cantAlertOpen"] }}</div></td>
+                             </tr>
+                             <tr>
+                                 <td style="width:40px"><i class="fa fa-circle text-success"></i></td>
+                                 <td><h3 class="alertas">Día:</h3></td>
+                                 <td class="text-right"><div class="alertas">{{ alertsAnswer["cantAlertToday"] }}</div></td>
+                             </tr>
+                             <tr>
+                                 <td style="width:40px"><i class="fa fa-circle text-info"></i></td>
+                                 <td><h3 class="alertas">Semana:</h3></td>
+                                 <td class="text-right"><div class="alertas">{{ alertsAnswer["cantAlertThisWeek"]  }}</div></td>
+                             </tr>
+                             <tr>
+                                 <td style="width:40px"><i class="fa fa-circle text-warning"></i></td>
+                                 <td><h3 class="alertas">Mes:</h3></td>
+                                 <td class="text-right"><div class="alertas">{{ alertsAnswer["cantAlertThisMonth"]  }}</div></td>
+                             </tr>
+                             <tr>
+                                 <td style="width:40px"><i class="fa fa-circle text-primary"></i></td>
+                                 <td><h3 class="alertas">Total:</h3></td>
+                                 <td class="text-right"><div class="alertas">{{ alertsAnswer["totalAlertas"] }}</div></td>
+                             </tr>
+                             </tbody>
+                         </table>
+                     </div>
+                  </div>
+                  </div>
+                   <div class="col-lg-6 col-xlg-4">
+                       <div class="card bg-theme alertas">
+                     <div class="card-body  ">
+                            <i class="fa fa-handshake-o text-center {%if alertsSolution["cantAlertOpen"] > 0%}alert_opened{%endif%}"></i>
+                             <table class="table browser m-t-30 no-border tabla_alertas">
+                             <tbody>
+                             <h6 class="text-muted m-t-10 m-b-0">Resolución</h6>
+
+                             {# Sonido #}
+                             
+                             
+                             <tr>
+                                 <td style="width:40px"><i class="fa fa-circle text-danger"></i></td>
+                                 <td><h3 class="alertas">Abiertas:</h3></td>
+                                 <td class="text-right"><div class="alertas">{{ alertsSolution["cantAlertOpen"] }}</div></td>
+                             </tr>
+                             <tr>
+                                 <td style="width:40px"><i class="fa fa-circle text-success"></i></td>
+                                 <td><h3 class="alertas">Día:</h3></td>
+                                 <td class="text-right"><div class="alertas">{{ alertsSolution["cantAlertToday"] }}</div></td>
+                             </tr>
+                             <tr>
+                                 <td style="width:40px"><i class="fa fa-circle text-info"></i></td>
+                                 <td><h3 class="alertas">Semana:</h3></td>
+                                 <td class="text-right"><div class="alertas">{{ alertsSolution["cantAlertThisWeek"]  }}</div></td>
+                             </tr>
+                             <tr>
+                                 <td style="width:40px"><i class="fa fa-circle text-warning"></i></td>
+                                 <td><h3 class="alertas">Mes:</h3></td>
+                                 <td class="text-right"><div class="alertas">{{ alertsSolution["cantAlertThisMonth"]  }}</div></td>
+                             </tr>
+                             <tr>
+                                 <td style="width:40px"><i class="fa fa-circle text-primary"></i></td>
+                                 <td><h3 class="alertas">Total:</h3></td>
+                                 <td class="text-right"><div class="alertas">{{ alertsSolution["totalAlertas"] }}</div></td>
+                             </tr>
+                             </tbody>
+                         </table>
+                     </div>
+                  </div>
+                  </div>
+                 </div>
+             </div>
+             </div>
+	    {#Segunda fila#}
+            {%if openedTickets | length > 0 %}
+                    <div class="row">
+                        <div class="col-lg-12 col-sm-12 mb-12 tablas">
+                        <h3 class="card-title">Peticiones abiertas</h3>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                </div>
+                                <div class="table-responsive m-t-20">
+                                    <table class="table vm no-th-brd no-wrap pro-of-month">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Petición</th>
+                                                 <th scope="col">Grupo</th>
+                                                 <th scope="col">Fecha de inicio</th>
+                                                 <th scope="col">Tiempo transcurrido</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for ticket in openedTickets %}
+                                             <tr>
+                                                 <td class="">{{ticket.name}}</td>
+                                                 <td class="">{{ticket.whatsappGroup}}</td>
+                                                 <td class="">{{ticket.startDate | date("d-m-Y H:i", userTimezone)}}</td>
+
+    {#                                             <td>{{ticket.minutesSolutionTime}}</td>#}
+                                                 <td class="graficas">
+                                                     {% set leftDays = "" %}
+                                                     {% set difference = date("now").diff(date(ticket.startDate)) %}
+                                                     {%if difference.days > 0%}
+                                                        {% set leftDays = difference.days~" d, "%}
+                                                     {%endif%}
+                                                     {%if difference.h > 0%}
+                                                        {% set leftDays = leftDays~difference.h~" h, "%}
+                                                     {%endif%}
+                                                     {% set leftDays = leftDays~difference.i~" min "%}
+
+                                                     {{ leftDays }}
+                                                 </td>
+
+                                             </tr>
+                                             {%endfor%}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+            {%endif%}
+
+
+     </div>
+{%if alertsSolution["cantAlertOpen"] > 0 or alertsAnswer["cantAlertOpen"] > 0%}
+<audio autoplay id="audio" src="{{ asset('bundles/whatsapp/recursos/alerta1.mp3') }}" ></audio>
+{%endif%} 
+{% endblock %}
+{% block inlinejavascript %}
+    {#<script>
+        function play(){
+            var audio = document.getElementById("audio");
+            audio.play();
+        }
+    </script>#}
+    {#<script type="text/javascript">
+        $(function(){
+            $('#vertical-ticker').totemticker({
+                row_height	:	'100px',
+                next		:	'#ticker-next',
+                previous	:	'#ticker-previous',
+                stop		:	'#stop',
+                start		:	'#start',
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $( "#stop" ).click(function() {
+                $('#stop').addClass('boton_automatico_dashboard_stop');
+                $('#start').removeClass('boton_automatico_dashboard_activo');
+            });
+            $( "#start" ).click(function() {
+                $('#stop').removeClass('boton_automatico_dashboard_stop');
+                $('#start').addClass('boton_automatico_dashboard_activo');
+            });
+            $( "#ticker-next" ).click(function() {
+                $('#stop').removeClass('boton_automatico_dashboard_stop');
+                $('#start').addClass('boton_automatico_dashboard_activo');
+            });
+            $( "#ticker-previous" ).click(function() {
+                $('#stop').removeClass('boton_automatico_dashboard_stop');
+                $('#start').addClass('boton_automatico_dashboard_activo');
+            });
+        });
+    </script>#}
+
+
+    <script>
+         $(document).ready(function(){
+           if(window.top==window) {
+            // You're not in a frame, so you reload the site.
+            var refreshId = setInterval(refrescarTablaEstadoSala, 60000);
+            }
+         });
+
+         function refrescarTablaEstadoSala() {
+
+          $("#rolling").toggle();
+{#          window.location.reload(); //Reloads after three seconds#}
+          window.location.href = "{{path('dashboard')}}"; //Reloads after three seconds
+          ("#rolling").css('display', block);
+         }
+    </script>
+
+
+
+    <script type="text/javascript">
+       
+
+//    $("html, body").animate({ scrollTop: $(document).height() }, 19000);
+//    setTimeout(function() {
+//       $('html, body').animate({scrollTop:0}, 19000);
+//    },9000);
+//  var scrolltopbottom =  setInterval(function(){
+//         // 9000 - it will take 4 secound in total from the top of the page to the bottom
+//    $("html, body").animate({ scrollTop: $(document).height() }, 19000);
+//    setTimeout(function() {
+//       $('html, body').animate({scrollTop:0}, 19000);
+//    },19000);
+//
+//    },8000);
+    </script>
+{% endblock %}

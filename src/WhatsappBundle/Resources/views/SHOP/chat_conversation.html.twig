@@ -1,0 +1,1093 @@
+{% extends 'WhatsappBundle::standard_layout.html.twig' %}
+{% block sonata_breadcrumb %}
+
+{% endblock sonata_breadcrumb %}
+{% block sonata_admin_content %}
+
+    {% include '@SonataCore/FlashMessage/render.html.twig' %}
+    <style type="text/css">
+
+        #container-chat{
+            
+{#            min-height: 80vh;#}
+            position: relative;
+        }
+        .panel{
+            margin-bottom: 0px;
+            
+            {#display: grid;
+            grid-template-rows: auto 1fr auto;
+            grid-gap: 1em;
+            justify-content: center;#}
+        }
+        .chat-window{
+            {#            bottom:0;#}
+            {#            position:fixed;#}
+            {#            float:right;#}
+            margin-left:10px;
+            
+{#            min-height: 90vh;#}
+            
+        }
+        .chat-window > div > .panel{
+            border-radius: 5px 5px 0 0;
+        }
+        .icon_minim{
+            padding:2px 10px;
+        }
+        .msg_container_base{
+            background: #e5e5e5;
+            margin: 0;
+            padding: 0 10px 10px;
+{#            max-height:400px;#}
+            max-height:50vh;
+            min-height:50vh;
+            overflow-x:hidden;
+        }
+        .top-bar {
+            background: #666;
+            color: white;
+            padding: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        .msg_receive{
+            padding-left:0;
+            margin-left:0;
+        }
+        .msg_sent{
+            padding-bottom:20px !important;
+            margin-right:0;
+        }
+        .messages {
+            background: white;
+            padding: 10px;
+            border-radius: 2px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            max-width:100%;
+        }
+        .messages > p {
+            font-size: 13px;
+            margin: 0 0 0.2rem 0;
+        }
+        .messages > time {
+            font-size: 11px;
+            color: #ccc;
+        }
+        .msg_container {
+            padding: 10px;
+            overflow: hidden;
+            display: flex;
+        }
+        img {
+            display: block;
+            width: 100%;
+        }
+        .avatar {
+            position: relative;
+        }
+        .base_receive > .avatar:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border: 5px solid #FFF;
+            border-left-color: rgba(0, 0, 0, 0);
+            border-bottom-color: rgba(0, 0, 0, 0);
+        }
+
+        .base_sent {
+            justify-content: flex-end;
+            align-items: flex-end;
+        }
+        .base_sent > .avatar:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border: 5px solid white;
+            border-right-color: transparent;
+            border-top-color: transparent;
+            box-shadow: 1px 1px 2px rgba(black, 0.2); // not quite perfect but close
+        }
+
+        .msg_sent > time{
+            float: right;
+        }
+
+
+
+        .msg_container_base::-webkit-scrollbar-track
+        {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            background-color: #F5F5F5;
+        }
+
+        .msg_container_base::-webkit-scrollbar
+        {
+            width: 12px;
+            background-color: #F5F5F5;
+        }
+
+        .msg_container_base::-webkit-scrollbar-thumb
+        {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+            background-color: #555;
+        }
+
+        .btn-group.dropup{
+            position:fixed;
+            left:0px;
+            bottom:0;
+        }
+        
+        .actions .popover-content {
+	padding: 20px 40px;
+    }
+    
+    .panel-footer{
+        position: absolute;
+        bottom: -50px;
+        width: 100%;
+    }
+       
+    .chat-and-stickers{
+{#        position: absolute;#}
+        
+{#            max-height:55vh;#}
+{#            min-height:55vh;#}
+    }
+    #chat-messages{
+{#        padding: 40px;#}
+{#        position: relative;#}
+    }
+    #panel-stikers{
+{#        height:30vh;#}
+        padding: 20px;
+{#        position: relative;#}
+        
+    }
+    
+    #panel-stikers img{
+        margin: 10px;
+    }
+    
+    #panel-stikers img:hover{
+        cursor: pointer;
+    }
+   
+    
+    </style>
+    <link href="{{ asset('bundles/whatsapp/jquery-emojiarea-master/jquery.emojiarea.css') }}" rel="stylesheet">
+    <link href="{{ asset('bundles/whatsapp/jquery-emojiarea-master/stylesheet.css') }}" rel="stylesheet">
+    <link href="{{ asset('bundles/whatsapp/bootstrap-picker/bootstrap-picker.min.css') }}" rel="stylesheet">
+{#    <link rel="stylesheet" type="text/css" href="https://unpkg.com/@fonticonpicker/fonticonpicker@3.1.1/dist/css/base/jquery.fonticonpicker.min.css">#}
+    
+    <div class="row chat-window col-xs-12 col-md-12" id="chat_window_1" style="margin-left:10px;">
+        <div class="col-xs-12 col-md-12">
+            <div class="panel panel-default" id="container-chat">
+                <div class="panel-heading top-bar">
+                    <div class="col-md-8 col-xs-8">
+                        <h3 class="panel-title"><span class="glyphicon glyphicon-comment"></span> Chat - {{whatsappGroup}}</h3>
+                    </div>
+                    <div class="col-md-4 col-xs-4" style="text-align: right;">
+                        {#                        <a href="#"><span id="minim_chat_window" class="glyphicon glyphicon-minus icon_minim"></span></a>#}
+                        {#                        <a href="#"><span class="glyphicon glyphicon-remove icon_close" data-id="chat_window_1"></span></a>#}
+                    </div>
+                </div>
+
+{#                    <div class="chat-and-stickers" >#}
+                    <div class="panel-body msg_container_base" id="chat-messages">
+                    
+                    {% for message in messages%}
+                        <div id="{{message.id}}" class="row msg_container {%if message.fromMe %} base_sent {%else%} base_receive{%endif%}">
+                            {%if message.fromMe %}
+                                <div class="col-md-10 col-xs-10">
+                                    <div class="messages msg_sent">
+                                        <p>{{message.strmenssagetext}}</p>
+                                        {%if message.isLoadedAudio%}
+                                            {%if message.file is not null%}
+                                                <audio src="{% path message.file.media, 'reference' %}" controls="controls" type="audio/wave" preload="preload">
+                                                </audio>
+                                            {%endif%}
+                                        {%endif%}
+                                        {%if message.urlMedia is not null%} 
+                                            {%if message.strmenssagetext == "Mensaje de tipo Imagen" %} 
+                                                <img src="{{ message.urlMedia }}" class=" img-responsive "> 
+                                            {%endif%}
+                                            {%if message.strmenssagetext == "Mensaje de tipo Voz" %} 
+                                                <audio src="{{ message.urlMedia }}" controls="controls" type="audio/wave" preload="preload">
+                                                </audio>
+                                            {%endif%}
+                                            {%if message.strmenssagetext == "Mensaje de tipo Audio" %} 
+                                                <audio src="{{ message.urlMedia }}" controls="controls" type="audio/wave" preload="preload">
+                                                </audio>
+                                            {%endif%}
+                                            {%if message.strmenssagetext == "Mensaje de tipo Llamada" %} 
+                                                <audio src="{{ message.urlMedia }}" controls="controls" type="audio/wave" preload="preload">
+                                                </audio>
+                                            {%endif%}
+                                            {%if message.strmenssagetext == "Mensaje de tipo Video" %} 
+                                                <video src="{{ message.urlMedia }}" controls="controls" preload="preload">
+                                                </video>
+                                            {%endif%}
+                                            {%if message.strmenssagetext == "Mensaje de tipo Documento de texto" %} 
+                                                <a href="{{ message.urlMedia }}"> Descargar </a>
+                                            {%endif%}
+                                        {%endif%}
+                                        <time datetime="{{message.dtmmessage | date}}">{%if message.messageSended is defined%} {%if message.messageSended.user is defined%} {{message.messageSended.user.firstName}} {%endif%}{%endif%}{{message.dtmmessage | customdate}}</time>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-xs-2 avatar">
+{#                                    <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive ">#}
+                                    <img src="{{ asset('bundles/whatsapp/img/support.png') }}" class=" img-responsive ">
+                                </div>
+                            {%else%}
+                                <div class="col-md-2 col-xs-2 avatar">
+                                    <img src="{{ asset('bundles/whatsapp/img/client.png') }}" class=" img-responsive ">
+                                </div>
+                                <div class="col-md-10 col-xs-10">
+                                    <div class="messages msg_receive">
+                                        <p>{{message.strmenssagetext}}</p>
+                                        {%if message.isLoadedAudio%}
+                                            {%if message.file is not null%}
+                                                <audio src="{% path message.file.media, 'reference' %}" controls="controls" type="audio/wave" preload="preload">
+                                                </audio>
+                                            {%endif%}
+                                        {%endif%}
+                                        {%if message.urlMedia is not null%} 
+                                            {%if message.strmenssagetext == "Mensaje de tipo Imagen" %} 
+                                                <img src="{{ message.urlMedia }}" class=" img-responsive "> 
+                                            {%endif%}
+                                            {%if message.strmenssagetext == "Mensaje de tipo Voz" %} 
+                                                <audio src="{{ message.urlMedia }}" controls="controls" type="audio/wave" preload="preload">
+                                                </audio>
+                                            {%endif%}
+                                            {%if message.strmenssagetext == "Mensaje de tipo Audio" %} 
+                                                <audio src="{{ message.urlMedia }}" controls="controls" type="audio/wave" preload="preload">
+                                                </audio>
+                                            {%endif%}
+                                            {%if message.strmenssagetext == "Mensaje de tipo Llamada" %} 
+                                                <audio src="{{ message.urlMedia }}" controls="controls" type="audio/wave" preload="preload">
+                                                </audio>
+                                            {%endif%}
+                                            {%if message.strmenssagetext == "Mensaje de tipo Video" %} 
+                                                <video src="{{ message.urlMedia }}" controls="controls" preload="preload">
+                                                </video>
+                                            {%endif%}
+                                            {%if message.strmenssagetext == "Mensaje de tipo Documento de texto" %} 
+                                                <a href="{{ message.urlMedia }}"> Descargar </a>
+                                            {%endif%}
+                                        {%endif%}
+                                        <time datetime="{{message.dtmmessage | date}}">{{message.whatsappGroup.name}} ({{message.whatsappGroup.phoneNumber}}) {{message.dtmmessage | customdate}}</time>
+                                    </div>
+                                </div>
+                            {%endif%}
+                        </div>
+
+                    {%endfor%}
+
+                    {#<div class="row msg_container base_receive">
+                        <div class="col-md-2 col-xs-2 avatar">
+                            <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive ">
+                        </div>
+                        <div class="col-md-10 col-xs-10">
+                            <div class="messages msg_receive">
+                                <p>that mongodb thing looks good, huh?
+                                    tiny master db, and huge document store</p>
+                                <time datetime="2009-11-13T20:00">Timothy • 51 min</time>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row msg_container base_receive">
+                        <div class="col-md-2 col-xs-2 avatar">
+                            <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive ">
+                        </div>
+                        <div class="col-xs-10 col-md-10">
+                            <div class="messages msg_receive">
+                                <p>that mongodb thing looks good, huh?
+                                    tiny master db, and huge document store</p>
+                                <time datetime="2009-11-13T20:00">Timothy • 51 min</time>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row msg_container base_sent">
+                        <div class="col-xs-10 col-md-10">
+                            <div class="messages msg_sent">
+                                <p>that mongodb thing looks good, huh?
+                                    tiny master db, and huge document store</p>
+                                <time datetime="2009-11-13T20:00">Timothy • 51 min</time>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-xs-2 avatar">
+                            <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive ">
+                        </div>
+                    </div>
+                    <div class="row msg_container base_receive">
+                        <div class="col-md-2 col-xs-2 avatar">
+                            <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive ">
+                        </div>
+                        <div class="col-xs-10 col-md-10">
+                            <div class="messages msg_receive">
+                                <p>that mongodb thing looks good, huh?
+                                    tiny master db, and huge document store</p>
+                                <time datetime="2009-11-13T20:00">Timothy • 51 min</time>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row msg_container base_sent">
+                        <div class="col-md-10 col-xs-10 ">
+                            <div class="messages msg_sent">
+                                <p>that mongodb thing looks good, huh?
+                                    tiny master db, and huge document store</p>
+                                <time datetime="2009-11-13T20:00">Timothy • 51 min</time>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-xs-2 avatar">
+                            <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive ">
+                        </div>
+                    </div>#}
+                    
+                    {#<div id="app">
+                        <div v-for="message in messages">
+                            <div v-if="message.from_me" class="row msg_container  base_sent ">
+                                <div class="col-md-10 col-xs-10">
+                                        <div class="messages msg_sent">
+                                            <p>${message.strmenssagetext}</p>
+                                            <time datetime="${message.dtmmessage | date}"> </time>
+                                        </div>
+                                </div>
+                                <div class="col-md-2 col-xs-2 avatar">
+                                    <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive ">
+                                </div>
+
+
+                            </div>
+                            <div v-if="!message.from_me" class="row msg_container base_receive">
+
+
+                                 <div class="col-md-2 col-xs-2 avatar">
+                                        <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive ">
+                                    </div>
+                                    <div class="col-md-10 col-xs-10">
+                                        <div class="messages msg_receive">
+                                            <p>${message.strmenssagetext}</p>
+
+                                            <time datetime="${message.dtmmessage | date}"> </time>
+                                        </div>
+                                    </div>       
+                            </div>
+                        </div>
+                    </div>#}
+                </div>
+                <div id="panel-stikers">
+                    <div class="row">
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/amor96x96.png') }}" data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/amor512x512.png') }}"/>
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/CBSe-Estoy-emojinado96.png') }}"  data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/CBSe-Estoy-emojinado512.png') }}"/>
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/duda96x96.png') }}"  data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/duda512x512.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/CBSe-Inicia-tu-dia-con-una-sonrisa96.png') }}"  data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/CBSe-Inicia-tu-dia-con-una-sonrisa512.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/fuego96x96.png') }}"  data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/fuego512x512.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/CBSe-KeepCalm96.png') }}"  data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/CBSe-KeepCalm512.png') }}" />
+                            </div>
+                        </div>
+                            <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/mate-con-like96x96.png') }}"  data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/mate-con-like512x512.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/salen-unos-mates96x96.png') }}"  data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/salen-unos-mates512x512.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/necesito-unos-mates96x96.png') }}"  data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/necesito-unos-mates512x512.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/preocupado96x96.png') }}"  data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/preocupado512x512.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/riendo-hasta-llorar96x96.png') }}" data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/riendo-hasta-llorar512x512.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/mate-corazon96x96.png') }}" data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/mate-corazon512x512.png') }}" />
+                            </div>
+                        </div>
+                        
+                        
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/guinno96x96.png') }}" data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/guinno512x512.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/CBSe-Sos-mi-momento-favorito96.png') }}" data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/CBSe-Sos-mi-momento-favorito512.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/insulto96x96.png') }}" data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/insulto512x512.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/lentes-de-sol-96x96.png') }}" data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/lentes-de-sol-512x512.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/llorando96x96.png') }}" data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/llorando512x512.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/mate-cbse96x96.png') }}" data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/mate-cbse512x512.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/v3_1_96.png') }}" data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/v3_1_512.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/v3_2_96.png') }}" data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/v3_2_512.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/v3_3_96.png') }}" data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/v3_3_512.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/v3_4_96.png') }}" data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/v3_4_512.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/v3_5_96.png') }}" data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/v3_5_512.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/v3_6_96.png') }}" data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/v3_6_512.png') }}" />
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/v3_7_96.png') }}" data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/v3_7_512.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/v3_8_96.png') }}" data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/v3_8_512.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/v3_9_96.png') }}" data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/v3_9_512.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/v3_10_96.png') }}" data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/v3_10_512.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div class="col-xs-12">
+                                <img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/v3_11_96.png') }}" data-src="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/whatsapp/cbse-stickers/v3_11_512.png') }}" />
+                            </div>
+                        </div>
+                        
+                        
+                        
+                    </div>
+                    
+                </div>
+{#                </div>#}
+                <div class="panel-footer">
+                    <form id="form-send-message" 
+                          autocomplete="off"
+                          enctype="multipart/form-data"
+                          method="POST"
+                          {#                            class="form-horizontal priority_modal_form"#}
+                          action="{{ path('publish_message_from_web_to_conversation', {"whatsappGroup":whatsappGroup.id}) }}"
+                          >
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <a class="btn btn-primary btn-sm" id="sticker-show" >
+                                    <i title='Share' class="col-sm fa fa-image"></i>
+{#<img class="col-sm  m-t-10" src="{{ asset('bundles/whatsapp/cbse-stickers/amor96x96.png') }}" />#}
+                                </a>
+                            </span>
+                            <input type="text"
+
+                                   name="message"
+                                   id="btn-input"
+                                   class="form-control input-sm chat_input"
+                                   placeholder="Escribir mensaje aquí..."
+                                   >
+                            {#                        <input id="btn-input" type="text" class="form-control input-sm chat_input" placeholder="Write your message here..." />#}
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary btn-sm" id="btn-chat" type="submit">Send</button>
+                            </span>
+
+                        </div>
+                    </form>
+                </div>
+                
+            </div>
+                            
+        </div>
+          {#<div style="width: 60%; height: 600px; padding: 100px 300px;">
+
+		<div class="actions">
+
+			<!-- Action Share -->
+			<div class="popup-window" data-placement='right'>
+				<i title='Share' class="btn-popup fa fa-share-alt"></i>
+			</div>
+			<div class="popup-content hide">
+				<div class="socialShare">
+					<label class="form-group">Share:</label>
+					<div class="well">
+						<a title="Share on twiiter" target="_blank" href="#">
+							<i style="font-size: 40px;" class="fa fa-twitter-square"></i>
+						</a>
+						<a title="Share on facebook" target="_blank" href="#">
+							<i style="font-size: 40px;" class="fa fa-facebook-square"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<!-- Action Respond To Review -->
+			<div class="popup-window" data-placement='bottom'>
+				<i  title='Respond To Review' class="btn-popup fa fa-share-square-o"></i>
+			</div>
+			<div class="popup-content hide">
+				<div class="">
+					<label class="form-group">Respond To Review:</label>
+					<div class="form-group">
+						<textarea class="form-control">Great song BRO!</textarea>
+					</div>
+					<div class="form-group">
+						<button class="btn btn-primary respondToReview width100" onclick="respondToReview(this);">Post Response</button>
+					</div>
+				</div>
+			</div>
+
+
+
+		</div>
+	</div>   #}   
+       {# <div class="form-group picker-container">
+            <label>With custom options</label>
+            <input class="form-control pck pck-opts picker-element picker-input" value="fa-github" type="text">
+            <div class="picker-popover popover fade bottomRight" style="display: none; top: 58.8px; left: 257.833px; max-width: 1028.83px;">
+                <div class="arrow"></div>
+                <div class="popover-title">Enviar sticker</div><div class="popover-content"><div class="picker"><div class="picker-items"><div class="picker-item picker-selected label label-success" title=".fa-github"><i class="fa fa-github"></i></div><div class="picker-item" title=".fa-heart"><i class="fa fa-heart"></i></div><div class="picker-item" title=".fa-html5"><i class="fa fa-html5"></i></div><div class="picker-item" title=".fa-css3"><i class="fa fa-css3"></i></div></div></div></div><div class="popover-footer"><div style="text-align:left; font-size:12px;">Placements: 
+                    <a href="#" class=" action-placement">topLeftCorner</a>
+                    <a href="#" class=" action-placement">topLeft</a>
+                    <a href="#" class=" action-placement">top</a>
+                    <a href="#" class=" action-placement">topRight</a>
+                    <a href="#" class=" action-placement">topRightCorner</a>
+                    <a href="#" class=" action-placement">rightTop</a>
+                    <a href="#" class=" action-placement">right</a>
+                    <a href="#" class=" action-placement">rightBottom</a>
+                    <a href="#" class=" action-placement">bottomRightCorner</a>
+                    <a href="#" class=" active action-placement">bottomRight</a>
+                    <a href="#" class=" action-placement">bottom</a>
+                    <a href="#" class=" action-placement">bottomLeft</a>
+                    <a href="#" class=" action-placement">bottomLeftCorner</a>
+                    <a href="#" class=" action-placement">leftBottom</a>
+                    <a href="#" class=" action-placement">left</a>
+                    <a href="#" class=" action-placement">leftTop</a>
+                    </div><hr><button class="picker-btn picker-btn-cancel btn btn-default btn-sm">Cancel</button><button class="picker-btn picker-btn-accept btn btn-primary btn-sm">Accept</button></div>
+            </div>
+        </div>#}
+        {#<div id="app1">
+            <button @click="disconnect" v-if="status === 'connected'">Disconnect</button>
+            <button @click="connect" v-if="status === 'disconnected'">Connect</button> ${ status }
+            <br /><br />
+            <div v-if="status === 'connected'">
+              <form @submit.prevent="sendMessage" action="#">
+                <input v-model="message"><button type="submit">Send Message</button>
+              </form>
+              <ul id="logs">
+                <li v-for="log in logs" class="log">
+                  ${ log.event }: ${ log.data }
+                </li>
+              </ul>
+            </div>
+          </div>#}
+    </div>
+   
+    {#<audio id="audio" controls>
+        <source type="audio/ogg" src="/whatsappshop/web/10405952_PCM.wav">
+    </audio>#}
+    <audio id="audio" controls hidden>
+        <source type="audio/ogg" src="{{ asset('bundles/whatsapp/recursos/alerta3.mp3') }}">
+    </audio>
+   
+    <script src="{{ asset('bundles/goswebsocket/js/vendor/autobahn.min.js') }}"></script>
+    <script src="{{ asset('bundles/goswebsocket/js/gos_web_socket_client.js') }}"></script>
+    
+	<script type='text/javascript'>
+    $( document ).ready(function() {
+
+// Bootstrap popover customization for actions
+	$('.popup-window').popover({
+	    html: true,
+	    title : '<button type="button" class="close" onclick="$(&quot;.popup-window&quot;).popover(&quot;hide&quot;);">&times;</button>',
+	    trigger: 'manual',
+	    content: function () {
+	        return $(this).next('.popup-content').html();
+	    }
+	}).click(function(e) {
+	    $(this).popover('toggle');
+		$('.popup-window').not(this).popover('hide');
+
+	    e.stopPropagation();
+	});
+
+	$('body').on('click', function (e) {
+	    $('.popup-window').each(function () {
+	        if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+	            $(this).popover('hide');
+	        }
+	    });
+	});
+
+
+
+}); 
+
+	</script>
+{#    <script src="{{ asset('bundles/whatsapp/bootstrap-picker/bootstrap-picker.js') }}"></script>#}
+   {# <script type="text/javascript">
+    $(function() {
+     $('.pck-opts').picker({
+    title: 'Enviar Stickers',
+    selectableItems: ['github', 'heart', 'html5', 'css3'],
+    selectedCustomClass: 'label label-success',
+    mustAccept:true,
+    placement:'bottomRight',
+    showFooter:true,
+    //... (see the source code of this page)
+});
+    });
+    </script>#}
+{#    <script src="{{ asset('bundles/whatsapp/jquery-emojiarea-master/jquery.emojiarea.js') }}"></script>#}
+    <!-- SELECT element -->
+{#<select id="myselect" name="myselect" class="myselect">
+    <option value="">No icon</option>
+    <option>icon-user</option>
+    <option>icon-search</option>
+    <option>icon-right-dir</option>
+    <option>icon-star</option>
+    <option>icon-cancel</option>
+    <option>icon-help-circled</option>
+    <option>icon-info-circled</option>
+    <option>icon-eye</option>
+    <option>icon-tag</option>
+    <option>icon-bookmark</option>
+    <option>icon-heart</option>
+    <option>icon-thumbs-down-alt</option>
+    <option>icon-upload-cloud</option>
+    <option>icon-phone-squared</option>
+    <option>icon-cog</option>
+    <option>icon-wrench</option>
+    <option>icon-volume-down</option>
+    <option>icon-down-dir</option>
+    <option>icon-up-dir</option>
+    <option>icon-left-dir</option>
+    <option>icon-thumbs-up-alt</option>
+</select>#}
+<!-- JavaScript -->
+{#<script type="text/javascript">
+    // Make sure to fire only when the DOM is ready
+    jQuery(document).ready(function($) {
+        $('#myselect').fontIconPicker(); // Load with default options
+    });
+</script>#}
+    
+{#    <script type="text/javascript" src="https://unpkg.com/@fonticonpicker/fonticonpicker/dist/js/jquery.fonticonpicker.min.js"></script>#}
+    {#<script src="{{ asset('bundles/whatsapp/jquery-emojiarea-master/packs/basic/emojis.js') }}">
+    
+    </script>#}
+    {#<script>
+        $.emojiarea.path = "{{ asset('bundles/whatsapp/jquery-emojiarea-master/packs/basic') }}";
+        $.emojiarea.icons = {
+                ':smile:'     : 'smile.png',
+                ':angry:'     : 'angry.png',
+                ':flushed:'   : 'flushed.png',
+                ':neckbeard:' : 'neckbeard.png',
+                ':laughing:'  : 'laughing.png',
+                ':laughing1:'  : 'laughing.png',
+                ':laughing2:'  : 'laughing.png'
+        };
+    </script>
+    <script>
+		$('.emojis-plain').emojiarea({wysiwyg: false});
+		
+		var $wysiwyg = $('.emojis-wysiwyg').emojiarea({wysiwyg: true});
+		var $wysiwyg_value = $('#emojis-wysiwyg-value');
+		
+		$wysiwyg.on('change', function() {
+                        alert($(this).val());
+			$wysiwyg_value.text($(this).val());
+		});
+		$wysiwyg.trigger('change');
+		</script>#}
+<script>
+
+        jQuery(document).ready(function ($) {
+{#            console.log($('#chat-messages div.msg_container:last'));#}
+            try{
+                $('#chat-messages').animate({scrollTop: $('#chat-messages div.msg_container:last').offset().top});
+            }catch (SyntaxError) { // non-standard
+                   
+            }
+            {#$("#chat-messages").animate({
+                scrollTop: $("#chat-messages div:last-child").position().top
+            }, 2000);#}
+{#            var element = $("#chat-messages div:last-child").scrollIntoView();#}
+            {#var action = "http://localhost/whatsappshop/web/app_dev.php/admin/chat_conversation_message_part/33"
+                        $.ajax({
+                            type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                                    url: action, // the url where we want to POST
+                                    encode: true,
+                        })
+                        .done(function (data) {
+                        var newdata = $(data);
+                        $("#chat-messages").append(newdata);
+                        var element = document.getElementById(obj.id);
+                        element.scrollIntoView();
+
+                        })
+                        .fail(function () {
+                        alert("Problemas1");
+                        })
+                        .always(function () {
+                        });#}
+{#            var websocket = WS.connect("ws://192.168.11.202:8080");#}
+            var websocket = WS.connect("ws://"+"{{gos_web_socket_url}}"+":"+"{{gos_web_socket_port}}");
+            websocket.on("socket/connect", function (session) {
+            //session is an AutobahnJS WAMP session.
+            session.subscribe("acme/channel/" +{{whatsappGroup.id}} , function (uri, payload) {
+                console.log("Received message", payload);
+                var texto = payload.msg;
+                try {
+                        var obj = JSON.parse(payload.msg);
+                        console.log("Received message", obj.strmenssagetext);
+                        {#var newdata = $('<div id="'+obj.id+'" class="row msg_container base_receive"><div class="col-md-2 col-xs-2 avatar"><img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive "></div><div class="col-md-10 col-xs-10"><div class="messages msg_receive"><p>'+obj.strmenssagetext+'</p></div></div></div>');
+                        if(obj.from_me)
+                            var newdata = $('<div id="'+obj.id+'" class="row msg_container base_sent"><div class="col-md-10 col-xs-10"><div class="messages msg_sent"><p>'+obj.strmenssagetext+'</p></div></div><div class="col-md-2 col-xs-2 avatar"><img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive "></div></div>');
+                        $("#chat-messages").append(newdata);
+                        var element = document.getElementById(obj.id);
+                        element.scrollIntoView();#}
+                        
+                        var baseAction = "{{ app.request.getSchemeAndHttpHost()~app.request.getBaseURL() }}";
+                        var action = baseAction+"/admin/chat_conversation_message_part/"+obj.id
+                        $.ajax({
+                            type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                                    url: action, // the url where we want to POST
+                                    encode: true,
+                        })
+                        .done(function (data) {
+    {#                    alert(data);#}
+                            var newdata = $(data);
+                            $("#chat-messages").append(newdata);
+                            var element = document.getElementById(obj.id);
+                            element.scrollIntoView();
+                            if(!obj.from_me){
+                                var audio = document.getElementById("audio");
+                                audio.play();
+                            }
+
+                        })
+                        .fail(function () {
+                        alert("Problemas");
+                        })
+                        .always(function () {
+                        });
+                        
+                        {#$(".msg_container_base").animate({
+                            scrollTop: ($('.msg_container').last().offset().top)
+                        }, 0);#}
+{#                        $('#chat-messages').animate({ scrollTop: $(newdata).offset().top }, 1000);#}
+                        {#$("#chat-messages").animate({
+                            scrollTop: $("#"+obj.id).offset().top
+                        }, 0);#}
+                        
+                    }
+                    catch (SyntaxError) { // non-standard
+                       console.log("Received message eerrr");
+                    }
+                
+                
+                
+{#                var newdata = '<div class="col-md-10 col-xs-10"><div class="messages msg_sent"><p>'+payload.smg.strmenssagetext+'</p></div></div><div class="col-md-2 col-xs-2 avatar"><img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive "></div>'#}
+{#                var newdata = '<div class="col-md-10 col-xs-10"><div class="messages msg_sent"><p>'+payload.strmenssagetext+'</p></div></div><div class="col-md-2 col-xs-2 avatar"><img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive "></div>'#}
+                
+            
+                //Mostrar el nuevo mensaje
+            });
+            session.publish("acme/channel/" +{{whatsappGroup.id}} , "This is a message!");
+            console.log("Successfully Connected!");
+        })
+
+        {#websocket.on("socket/disconnect", function (error) {
+            //error provides us with some insight into the disconnection: error.reason and error.code
+
+            console.log("Disconnected for " + error.reason + " with code " + error.code);
+        })#}
+
+
+            });
+    </script>
+    <script>
+        $(document).on('click', '.panel-heading span.icon_minim', function (e) {
+            var $this = $(this);
+            if (!$this.hasClass('panel-collapsed')) {
+                $this.parents('.panel').find('.panel-body').slideUp();
+                $this.addClass('panel-collapsed');
+                $this.removeClass('glyphicon-minus').addClass('glyphicon-plus');
+            } else {
+                $this.parents('.panel').find('.panel-body').slideDown();
+                $this.removeClass('panel-collapsed');
+                $this.removeClass('glyphicon-plus').addClass('glyphicon-minus');
+            }
+        });
+        $(document).on('focus', '.panel-footer input.chat_input', function (e) {
+            var $this = $(this);
+            if ($('#minim_chat_window').hasClass('panel-collapsed')) {
+                $this.parents('.panel').find('.panel-body').slideDown();
+                $('#minim_chat_window').removeClass('panel-collapsed');
+                $('#minim_chat_window').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+            }
+        });
+        $(document).on('click', '#new_chat', function (e) {
+            var size = $(".chat-window:last-child").css("margin-left");
+            size_total = parseInt(size) + 400;
+            alert(size_total);
+            var clone = $("#chat_window_1").clone().appendTo(".container");
+            clone.css("margin-left", size_total);
+        });
+        $(document).on('click', '.icon_close', function (e) {
+        //$(this).parent().parent().parent().parent().remove();
+            $("#chat_window_1").remove();
+        });
+    </script>
+
+    <script language="javascript" type="text/javascript">
+        // Funcion que se ejecuta cuando se da submit al formulario de envio de cambio de prioridad de un Resultado Clave
+        $(function () {
+        $(document).on('submit', '#form-send-message', function (evt) {
+        $form = this;
+        var action = $(this).attr('action');
+        var formData = $(this).serializeArray();
+        {#                var id = $(this).attr("id");#}
+            $.ajax({
+            type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                    url: action, // the url where we want to POST
+                    data: formData, // our data object
+        {#                    dataType: 'json', // what type of data do we expect back from the server#}
+                    encode: true,
+            })
+                    .done(function (data) {
+{#                    alert(data);#}
+                    $("#btn-chat").attr('disabled', false);
+                    $("#btn-input").val("");
+                    
+                    })
+                    .fail(function () {
+                    alert("Problemas");
+                    })
+                    .always(function () {
+                    });
+        {#.success(function(data) {
+        alert("dfsd");
+        $("#compani_objectives").append(data);
+        console.log(data);
+        });#}
+            evt.preventDefault();
+            });
+            });
+    </script>
+    {#<script src="https://unpkg.com/vue"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/autobahn-js-built@0.11.1/autobahn.min.js" integrity="sha256-3TKjZRGVl5JD8PzY9Zea2pVWKeA32IqWwIPKVf9G/UA=" crossorigin="anonymous"></script>
+    <script src="/whatsappshop/web/vue-wamp.js"></script>
+
+
+    <script language="javascript" type="text/javascript">
+        var url = "http://localhost/whatsappshop/web/app_dev.php/api/api_get_conversation_messages/2";
+        Vue.prototype.$http = axios;
+        Vue.prototype.$VueWamp = VueWamp;
+        Vue.use(VueWamp, {
+      foo: 'bar'
+    });
+      const app = new Vue({
+        delimiters: ['${', '}'],
+        el: "#app",
+        data: {
+          message: "",
+          logs: [],
+          messages: [],
+          status: "disconnected"
+        },
+        methods: {
+            init: function(){
+                    this.loadData();
+                    console.log("dsf");
+            },
+            loadData: function() { 
+                this.$http.get(url).then((response) => { 
+                    this.messages = response.data.messages;
+                        if(!!response.body) {
+                                this.locat = response.body;
+                                console.log(this.locat);
+                        }
+                }, (response) => {
+                        this.error = response;
+                        
+                
+                });
+                this.socket = new WebSocket("ws://127.0.0.1:8080");
+                this.socket.onopen = () => {
+                    this.status = "connected";
+                    //this.logs.push({ event: "Connected to", data: 'wss://127.0.0.1:8080'})
+                    console.log("connected");
+                     //this.socket.send(JSON.stringify({"command": "subscribe","identifier":"{\"channel\":\"ArticlesChannel\"}"}))
+                     //this.socket.send(JSON.stringify({"command": "subscribe","identifier":"{\"channel\":\"acme\/channel\/2\"}"}));
+                     this.socket.send(JSON.stringify({"command": "subscribe","identifier":'{"channel":"acme/channel/2"}'}));
+                    // this.socket.send("acme/channel", { id: 2 }, (response) => {
+                    //console.log("ssdf");
+
+                //});
+                   
+                };
+                    
+                 this.socket.onmessage = ({data}) => {
+                      this.messages.push(data);
+                      console.log(this.messages);
+                    this.logs.push({ event: "Recieved message", data });
+                  };
+            },
+          connect() {
+              console.log("ssdf");
+            
+          },
+          disconnect() {
+            this.socket.close();
+            this.status = "disconnected";
+            this.logs = [];
+          },
+          sendMessage(e) {
+            this.socket.send(this.message);
+            this.logs.push({ event: "Sent message", data: this.message });
+            this.message = "";
+          }
+        },
+        beforeMount(){
+            this.loadData()
+         },
+      });
+
+    </script>  #}
+    
+    <script type='text/javascript'>
+    $( document ).ready(function() {
+        $('#panel-stikers').toggle();
+            if(!$('#panel-stikers').is(':visible')){
+                $('#chat-messages').css("max-height","72vh");
+                $('#chat-messages').css("min-height","72vh");
+            }
+            else{
+                $('#chat-messages').css("max-height","50vh");
+                $('#chat-messages').css("min-height","50vh");
+            }
+
+	$('#sticker-show').on('click', function (e) {
+            
+	    $('#panel-stikers').toggle();
+            if(!$('#panel-stikers').is(':visible')){
+                $('#chat-messages').css("max-height","72vh");
+                $('#chat-messages').css("min-height","72vh");
+            }
+            else{
+                $('#chat-messages').css("max-height","50vh");
+                $('#chat-messages').css("min-height","50vh");
+            }
+            
+	});
+	$('#panel-stikers img').on('click', function (e) {
+            var url = $(this).attr('data-src');
+            var id = "{{whatsappGroup}}";
+            var data = {image : url};
+        $.ajax({
+            type: "POST",
+            url: "{{ path('chat_whatsapp_group_ajax_send_sticker', {whatsappGroup:whatsappGroup.id}) }}",
+            data: data,
+            success: function (data, dataType) {
+                alert("Sticker enviado");
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert('Error : ' + errorThrown);
+            }
+        });
+            
+            
+	});
+        
+
+}); 
+
+	</script>
+{% endblock %}
+
+{% block inlinejavascript %}
+
+{% endblock %}

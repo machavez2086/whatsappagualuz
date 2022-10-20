@@ -1,0 +1,15 @@
+[Unit]
+Description=gos_websocket_server correr el servidor websocket para que lleguen los mensajes al chat.
+After=network.target
+
+[Service]
+Type=idle
+WorkingDirectory=/var/www/html/whatsappshop2
+User=administrador
+ExecStart=/usr/bin/php /var/www/html/whatsappshop2/app/console gos:websocket:server
+TimeoutSec=600
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+

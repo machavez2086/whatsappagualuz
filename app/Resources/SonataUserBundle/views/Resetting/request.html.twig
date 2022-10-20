@@ -1,0 +1,14 @@
+{% extends 'WhatsappBundle:Default:home.html.twig' %}
+
+
+{% block contenido_especifico %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            {% include "FOSUserBundle:Resetting:request_content.html.twig" %}
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block footer%}
+{% endblock %}

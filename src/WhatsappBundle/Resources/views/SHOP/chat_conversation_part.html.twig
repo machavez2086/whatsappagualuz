@@ -1,0 +1,85 @@
+
+<div id="{{message.id}}" class="row msg_container {%if message.fromMe %} base_sent {%else%} base_receive{%endif%}">
+    {%if message.fromMe %}
+        <div class="col-md-10 col-xs-10">
+            <div class="messages msg_sent">
+                <p>{{message.strmenssagetext}}</p>
+                {%if message.isLoadedAudio%}
+                    {%if message.file is not null%}
+                        <audio src="{% path message.file.media, 'reference' %}" controls="controls" type="audio/wave" preload="preload">
+                        </audio>
+                    {%endif%}
+                {%endif%}
+                {%if message.urlMedia is not null%} 
+                    {%if message.strmenssagetext == "Mensaje de tipo Imagen" %} 
+                        <img src="{{ message.urlMedia }}" class=" img-responsive "> 
+                    {%endif%}
+                    {%if message.strmenssagetext == "Mensaje de tipo Voz" %} 
+                        <audio src="{{ message.urlMedia }}" controls="controls" type="audio/wave" preload="preload">
+                        </audio>
+                    {%endif%}
+                    {%if message.strmenssagetext == "Mensaje de tipo Audio" %} 
+                        <audio src="{{ message.urlMedia }}" controls="controls" type="audio/wave" preload="preload">
+                        </audio>
+                    {%endif%}
+                    {%if message.strmenssagetext == "Mensaje de tipo Llamada" %} 
+                        <audio src="{{ message.urlMedia }}" controls="controls" type="audio/wave" preload="preload">
+                        </audio>
+                    {%endif%}
+                    {%if message.strmenssagetext == "Mensaje de tipo Video" %} 
+                        <video src="{{ message.urlMedia }}" controls="controls" preload="preload">
+                        </video>
+                    {%endif%}
+                    {%if message.strmenssagetext == "Mensaje de tipo Documento de texto" %} 
+                        <a href="{{ message.urlMedia }}"> Descargar </a>
+                    {%endif%}
+                {%endif%}
+                <time datetime="{{message.dtmmessage | date}}">{%if message.messageSended is defined%} {%if message.messageSended.user is defined%} {{message.messageSended.user.firstName}} {%endif%}{%endif%}{{message.dtmmessage | customdate}}</time>
+            </div>
+        </div>
+        <div class="col-md-2 col-xs-2 avatar">
+            {#                                    <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive ">#}
+            <img src="{{ asset('bundles/whatsapp/img/support.png') }}" class=" img-responsive ">
+        </div>
+    {%else%}
+        <div class="col-md-2 col-xs-2 avatar">
+            <img src="{{ asset('bundles/whatsapp/img/client.png') }}" class=" img-responsive ">
+        </div>
+        <div class="col-md-10 col-xs-10">
+            <div class="messages msg_receive">
+                <p>{{message.strmenssagetext}}</p>
+                {%if message.isLoadedAudio%}
+                    {%if message.file is not null%}
+                        <audio src="{% path message.file.media, 'reference' %}" controls="controls" type="audio/wave" preload="preload">
+                        </audio>
+                    {%endif%}
+                {%endif%}
+                {%if message.urlMedia is not null%} 
+                    {%if message.strmenssagetext == "Mensaje de tipo Imagen" %} 
+                        <img src="{{ message.urlMedia }}" class=" img-responsive "> 
+                    {%endif%}
+                    {%if message.strmenssagetext == "Mensaje de tipo Voz" %} 
+                        <audio src="{{ message.urlMedia }}" controls="controls" type="audio/wave" preload="preload">
+                        </audio>
+                    {%endif%}
+                    {%if message.strmenssagetext == "Mensaje de tipo Audio" %} 
+                        <audio src="{{ message.urlMedia }}" controls="controls" type="audio/wave" preload="preload">
+                        </audio>
+                    {%endif%}
+                    {%if message.strmenssagetext == "Mensaje de tipo Llamada" %} 
+                        <audio src="{{ message.urlMedia }}" controls="controls" type="audio/wave" preload="preload">
+                        </audio>
+                    {%endif%}
+                    {%if message.strmenssagetext == "Mensaje de tipo Video" %} 
+                        <video src="{{ message.urlMedia }}" controls="controls" preload="preload">
+                        </video>
+                    {%endif%}
+                    {%if message.strmenssagetext == "Mensaje de tipo Documento de texto" %} 
+                        <a href="{{ message.urlMedia }}"> Descargar </a>
+                    {%endif%}
+                {%endif%}
+                <time datetime="{{message.dtmmessage | date}}">{{message.whatsappGroup.name}} ({{message.whatsappGroup.phoneNumber}}) {{message.dtmmessage | customdate}}</time>
+            </div>
+        </div>
+    {%endif%}
+</div>

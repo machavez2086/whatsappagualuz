@@ -1,0 +1,31 @@
+    <div class="page-header" filter-color="orange">
+        <div class="page-header-image" style="background-image: url({{ asset('bundles/whatsapp/img/img-home/img/whatsapp-2.jpg')  }});"></div>
+        <div class="container">
+            <div class="col-md-4 content-center">
+                <div class="card card-login card-plain">
+                    <form action="{{ path('sonata_user_resetting_send_email') }}" method="POST" class="fos_user_resetting_request">
+                        {% if invalid_username is defined %}
+                            <div class="alert alert-danger">{{ 'resetting.request.invalid_username'|trans({'%username%': invalid_username}, 'FOSUserBundle') }}</div>
+                        {% endif %}
+                        <div class="content">
+                            <div class="input-group form-group-no-border input-lg">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-user text-white"></i>
+                                </span>
+                            <input type="text" class="form-control" id="username" name="username" required="required" placeholder="Usuario..." />
+                            </div>
+                        </div>
+
+                        <div class="form-actions form-group">
+                            <div class="col-sm-offset-3 col-sm-9">
+                                <input type="submit" value="{{ 'resetting.request.submit'|trans({}, 'FOSUserBundle') }}" class="btn btn-primary btn-round btn-lg btn-block restablecer_contrasena" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <a style="float: left;" class="nav-link" href="{{ path('fos_user_security_login') }}"><i class="fa fa-arrow-circle-o-left"></i></a>
+
+            </div>
+        </div>
+    </div>

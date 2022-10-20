@@ -1,0 +1,9 @@
+acme_topic:
+    channel: acme/channel/{id}
+    handler: 
+        callback: 'acme.topic'
+        
+acme_global:
+    channel: acme/global
+    handler: 
+        callback: 'acme.global'

@@ -1,0 +1,198 @@
+{% extends 'WhatsappBundle::standard_layout.html.twig' %}
+
+{% block sonata_admin_content %}
+    
+    {% include '@SonataCore/FlashMessage/render.html.twig' %}
+    <style type="text/css">
+        {##container {
+                min-width: 310px;
+                max-width: 800px;
+                height: 400px;
+                margin: 0 auto
+        }#}
+    </style>
+    <div class="sonata-ba-form">
+
+
+        <form
+            {% if admin_pool.getOption('form_type') == 'horizontal' %}class="form-horizontal"{% endif %}
+            role="form"
+            action="{{ path('change_ticket_to_group') }}" {{ form_enctype(form) }}
+            method="POST"
+            {% if not admin_pool.getOption('html5_validate') %}novalidate="novalidate"{% endif %}
+            >
+            {% if form.vars.errors|length > 0 %}
+                <div class="sonata-ba-form-error">
+                    {{ form_errors(form) }}
+                </div>
+            {% endif %}
+            {% for flashMessage in app.session.flashbag.get('error') %} 
+                <div class="alert alert-warning">
+                    {{ flashMessage | trans({}, 'RegistroentradaBundle')}} 
+                </div>
+            {% endfor %}
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box box-primary">
+                                <div class="box-header">
+                                    <h4 class="box-title"> {{ 'Agregar mensaje a grupo'|trans({}, 'WhatsappBundle') }} </h4>
+                                </div>          
+
+                                <div class="box-body">
+                                    <div class="sonata-ba-collapsed-fields">
+                                        <div class="form-group">
+                                            {{ form_label(form.whatsappGroup)}}  
+                                                {{ form_widget(form.whatsappGroup, {attr: {'class': 'form-control '}}) }}  
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form_label(form.peticiones)}}  
+                                                {{ form_widget(form.peticiones) }}  
+                                        </div>
+                                        
+                                        
+                                        {{ form_rest(form) }}  
+                                        <div class="row">
+
+
+                                            {#<div class="col-md-8 ">
+                                                
+                                            </div>
+                                            <div class="col-md-8">
+                                                {{ form_label(form.dtmmessage)}}  
+                                                {{ form_widget(form.dtmmessage, {'horizontal': false, 'class': 'horizontal_input_wrapper_class'}) }}  
+                                            </div>
+                                            <div class="col-md-8">
+                                                {{ form_label(form.ticket)}}  
+                                                {{ form_widget(form.ticket, {'horizontal': false, 'class': 'horizontal_input_wrapper_class'}) }}  
+                                            </div>
+                                            <div class="col-md-8">
+                                                {{ form_label(form.whatsappGroup)}}  
+                                                {{ form_widget(form.whatsappGroup, {'horizontal': false, 'class': 'horizontal_input_wrapper_class'}) }}  
+                                            </div>#}
+
+                                            <div class="col-md-8">
+                                                {% block formactions %}
+                                                    {% block sonata_form_actions %}
+                                                        <button type="submit" class="btn btn-success" name="btn_update"><i class="fa fa-save"></i> {{ 'Crear'|trans({}, 'WhatsappBundle') }}</button>
+                                                    {% endblock %}
+                                                {% endblock formactions %}
+                                            </div>
+
+                                            
+
+                                            <div class="col-md-5 hidden">
+                                                <div class="form-group">
+                                                    {#{{ form_label(form.trabajador) }}  #}
+                                                    <div class="">
+
+
+
+                                                    </div>  
+                                                </div> 
+                                            </div> 
+                                        </div>
+
+
+                                    </div>          
+                                </div>          
+                            </div>          
+                        </div>          
+                    </div>          
+            </div>    
+
+        </form>
+        {#<div class="row">
+            <div class="col-xs-12 col-md-12">
+                <div class="box box-primary">
+                    <div class="box-body table-responsive no-padding">
+                        <table class="table table-bordered table-striped sonata-ba-list">
+
+                            <thead>
+                                <tr class="sonata-ba-list-field-header">
+
+
+                                     <th class="sonata-ba-list-field-header-">
+                                        {{ 'Entidad'|trans({}, 'PizarraBundle') }}
+                                   </th>
+                                    <th class="sonata-ba-list-field-header-">
+                                        {{ 'Departamento'|trans({}, 'PizarraBundle') }}
+                                    </th>
+                                    <th class="sonata-ba-list-field-header-">
+                                        {{ 'Consumo'|trans({}, 'PizarraBundle') }}
+                                    </th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for departamento in pagination %}
+                                    <tr class="">
+                                     <td class="">
+                                        {{departamento["entity"]}}
+                                    </td>
+                                        <td class="">
+                                            {{departamento["departament"]}}
+                                        </td>
+                                        <td class="">
+                                            {{departamento["consumo"] |round(1, 'floor') }}
+                                        </td>
+                                    </tr>
+                                {%endfor%}
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <div class="box-footer">
+                        <div class="form-inline clearfix">
+                            <div class="pull-right">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-share-square-o" aria-hidden="true"></i>
+                                        {{ "label_export_download"|trans({}, "SonataAdminBundle") }}
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="{{ path('consumo_por_departamentos', {"export": "xls"}+app.request.query.all) }}">
+                                                <i class="fa fa-arrow-circle-o-down" aria-hidden="true"></i>
+                                                XLS
+                                            </a>
+                                            <a href="{{ path('consumo_por_departamentos', {"export": "pdf"}+app.request.query.all) }}">
+                                                <i class="fa fa-arrow-circle-o-down" aria-hidden="true"></i>
+                                                PDF
+                                            </a>
+                                        <li>
+                                    </ul>
+                                </div>
+                                &nbsp;-&nbsp;
+
+                            {{pagination.totalItemCount}} resultados    &nbsp;
+
+                            <label for="s5ae5f6ac112c5_per_page" class="control-label"></label>
+
+                            </div>
+                                <br><br>
+                            <div class="text-center">
+                                {{ knp_pagination_render(pagination) }}
+                            </div>
+                                
+
+                            </div>
+                        </div>
+
+                        <hr>
+                    </div>
+                </div>
+            </div>#}
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block inlinejavascript %}
+
+{% endblock %}

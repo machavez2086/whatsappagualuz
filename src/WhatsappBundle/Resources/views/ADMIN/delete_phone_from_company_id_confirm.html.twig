@@ -1,0 +1,143 @@
+{% extends 'WhatsappBundle::standard_layout.html.twig' %}
+{% block sonata_breadcrumb %}
+    <div class="hidden-xs">
+        <ol class="nav navbar-top-links breadcrumb">
+            <li>
+                <a href="{{ path('sonata_admin_dashboard', {action:"list"}) }}">
+                    <i class="fa fa-home"></i>
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('my_companies', {action:"list"}) }}">
+                    Mis empresas
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('my_companies', {action:"manage", "id":configuration}) }}">
+                    Configuraciones generales
+                </a>
+            </li>
+
+            <li class="active"><span>Eliminar teléfono</span></li>
+        </ol>
+    </div>
+{% endblock sonata_breadcrumb %}
+{% block sonata_admin_content %}
+    
+    {% include '@SonataCore/FlashMessage/render.html.twig' %}
+    <style type="text/css">
+        {##container {
+                min-width: 310px;
+                max-width: 800px;
+                height: 400px;
+                margin: 0 auto
+        }#}
+    </style>
+    <div class="sonata-ba-form">
+        
+
+        
+        <form
+            {% if admin_pool.getOption('form_type') == 'horizontal' %}class="form-horizontal"{% endif %}
+            role="form"
+            action="{{ path('delete_phone_from_company_id', {configuration:configuration,alertPhone:alertPhone}) }}" {{ form_enctype(form) }}
+            method="POST"
+            {% if not admin_pool.getOption('html5_validate') %}novalidate="novalidate"{% endif %}
+            >
+            {% if form.vars.errors|length > 0 %}
+                <div class="sonata-ba-form-error">
+                    {{ form_errors(form) }}
+                </div>
+            {% endif %}
+            {% for flashMessage in app.session.flashbag.get('error') %} 
+                <div class="alert alert-warning">
+                    {{ flashMessage | trans({}, 'RegistroentradaBundle')}} 
+                </div>
+            {% endfor %}
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box box-danger">
+                                <div class="box-header">
+                                    <h4 class="box-title"> {{ 'Confirmar borrado'|trans({}, 'WhatsappBundle') }} </h4>
+                                </div>          
+
+                                <div class="box-body">
+                                    <div class="sonata-ba-collapsed-fields">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                ¿Está seguro de que quiere borrar el elemento seleccionado? 
+                                            </div>
+                                        </div>
+                                        <br>
+                                        {{ form_rest(form) }}  
+                                        <div class="row">
+
+
+                                            <div class="col-md-8">
+                                                {% block formactions %}
+                                                    {% block sonata_form_actions %}
+                                                        <button type="submit" class="btn btn-danger" name="btn_update"><i class="fa fa-trash" aria-hidden="true"></i> Sí, borrar</button> o 
+                                                        <a class="btn btn-success" href="{{ path('my_companies', {action:"manage", id:configuration})}}"><i class="fa fa-pencil" aria-hidden="true"></i> Cancelar</a>
+                                                    {% endblock %}
+                                                {% endblock formactions %}
+                                            </div>
+
+                                            
+
+                                            <div class="col-md-5 hidden">
+                                                <div class="form-group">
+                                                    {#{{ form_label(form.trabajador) }}  #}
+                                                    <div class="">
+
+
+
+                                                    </div>  
+                                                </div> 
+                                            </div> 
+                                        </div>
+
+
+                                    </div>          
+                                </div>          
+                            </div>          
+                        </div>          
+                    </div>          
+            </div>    
+            </div>    
+
+        </form>
+        </div>
+
+    </div>
+{%if is_granted('ROLE_SUPER_ADMIN')%}
+        <script>
+            jQuery(document).ready(function ($) {
+                    var a = $("html body.sonata-bc.skin-black.fixed div.wrapper aside.main-sidebar div.slimScrollDiv section.sidebar ul.sidebar-menu li.treeview:nth-child(4)");
+                    console.log(a);
+                    a.toggleClass("active")
+                    $("html body.sonata-bc.skin-black.fixed div.wrapper aside.main-sidebar div.slimScrollDiv section.sidebar ul.sidebar-menu li.treeview.active ul.active.treeview-menu.menu_level_1 li.first").toggleClass("active");
+                    a.trigger("click");
+                });
+
+        </script>
+        {%else%}
+            <script>
+                jQuery(document).ready(function ($) {
+
+                        var a = $("html body.sonata-bc.skin-black.fixed div.wrapper aside.main-sidebar div.slimScrollDiv section.sidebar ul.sidebar-menu li.treeview:nth-child(2)");
+                        console.log(a);
+                        a.toggleClass("active")
+                        $("html body.sonata-bc.skin-black.fixed div.wrapper aside.main-sidebar div.slimScrollDiv section.sidebar ul.sidebar-menu li.treeview.active ul.active.treeview-menu.menu_level_1 li.first").toggleClass("active");
+                        a.trigger("click");
+                    });
+
+        </script>
+    {%endif%}
+{% endblock %}
+
+{% block inlinejavascript %}
+
+{% endblock %}

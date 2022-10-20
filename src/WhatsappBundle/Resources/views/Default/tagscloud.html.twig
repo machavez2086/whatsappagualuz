@@ -1,0 +1,513 @@
+{% extends 'WhatsappBundle::report_layout.html.twig' %}
+ {% block stylesheets_inline %}
+     {{ parent() }}
+     <link href="{{ asset('bundles/whatsapp/css/sb-admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('bundles/whatsapp/css/bootstrap-datetimepicker.css') }}" rel="stylesheet">
+     <link href="{{ asset('bundles/whatsapp/css/TagsCloud/index.css') }}" rel="stylesheet">
+     <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel='stylesheet' type='text/css'>
+ {% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        {#        {% include '@SonataCore/FlashMessage/render.html.twig' %}#}
+
+        <form id="rango_fechas" role="form" action="{{ path('terms') }}" {{ form_enctype(form2) }} method="POST">
+            {% if form2.vars.errors|length > 0 %}
+                <div class="sonata-ba-form-error">
+                    {{ form_errors(form2) }}
+                </div>
+            {% endif %}
+            {% for flashMessage in app.session.flashbag.get('error') %}
+                <div class="alert alert-warning">
+                    {{ flashMessage | trans({}, 'WhatsappBundle') }}
+                </div>
+            {% endfor %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                            <div class="box box-primary">
+                                <div class="box-body">
+                                    <div class="sonata-ba-collapsed-fields">
+                                        <div class="row">
+                                            <div class="form-group col-6">
+                                                {{ form_label(form2.fechainicial) }}
+                                                {{ form_widget(form2.fechainicial, {attr: {'class': 'form-control '}}) }}
+                                            </div>
+                                            <div class="form-group col-6">
+                                                {{ form_label(form2.fechafinal) }}
+                                                {{ form_widget(form2.fechafinal, {attr: {'class': 'form-control '}}) }}
+                                            </div>
+                                        </div>
+                                        {{ form_rest(form2) }}
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    {% block formactions %}
+                        {% block sonata_form_actions %}
+                            <button type="submit" class="btn btn-primary pull-right" name="btn_update">
+                                <i class="fa fa-newspaper-o"></i> {{ 'Hacer reporte'|trans({}, 'WhatsappBundle') }}
+                            </button>
+                        {% endblock %}
+                    {% endblock formactions %}
+                </div>
+            </div>
+        </form>
+
+        {#Tables#}
+        <div class="row">
+            <div class="col-lg-6 col-sm-6 col-mb-6 tablas_rango_fechas">
+                <h3 class="card-title titulo_tablas_rango_fechas"><i class="fa fa-file-text-o"></i>Términos generales
+                    <strong>{{configuration.company}}</strong></h3>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex">
+                        </div>
+                        <div class="table-responsive m-t-20 text-center">
+{#                            <div id="wordCloud"></div>#}
+                            {#<div id="myCanvasContainer">
+                                  <canvas width="500" height="400" id="myCanvas">
+                                    <p>Anything in here will be replaced on browsers that support the canvas element</p>
+                                  </canvas>
+                                </div>
+                                <div id="tags">
+                                  <ul>
+                                    {% for resultGroup in arrayResultConfigurationResult %}
+                                        <li><a href="#fake2" data-word="{{resultGroup.word}}" data-weight="{{resultGroup.weight}}" onclick="return tpu(this)">{{resultGroup.word}}</a></li>
+                                    {%endfor%}
+
+                                  </ul>
+                                </div>
+                                  <div id="sout"></div>#}
+                            <div id="tagcloud2">
+                                {% for term in arrayResultConfigurationResult %}
+                                    <a href="#" rel='{{term.weight}}' class="termino">
+                                        <span>{{term.word}}
+                                            <sup>{{term.weight}}</sup>
+                                        </span>
+                                    </a>
+                                {%endfor%}
+                            </div>
+                                  
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6 col-mb-6 tablas_rango_fechas">
+                <h3 class="card-title titulo_tablas_rango_fechas"><i class="fa fa-file-text-o"></i>Términos generales
+                    <strong>Grupos</strong></h3>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex">
+                        </div>
+                        <div class="table-responsive m-t-20 tabla-grupos">
+                            <table class="table vm no-th-brd no-wrap pro-of-month">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Grupo</th>
+                                    <th scope="col">Términos</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for resultGroup in arrayResultGroupResult %}
+                                <tr>
+                                    
+                                        <td class="columna_dia">{{resultGroup.name}}</td>
+                                        <td class="columna_dia">
+                                            <div id="tagcloud2">
+                                                {% for term in resultGroup.array %}
+                                                    <a href="#" rel='{{term.weight}}' class="termino">
+                                                        <span>{{term.word}}
+                                                            <sup>{{term.weight}}</sup>
+                                                        </span>
+                                                    </a>
+                                                {%endfor%}
+                                            </div>
+                                        </td>
+                                    
+                                    {#<td class="columna_dia">Bla bla bla</td>
+                                    <td class="columna_dia">
+                                        <div id="tagcloud2">
+                                            <a href="#" rel='4' class="termino">
+                                                <span>C++
+                                                    <sup>4</sup>
+                                                </span>
+                                            </a>
+                                            <a href="#" rel='2' class="termino">
+                                                <span>Java
+                                                    <sup>2</sup>
+                                                </span>
+                                            </a>
+                                            <a href="#" rel='5' class="termino">
+                                                <span>Python
+                                                    <sup>5</sup>
+                                                </span>
+                                            </a>
+                                        </div>
+
+
+                                    </td>#}
+                                </tr>
+                                {%endfor%}
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+
+        {#<div class="row">
+            <h3 class="card-title titulo_tablas_rango_fechas"><i class="fa fa-file-text-o"></i>Términos generales por
+                <strong>Recursos</strong></h3>
+        </div>#}
+        {#<div class="row">
+            <div class="col-lg-12 col-sm-12 col-mb-12 tablas_rango_fechas">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex">
+                        </div>
+                        <div class="table-responsive m-t-20">
+                            <table class="table vm no-th-brd no-wrap pro-of-month">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Recurso</th>
+                                    <th scope="col">Términos</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <tr>
+                                    {% for resultGroup in arrayResultGroupResult %}
+                                        <td class="columna_dia">{{resultGroup.name}}</td>
+                                        <td class="columna_dia">
+                                            <div id="tagcloud">
+                                                {% for term in resultGroup.array %}
+                                                    <a href="#" rel='4' class="termino">
+                                                        <span>{{term.word}}
+                                                            <sup>{{term.weight}}</sup>
+                                                        </span>
+                                                    </a>
+                                                {%endfor%}
+                                            </div>
+                                        </td>
+                                    {%endfor%}
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>#}
+
+
+    </div>
+{% endblock %}
+
+
+    {% block inlinejavascript %}
+        
+        <script src="{{ asset('bundles/whatsapp/js/bootstrap-datetimepicker.js') }}"></script>
+    <script src="{{ asset('bundles/whatsapp/js/bootstrap-datetimepicker.fr.js') }}"></script>
+{#    <script src="{{ asset('bundles/whatsapp/js/jquery.tagcanvas.min.js') }}"></script>#}
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#fecharangetype_fechainicial").datetimepicker({
+                format: "yyyy-mm-dd hh:ii:ss",
+                autoclose: true,
+                todayBtn: true,
+    {#            startDate: "{{inicial | date("Y-m-d H:i")}}",#}
+                minuteStep: 10
+            });
+        });
+        
+        function tpu(s) {
+{#            alert(s.getAttribute("data-word"));#}
+            document.getElementById('sout').innerHTML = s.getAttribute("data-word")+" ("+s.getAttribute("data-weight")+")";
+            return false;
+           }
+    </script>
+{#
+    <script type="text/javascript">
+        $("#fecharangetype_fechainicial").datetimepicker({
+            format: "yyyy-mm-dd HH:mm:ss",
+            autoclose: true,
+            todayBtn: true,
+            startDate: "{{inicial | date("yyyy-mm-dd HH:mm:ss")}}",
+            minuteStep: 10
+        });
+    </script>#}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#fecharangetype_fechafinal").datetimepicker({
+                format: "yyyy-mm-dd hh:ii:ss",
+                autoclose: true,
+                todayBtn: true,
+    {#            startDate: "{{finalDay | date("Y-m-d H:i")}}",#}
+                minuteStep: 10
+            });
+        });
+    </script>
+{#        <script src="{{ asset('bundles/whatsapp/js/TagsCloud/index.js') }}"></script>#}
+        <script src="{{ asset('bundles/whatsapp/js/TagsCloud/jQWCloudv3.1.js') }}"></script>
+        <script src="{{ asset('bundles/whatsapp/js/TagsCloud/tagcloud.js') }}"></script>
+        <script type="text/javascript">
+
+            const myData = [
+                {word: 'Prashant', weight: 40},
+                {word: 'Sandeep', weight: 39},
+                {word: 'Ajinkya', weight: 11, color: 'green'},
+                {word: 'Rishi', weight: 27},
+                {word: 'Kuldeep', weight: 36},
+                {word: 'Vivek', weight: 39},
+                {word: 'Saheer', weight: 12, color: 'green'},
+                {word: 'Lohit', weight: 27},
+                {word: 'Anirudh', weight: 36},
+                {word: 'Raj', weight: 22},
+                {word: 'Mohan', weight: 40},
+                {word: 'Yadav', weight: 39},
+                {word: 'India', weight: 11, color: 'green'},
+                {word: 'USA', weight: 27},
+                {word: 'Sreekar', weight: 36},
+                {word: 'Ram', weight: 39},
+                {word: 'Deepali', weight: 12, color: 'green'},
+                {word: 'Kunal', weight: 27},
+                {word: 'Rishi', weight: 80},
+                {word: 'Chintan', weight: 22},
+                {word: 'Prashant', weight: 40},
+                {word: 'Sandeep', weight: 39},
+                {word: 'Ajinkya', weight: 11, color: 'green'},
+                {word: 'Rishi', weight: 27},
+                {word: 'Kuldeep', weight: 36},
+                {word: 'Vivek', weight: 39},
+                {word: 'Saheer', weight: 12, color: 'green'},
+                {word: 'Lohit', weight: 27},
+                {word: 'Anirudh', weight: 36},
+                {word: 'Raj', weight: 22},
+                {word: 'Mohan', weight: 40},
+                {word: 'Yadav', weight: 39},
+                {word: 'India', weight: 11, color: 'green'},
+                {word: 'USA', weight: 27},
+                {word: 'Sreekar', weight: 36},
+                {word: 'Ram', weight: 39},
+                {word: 'Deepali', weight: 12, color: 'green'},
+                {word: 'Kunal', weight: 27},
+                {word: 'Rishi', weight: 80},
+                {word: 'Chintan', weight: 22},
+            ];
+
+            const myData2 = [
+                { word: "pendiente", weight: "9" },
+                { word: "correo", weight: "8" },
+                { word: "sitio", weight: "8" },
+                { word: "detalle", weight: "8" },
+                { word: "cambio", weight: "7" },
+                { word: "comentarios", weight: "7" },
+                { word: "banners", weight: "6" },
+                { word: "caso", weight: "6" },
+                { word: "San Pedro", weight: "5" },
+                { word: "manera", weight: "5" },
+                { word: "sección de Opinión", weight: "5" },
+                { word: "publicidad", weight: "5" },
+                { word: "petición", weight: "5" },
+                { word: "sección", weight: "4" },
+                { word: "portal", weight: "4" },
+                { word: "tiempo", weight: "4" },
+                { word: "acuerdo", weight: "4" },
+                { word: "nota", weight: "4" },
+                { word: "parte", weight: "4" },
+                { word: "pruebas", weight: "4" },
+                { word: "espera", weight: "4" },
+                { word: "contenido", weight: "4" },
+                { word: "acceso", weight: "4" },
+                { word: "error", weight: "4" },
+                { word: "movil", weight: "3" },
+                { word: "link", weight: "3" },
+                { word: "medidas", weight: "3" },
+                { word: "tema", weight: "16" },
+                { word: "minutos", weight: "11" },
+                { word: "home", weight: "11" }
+            ];
+            console.log(myData);
+            const myData1 = {{ arrayResultConfigurationResult |json_encode(constant('JSON_OBJECT_AS_ARRAY'))|raw }};
+            console.log(myData1);
+            {#$("#wordCloud").jQWCloud({
+                words: myData1,
+                // title
+                title: 'Grupos',
+
+                // min/max font size
+                minFont: 32,
+                maxFont: 90
+            });#}
+                
+                $(document).ready(function()
+{
+                    $("#wordCloud").jQWCloud({
+{#                            words: {{ arrayResultConfigurationResult |json_encode|raw }},#}
+                            words: myData2,
+                            //cloud_color: 'yellow',		
+                            minFont: 5,
+                            maxFont: 15,
+                            //fontOffset: 5,
+                            //cloud_font_family: 'Owned',
+                            //verticalEnabled: false,
+                            padding_left: 1,
+                            //showSpaceDIV: true,
+                            //spaceDIVColor: 'white',
+                            word_common_classes: 'WordClass',		
+                            word_mouseEnter :function(){
+                                    $(this).css("text-decoration","underline");
+                            },
+                            word_mouseOver :function(){
+                                var id = $(this).attr("id");
+                                var weigth_array = id.split("_");
+                                var weigth = weigth_array[2];
+                                console.log($(this));
+                                console.log(weigth_array[2]);
+{#                                alert("You have selected:" +$(this).text());#}
+{#                                    $(this).css("text-decoration","none");	#}
+                            },
+                            word_mouseOut :function(){
+                                    $(this).css("text-decoration","none");	
+                            },
+                            word_click: function(){ 			
+                                var id = $(this).attr("id");
+                                var weigth_array = id.split("_");
+                                var weigth = weigth_array[2];
+{#                                console.log($(this));#}
+                                alert("Cantidad de ocurrencias:" +weigth);
+                            },		              
+                            beforeCloudRender: function(){
+                                   date1=new Date();
+                            },
+                            afterCloudRender: function(){
+                                            var date2=new Date();
+                                            console.log("Cloud Completed in "+(date2.getTime()-date1.getTime()) +" milliseconds");
+                                    }
+                    });
+
+            });
+
+            $(function () {
+                $('#tagcloud a').tagcloud({
+                    size: {
+                        start: 20,
+                        end: 30,
+                        unit: "px"
+                    },
+                });
+            });
+
+            $(function () {
+                $('#tagcloud2 a').tagcloud({
+                    size: {
+                        start: 20,
+                        end: 30,
+                        unit: "px"
+                    },
+                });
+            });
+
+
+        </script>
+{#
+<script type="text/javascript">
+      window.onload = function() {
+        try {
+          TagCanvas.Start('myCanvas','tags',{
+            textColour: '#fff',
+            interval: 25,
+            outlineThickness: 5,
+            reverse: true,
+            depth: 0.8,
+            maxSpeed: 0.04,
+            depth: 0.92,
+            pulsateTo: 0.2,
+            pulsateTime:0.75,
+            initial: [0.1,-0.1],
+            decel: 0.98,
+            reverse: true,
+            shadowBlur: 3,
+            clickToFront: 600,
+            textHeight: 20,
+            weightFrom: 'data-weight',
+            hideTags: true,
+            fadeIn: 800,
+          });
+        } catch(e) {
+          // something went wrong, hide the canvas container
+          document.getElementById('myCanvasContainer').style.display = 'none';
+        }
+      };
+    </script>#}
+    
+   {# <script type="text/javascript">
+window.onload = function() {
+	TagCanvas.interval = 20;
+	TagCanvas.textFont = 'Impact,Arial Black,sans-serif';
+	TagCanvas.textColour = '#00f';
+	TagCanvas.textHeight = 25;
+	TagCanvas.outlineColour = '#f96';
+	TagCanvas.outlineThickness = 5;
+	TagCanvas.maxSpeed = 0.04;
+	TagCanvas.minBrightness = 0.1;
+	TagCanvas.depth = 0.92;
+	TagCanvas.pulsateTo = 0.2;
+	TagCanvas.pulsateTime = 0.75;
+	TagCanvas.initial = [0.1,-0.1];
+	TagCanvas.decel = 0.98;
+	TagCanvas.reverse = true;
+	TagCanvas.hideTags = false;
+	TagCanvas.shadow = '#ccf';
+	TagCanvas.shadowBlur = 3;
+	TagCanvas.weight = true;
+	TagCanvas.weightFrom = 'data-weight';
+    TagCanvas.fadeIn = 800;
+	try {
+		TagCanvas.Start('tagcanvas','weightTags');
+	} catch(e) {
+	}
+	var i, j, g, gc = document.getElementById('myCanvas').getContext('2d');
+	g = gc.createLinearGradient(0, 0, 0, gc.canvas.height);
+	for(i in TagCanvas.weightGradient)
+		g.addColorStop(i, TagCanvas.weightGradient[i]);
+	gc.fillStyle = g;
+	gc.fillRect(0,0,gc.canvas.width,gc.canvas.height);
+  for(i = 0; i < gexamples.length; ++i) {
+    gc = document.getElementById('example' + i).getContext('2d');
+    g = gc.createLinearGradient(0, 0, gc.canvas.width, 0);
+    for(j in gexamples[i])
+      g.addColorStop(j, gexamples[i][j]);
+    gc.fillStyle = g;
+    gc.fillRect(0, 0, gc.canvas.width, gc.canvas.height);
+  }
+};
+var g1 = {
+ 0:   'red',
+ 0.5: 'orange',
+ 1:   'rgba(0,0,0,0.1)'
+}, wOpts = {
+  none: { weight: false },
+  size: null,
+  colour: { weightMode: 'colour' },
+  both: { weightMode: 'both' },
+  bgcolour: { weightMode: 'bgcolour', padding: 2, bgRadius: 5 },
+  bgoutline: { weightMode:'bgoutline', bgOutlineThickness: 3, padding: 2, bgRadius: 5},
+  outline: {weightMode:'outline'}
+}, gexamples = [];
+function TLoad(o) { TagCanvas.Start('tagcanvas','weightTags',wOpts[o]); }
+</script>#}
+
+    {% endblock %}

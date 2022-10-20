@@ -1,0 +1,120 @@
+{% extends 'WhatsappBundle::standard_layout.html.twig' %}
+
+{% block sonata_breadcrumb %}
+    <div class="hidden-xs">
+        <ol class="nav navbar-top-links breadcrumb">
+            <li>
+                <a href="{{ path('sonata_admin_dashboard', {action:"list"}) }}">
+                    <i class="fa fa-home"></i>
+                </a>
+            </li>
+            <li class="active"><span>Mis empresas</span></li>
+        </ol>
+    </div>
+{% endblock sonata_breadcrumb %}
+{%- block actions -%}
+{%if user.aprovedplan or is_granted('ROLE_SUPER_ADMIN')%}
+{#                    <a class="btn btn-success pull-right" href="{{ path('my_companies', {action:"create"})}}">Crear empresa</a>#}
+                    {%endif%}
+        <li><a class="sonata-action-element" href="{{ path('my_companies', {action:"create"}) }}">
+            <i class="fa fa-plus-circle" aria-hidden="true"></i>
+            Agregar empresa</a></li>
+{%- endblock -%}
+{% block sonata_admin_content %}
+
+    {% include '@SonataCore/FlashMessage/render.html.twig' %}
+    <style type="text/css">
+        {##container {
+                min-width: 310px;
+                max-width: 800px;
+                height: 400px;
+                margin: 0 auto
+        }#}
+    </style>
+    <div class="sonata-ba-form">
+
+
+
+
+        <div class="box box-primary">
+            <div class="box-header">
+                <h4 class="box-title"> {{ 'Mis empresas'|trans({}, 'WhatsappBundle') }} </h4>
+            </div>          
+
+            <div class="box-body">
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-bordered table-striped sonata-ba-list">
+
+                        <thead>
+                            <tr class="sonata-ba-list-field-header">
+                                <th class="sonata-ba-list-field-header-">
+                                    {{ 'Nombre de la empresa'|trans({}, 'WhatsappBundle') }}
+                                </th>
+                                {#<th class="sonata-ba-list-field-header-">
+                                    {{ 'Sufijo de grupos'|trans({}, 'WhatsappBundle') }}
+                                </th>#}
+
+                                <th class="sonata-ba-list-field-header-">
+                                    {{ 'Habilitada'|trans({}, 'WhatsappBundle') }}
+                                </th>
+                                <th class="sonata-ba-list-field-header-">
+                                    {{ 'Acciones'|trans({}, 'WhatsappBundle') }}
+                                </th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for configuration in configurations %}
+                                <tr class="">
+                                    <td class="">
+                                        {{configuration.company}}
+                                    </td>
+                                   {# <td class="">
+                                        {{configuration.prefix}}
+                                    </td>#}
+
+                                    <td class="">
+                                        {%if configuration.enabled %}
+                                            Sí
+                                        {%else%}
+                                            No
+                                        {%endif%}
+                                    </td>
+                                    <td class="sonata-ba-list-field sonata-ba-list-field-actions">
+                                        <a title="Configurar" class="btn btn-sm btn-default edit_link" href="{{ path('my_companies', {action:"manage", id:configuration.id})}}">
+                                            <i aria-hidden="true" class="fa fa-pencil"></i>
+                                            Configurar
+                                        </a>
+                                        {%if configuration.owner%} 
+                                        {%if user.id == configuration.owner.id%}
+                                            <a title="Borrar" class="btn btn-sm btn-default delete_link" href="{{ path('delete_company', {configuration:configuration.id})}}">
+                                                <i aria-hidden="true" class="fa fa-times"></i>
+                                                Borrar
+                                            </a>
+                                        {%endif%}
+                                        {%endif%}
+                                    </td>
+
+
+                                </tr>
+                            {%endfor%}
+                        </tbody>
+
+                    </table>
+                </div>
+                <div class="box-footer">
+                    {#{%if user.aprovedplan or is_granted('ROLE_SUPER_ADMIN')%}
+                    <a class="btn btn-success pull-right" href="{{ path('my_companies', {action:"create"})}}">Crear empresa</a>
+                    {%endif%}#}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block inlinejavascript %}
+
+{% endblock %}

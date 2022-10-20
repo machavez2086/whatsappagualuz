@@ -1,0 +1,47 @@
+services:
+    whatsapp.sacspro.phonestatus:
+        class: WhatsappBundle\Services\VerifyPhoneStatusService
+        arguments: [ @doctrine.orm.entity_manager ]
+    sonata.block.service.rss:
+        class: WhatsappBundle\Block\Service\RssBlockService
+        arguments:
+            - ~
+            - '@templating'
+            - '@doctrine.orm.entity_manager'
+            - '@security.token_storage'
+        tags:
+            - { name: sonata.block }
+            
+    whatsapp.sacspro.whatsappapi:
+        class: WhatsappBundle\Services\WhatsappApiService
+        arguments: [ @doctrine.orm.entity_manager ]
+    app.websocket.topic.acme:
+        class: WhatsappBundle\Services\MessageTopicChat
+        arguments: [ @doctrine.orm.entity_manager ]
+        tags:
+            - { name: gos_web_socket.topic }
+            
+    app.websocket.topic.global:
+        class: WhatsappBundle\Services\MessageGlobalNewChat
+        tags:
+            - { name: gos_web_socket.topic }
+            
+    app.twig_extension:
+        class: WhatsappBundle\Twig\AppExtension
+        public: false
+        tags:
+            - { name: twig.extension }
+            
+    sonata.user.profile.form.type1:
+        class: WhatsappBundle\Form\ProfileType
+        parent: fos_user.registration.form.type
+        tags:
+            - { name: form.type, alias: "sonata_user_profile1" }   
+#    whatsapp.bundle_user.user_creation:
+#        class: WhatsappBundle\EventListener\UserCreationListener
+#        arguments: [ @doctrine.orm.entity_manager ]
+#        tags:
+#            - { name: kernel.event_subscriber,  alias: whatsapp_user_creation_listener}
+#    whatsapp.example:
+#        class: WhatsappBundle\Example
+#        arguments: ["@service_id", "plain_value", %parameter%]

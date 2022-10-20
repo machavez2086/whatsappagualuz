@@ -1,0 +1,27 @@
+{% block subject %}
+
+Hola {{ user.username }}
+
+{% endblock %}
+{% block body_text %}{% endblock %}
+{% block body_html %}
+            <table style="width: 90%; margin: 0 auto; text-align: center;" >
+                {#<tr>
+                    <td style="">
+                        <img src="http://reclamos.cbse.com.ar/Reclamos-cbse.png" style=" width: 100%;height: auto;">
+                    </td>
+                </tr>#}
+                <tr>
+                    <td>
+                        <div class="col-lg-12 datos">
+                            <p style="padding-top: 10px;font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;color:#333333">Proceso de confirmación de registro para el usuario <b> {{ user.username }}</b>.</p>
+                <p style="padding-top: 10px;color:#333333;font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;text-align: left;">A partir de este paso usted podrá comenzar a utilizar nuestros servicios, lo que le permitirá configurar los datos del personal de sus empresas, el registro automático de peticiones de soporte mediante conversaciones en grupos de Whatsapp, y la vizualización de alertas y reportes estadísticos asociados a la atención que le dan sus trabajadores a sus clientes.</p>
+                <p style="padding-top: 10px;color:#333333;font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;text-align: left;">Atentamente, equipo de trabajo de Reclamos CBSE.</p> 
+                <a style="background-color: #25d366;color: white;padding-bottom: 0.375rem;margin-bottom: 14px;display: inline-block;font-weight: 400;text-align: center;white-space: nowrap;vertical-align: middle;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;border: 1px solid transparent;padding: .375rem .75rem;    padding-bottom: 0.375rem;font-size: 1rem;line-height: 1.5;border-radius: .25rem;transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;text-decoration: none;" href="{{ confirmationUrl }}"><STRONG>CONFIRMAR</STRONG></a>
+            </div>
+                    </td>
+                </tr>
+                
+            </table>
+
+{% endblock %}

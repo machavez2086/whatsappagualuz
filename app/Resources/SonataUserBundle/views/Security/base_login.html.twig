@@ -1,0 +1,99 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{% extends 'WhatsappBundle:Default:home.html.twig' %}
+
+{% block stylesheets_inline %}
+    <link href="{{ asset('bundles/whatsapp/css/now-ui-kit.css') }}" rel="stylesheet">
+{% endblock %}
+
+
+{% block contenido_especifico %}
+    
+    <div class="page-header" filter-color="orange">
+        <div class="page-header-image" style="background-image: url({{ asset('bundles/whatsapp/img/img-home/img/whatsapp-2.jpg') }});"></div>
+        <div class="container">
+            <div class="col-md-4 content-center">
+                <div class="card card-login card-plain">
+                    
+                    <form action="{{ path("fos_user_security_check") }}" method="post" role="form"
+                          class="form-horizontal">
+                        
+                        <div class="header header-primary text-center">
+                            <div class="logo-container">
+                               
+                            </div>
+                        </div>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
+
+                        <div class="content">
+                             <h4 class="box-title"> Autenticación </h4>
+                            {% if error %}
+                                
+                            <div>{{ error|trans({}, 'WhatsappBundle') }}</div>
+                        {% endif %}
+                            <div class="input-group form-group-no-border input-lg">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-user text-white"></i>
+                                </span>
+                                <input type="text" class="form-control" id="username" placeholder="Usuario o correo electrónico..."
+                                       name="_username" value="{{ last_username }}"
+                                       required="required"/>
+                            </div>
+
+                            <div class="input-group form-group-no-border input-lg">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-key text-white"></i>
+                                </span>
+                                <input type="password" class="form-control" id="password" placeholder="Contraseña..."
+                                       name="_password" required="required"/>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-4 col-sm-8">
+                                    <div class="remember control-group">
+                                        <input type="checkbox" class="form-check-input" id="remember_me" name="_remember_me">
+                                        <label class="form-check-label"  for="exampleCheck1">Recordar</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group control-group">
+                                <div class="controls col-sm-offset-4 col-sm-8">
+                                    <a class="olvidaste_password" href="{{ path('fos_user_resetting_request') }}">{{ 'forgotten_password'|trans({}, 'SonataUserBundle') }}</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="footer text-center">
+                            <div class="form-group">
+                                <div class="footer text-center">
+                                    <button type="submit" id="_submit" name="_submit"
+                                            value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}" class="btn btn-primary btn-round btn-lg btn-block">Entrar</button>
+                                </div>
+                                <div class="pull-left">
+                                    <a style="float: left;" class="nav-link" href="{{ path('home') }}"><i class="fa fa-arrow-circle-o-left"></i></a>
+                                </div>
+                                {#<div class="pull-right">
+                                    <h6>
+                                        <a href="{{ path('fos_user_registration_register') }}" class="link">Registrarse</a>
+                                    </h6>
+                                </div>#}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block footer%}
+{% endblock %}
+

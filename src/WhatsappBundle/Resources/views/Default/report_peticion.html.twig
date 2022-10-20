@@ -1,0 +1,346 @@
+{% extends 'WhatsappBundle::report_layout.html.twig' %}
+
+{#{% block config %}
+    <p class=" control_scroll_automatico pull-right"><a href="#" id="ticker-previous"><i class="fa fa-backward"></i></a><a href="#" id="ticker-next"><i class="fa fa-forward"></i></a><a id="stop" href="#"><i class="fa fa-stop"></i></a><a id="start" class="boton_automatico_dashboard_activo" href="#"><i class="fa fa-play"></i></a></p>
+
+{% endblock %}#}
+
+{% block child_title %}Resumen{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+            {#Graficos#}
+
+            <div class="row graficos">
+                    <div class="col-lg-12 graficos">
+                        <h3>Peticiones por clientes</h3>
+                        <div class="row">
+                            <!-- Example Bar Chart Card-->
+                            <div class="graficas card col-lg-4 col-sm-12 col-mb-12 ml-auto mr-auto">
+                                <div class="card-header">
+                                    <h6 class="text-muted m-t-10 m-b-0">En el día</h6>
+                                </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-sm-12 my-auto">
+                                            <div id="container3" style="height: 400px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="graficas card col-lg-4 col-sm-12 col-mb-12 ml-auto mr-auto">
+                                <div class="card-header">
+                                    <h6 class="text-muted m-t-10 m-b-0">En la semana</h6>
+                                </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-sm-12 my-auto">
+                                            <div id="container2" style="height: 400px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="graficas card col-lg-4 col-sm-12 col-mb-12 ml-auto mr-auto">
+                                <div class="card-header">
+                                    <h6 class="text-muted m-t-10 m-b-0">En el último mes</h6>
+                                </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-sm-12 my-auto">
+                                            <div id="container" style="height: 400px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div></li>
+            
+            <div class="row tablas">
+                    {#Tables#}
+                    <div class="col-lg-6 col-sm-12 mb-12 tablas">
+                        <h3 class="card-title">Estadísticas por cliente diario</h3>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                </div>
+                                <div class="table-responsive m-t-20">
+                                    <table class="table vm no-th-brd no-wrap pro-of-month">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Cliente</th>
+                                                <th scope="col">Tiempo promedio de respuesta <i data-toggle="tooltip" data-placement="top" title="Que es el promedio de respuesta. Preguntele a Wili" class="fa fa-question"></i></th>
+                                                <th scope="col">Tiempo promedio de desarrollo <i data-toggle="tooltip" data-placement="top" title="Que es el promedio de desarrollo.Preguntele a Wili" class="fa fa-question"></i></th>
+                                                <th scope="col">Tiempo promedio de validación <i data-toggle="tooltip" data-placement="top" title="Que es el promedio de validación. Preguntele a Wili"  class="fa fa-question"></i></th>
+                                                <th scope="col">Tiempo promedio de resolución <i data-toggle="tooltip" data-placement="top" title="Que es el promedio de resolución. Preguntele a Wili" class="fa fa-question"></i></th>
+                                                <th scope="col">Número de peticiones</th>
+                                                <th scope="col">Análisis de Sentimiento</th>
+                                                <th scope="col">Evaluación</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for mediaGroup in mediaResolutionTimeByGroup %}
+                                                {%if ticketsCantByGroup[mediaGroup[0]] > 0%}
+                                                    <tr>
+                                                        <td class="graficas">{{mediaGroup[0]}} </td>
+                                                        <td class="graficas">{{mediaGroup[1]}} min</td>
+                                                        <td class="graficas">{{mediaGroup[2]}} min</td>
+                                                        <td class="graficas">{{mediaGroup[3]}} min</td>
+                                                        <td class="graficas">{{mediaGroup[4]}} min</td>
+                                                        <td class="graficas">{{ticketsCantByGroup[mediaGroup[0]]}}</td>
+                                                        <td class="graficas{%if mediaGroup[6] < 50%} sentiment-neg-color {%elseif mediaGroup[6] > 60 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}">{{mediaGroup[6]}} %</td>
+                                                        <td class="graficas{%if mediaGroup[7] > 0%}{%if mediaGroup[7] <= 7%} sentiment-neg-color {%elseif mediaGroup[7] >= 9 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}{%endif%}">{%if mediaGroup[7] > 0%}{{mediaGroup[7]}} ({{mediaGroup[8]}}){%else%}-{%endif%} </td>
+                                                    </tr>
+                                                {%endif%}
+                                            {%endfor%}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12 mb-12 tablas">
+                        <h3 class="card-title">Estadísticas por cliente semanal</h3>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                </div>
+                                <div class="table-responsive m-t-20">
+                                    <table class="table vm no-th-brd no-wrap pro-of-month">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Cliente</th>
+                                                <th scope="col">Tiempo promedio de respuesta <i data-toggle="tooltip" data-placement="top" title="Que es el promedio de respuesta. Preguntele a Wili" class="fa fa-question"></i></th>
+                                                <th scope="col">Tiempo promedio de desarrollo <i data-toggle="tooltip" data-placement="top" title="Que es el promedio de desarrollo.Preguntele a Wili" class="fa fa-question"></i></th>
+                                                <th scope="col">Tiempo promedio de validación <i data-toggle="tooltip" data-placement="top" title="Que es el promedio de validación. Preguntele a Wili"  class="fa fa-question"></i></th>
+                                                <th scope="col">Tiempo promedio de resolución <i data-toggle="tooltip" data-placement="top" title="Que es el promedio de resolución. Preguntele a Wili" class="fa fa-question"></i></th>
+                                                <th scope="col">Número de peticiones</th>
+                                                <th scope="col">Minutos desde último mensaje</th>
+                                                <th scope="col">Análisis de Sentimiento</th>
+                                                <th scope="col">Evaluación</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for mediaGroup in mediaResolutionTimeByGroupThisWeek %}
+
+                                                    <tr>
+                                                        <td class="graficas">{{mediaGroup[0]}} </td>
+                                                        <td class="graficas">{{mediaGroup[1]}} min</td>
+                                                        <td class="graficas">{{mediaGroup[2]}} min</td>
+                                                        <td class="graficas">{{mediaGroup[3]}} min</td>
+                                                        <td class="graficas">{{mediaGroup[4]}} min</td>
+                                                        <td class="graficas">{{ticketsCantByGroupThisWeek[mediaGroup[0]]}}</td>
+                                                        <td class="graficas">{{minutesSinceLastMessageGroups[mediaGroup[0]]}}</td>
+                                                        <td class="graficas{%if mediaGroup[7] < 50%} sentiment-neg-color {%elseif mediaGroup[7] > 60 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}">{{mediaGroup[7]}} % </td>
+                                                        <td class="graficas{%if mediaGroup[8] > 0%}{%if mediaGroup[8] <= 7%} sentiment-neg-color {%elseif mediaGroup[8] >= 9 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}{%endif%}">{%if mediaGroup[8] > 0%}{{mediaGroup[8]}} ({{mediaGroup[9]}}){%else%}-{%endif%}</td>
+                                                    </tr>
+
+                                            {%endfor%}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+    </div>
+
+
+{% endblock %}
+{% block inlinejavascript %}
+    {#<script type="text/javascript">
+        $(function(){
+            $('#vertical-ticker').totemticker({
+                row_height	:	'100px',
+                next		:	'#ticker-next',
+                previous	:	'#ticker-previous',
+                stop		:	'#stop',
+                start		:	'#start',
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $( "#stop" ).click(function() {
+                $('#stop').addClass('boton_automatico_dashboard_stop');
+                $('#start').removeClass('boton_automatico_dashboard_activo');
+            });
+            $( "#start" ).click(function() {
+                $('#stop').removeClass('boton_automatico_dashboard_stop');
+                $('#start').addClass('boton_automatico_dashboard_activo');
+            });
+            $( "#ticker-next" ).click(function() {
+                $('#stop').removeClass('boton_automatico_dashboard_stop');
+                $('#start').addClass('boton_automatico_dashboard_activo');
+            });
+            $( "#ticker-previous" ).click(function() {
+                $('#stop').removeClass('boton_automatico_dashboard_stop');
+                $('#start').addClass('boton_automatico_dashboard_activo');
+            });
+        });
+    </script>#}
+
+
+    <script>
+        $(document).ready(function(){
+        if (window.top == window) {
+        // You're not in a frame, so you reload the site.
+        var refreshId = setInterval(refrescarTablaEstadoSala, 60000);
+        }
+        });
+        function refrescarTablaEstadoSala() {
+
+        $("#rolling").toggle();
+        window.location.reload(); //Reloads after three seconds
+        ("#rolling").css('display', block);
+        }
+    </script>
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+                console.log({{ticketsByGroupsLastWeek|json_encode|raw}} );
+            Highcharts.chart('container', {
+            chart: {
+            type: 'column',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               }
+            }, title: {
+            text: ''
+            },
+                    xAxis: {
+                    categories: [
+                            ''
+                    ],
+                            crosshair: true
+                    },
+                    yAxis: {
+                    min: 0,
+                            title: {
+                            text: 'Peticiones'
+                            },
+                            labels: {
+                            overflow: 'justify'
+                            }
+                    },
+                    tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                            '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                            footerFormat: '</table>',
+                            shared: true,
+                            useHTML: true
+                    },
+                    plotOptions: {
+                    series: {
+                    borderWidth: 0,
+                            dataLabels: {
+                            enabled: true
+                            }
+                    }
+                    },
+                    series:{{ ticketsByGroupsLastMonths|json_encode|raw }}
+            });
+            console.log({{ticketsByGroupsLastMonths|json_encode|raw}} );
+            Highcharts.chart('container2', {
+            chart: {
+            type: 'column',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               }
+            }, title: {
+            text: ''
+            },
+                    xAxis: {
+                    categories: [
+                            ''
+                    ],
+                            crosshair: true
+                    },
+                    yAxis: {
+                    min: 0,
+                            title: {
+                            text: 'Peticiones'
+                            }
+                    },
+                    tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                            '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                            footerFormat: '</table>',
+                            shared: true,
+                            useHTML: true
+                    },
+                    plotOptions: {
+                    series: {
+                    borderWidth: 0,
+                            dataLabels: {
+                            enabled: true
+                            }
+                    }
+                    },
+                    series:{{ ticketsByGroupsLastWeek|json_encode|raw }}
+            });
+             console.log({{ticketsByGroupsToday|json_encode|raw}} );
+            Highcharts.chart('container3', {
+            chart: {
+            type: 'column',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               }
+            }, title: {
+            text: ''
+            },
+                    xAxis: {
+                    categories: [
+                            ''
+                    ],
+                            crosshair: true
+                    },
+                    yAxis: {
+                    min: 0,
+                            title: {
+                            text: 'Peticiones'
+                            }
+                    },
+                    tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                            '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                            footerFormat: '</table>',
+                            shared: true,
+                            useHTML: true
+                    },
+                    plotOptions: {
+                    series: {
+                    borderWidth: 0,
+                            dataLabels: {
+                            enabled: true
+                            }
+                    }
+                    },
+                    series:{{ ticketsByGroupsToday|json_encode|raw }}
+            });
+            });
+    </script>
+
+    
+{% endblock %}

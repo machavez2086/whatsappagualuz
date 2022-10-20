@@ -1,0 +1,46 @@
+<h3>Mensaje de Call Center WhatsApp</h3>
+
+Ha recibido un mensaje asociado a un ticket.<br>
+Mensaje:<br>
+"{{message}}"<br>
+Por favor entrar al sistema para dar respuesta al mismo a través del enlace siguiente:<br>
+<a href="{{ url('show_peticion_panel', {peticion:peticion.id, "active-tab": "messagearea"}) }}">
+    Panel de ticket
+</a><br>
+<hr>
+<div style="text-align: center;">
+    <b >Detalles del ticket</b>
+</div>
+<br>
+<b>Nº de ticket:</b> {{peticion.nroReclamo}}<br>
+<b>Fecha:</b> {{peticion.createdAt | date("d/m/y h:i")}}<br>
+<b>Tipo:</b> {{peticion.peticionType}}<br>
+<b>Apertura de Motivos:</b> {{peticion.elementType}}<br>
+<b>Categoría:</b> {{peticion.category}}<br>
+<b>Motivo del reclamo:</b> {{peticion.motive}}<br>
+<b>Observaciones:</b> {{peticion.observations}}<br>
+<br>
+<div style="text-align: center;">
+    <b >Contacto</b>
+</div><br>
+<b>Correo:</b> {{peticion.whatsappGroup.email}}<br>
+<b>Contacto:</b> {{peticion.whatsappGroup}}<br>
+<b>Actitud del cliente/consumidor:</b> {{peticion.clientActitud}}<br>
+<b>Horario de disponibilidad:</b> {{peticion.timeDisponibility}}<br>
+<br>
+<div style="text-align: center;">
+    <b >Lote</b>
+</div><br>
+<b>VTO:</b> {{peticion.expirationDateStr}}<br>
+<b>No:</b> {{peticion.loteNo}}<br>
+<b>Hora:</b> {{peticion.loteHour}}<br>
+<b>Máquina:</b> {{peticion.loteMaquina}}<br>
+<br>
+<div style="text-align: center;">
+    <b >Producto</b>
+</div><br>
+<b>Producto:</b> {{peticion.product}}<br>
+<b>Cantidad:</b> {{peticion.cant}}<br>
+
+<hr>
+Gracias!

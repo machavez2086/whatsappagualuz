@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" datatype="plaintext" original="">
+        <body>
+            <trans-unit id="Bad-credentials">
+                <source>Bad credentials.</source>
+                <target>Nombre de usuario o Contraseña inválido</target>
+            </trans-unit>
+            <trans-unit id="Dashboard">
+                <source>Dashboard</source>
+                <target>Administration</target>
+            </trans-unit>
+            <trans-unit id="Message List">
+                <source>Message List</source>
+                <target>Message Lista</target>
+            </trans-unit>
+            <trans-unit id="Floor-List">
+                <source>Floor List</source>
+                <target>Floor List</target>
+            </trans-unit>
+            <trans-unit id="Entity-List">
+                <source>Entity List</source>
+                <target>Entity List</target>
+            </trans-unit>
+            <trans-unit id="published">
+                <source>Published</source>
+                <target>Published</target>
+            </trans-unit>
+            <trans-unit id="Departament-List">
+                <source>Departament List</source>
+                <target>Departament List</target>
+            </trans-unit>
+            <trans-unit id="Extensions">
+                <source>Extensions</source>
+                <target>Extensions</target>
+            </trans-unit>
+            <trans-unit id="Extension-List">
+                <source>Extension List</source>
+                <target>Extension List</target>
+            </trans-unit>
+            <trans-unit id="Title">
+                <source>Title</source>
+                <target>Title</target>
+            </trans-unit>
+            <trans-unit id="Subtitle">
+                <source>Subtitle</source>
+                <target>Subtitle</target>
+            </trans-unit>
+            <trans-unit id="Number">
+                <source>Number</source>
+                <target>Number</target>
+            </trans-unit>
+            <trans-unit id="Entity">
+                <source>Entity</source>
+                <target>Entity</target>
+            </trans-unit>
+            <trans-unit id="Line">
+                <source>Line</source>
+                <target>Line</target>
+            </trans-unit>
+            <trans-unit id="Departament">
+                <source>Departament</source>
+                <target>Departament</target>
+            </trans-unit>
+            <trans-unit id="Responsability-List">
+                <source>Responsability List</source>
+                <target>Responsability List</target>
+            </trans-unit>
+            <trans-unit id="Person-List">
+                <source>Person List</source>
+                <target>Workers List</target>
+            </trans-unit>
+            <trans-unit id="Responsability">
+                <source>Responsability</source>
+                <target>Responsability</target>
+            </trans-unit>
+            <trans-unit id="Lastname">
+                <source>Lastname</source>
+                <target>Lastname</target>
+            </trans-unit>
+            <trans-unit id="Tarifatype-List">
+                <source>Tarifatype List</source>
+                <target>Tarifatype List</target>
+            </trans-unit>
+            <trans-unit id="Horariodiurnoinicio">
+                <source>Horariodiurnoinicio</source>
+                <target>Day hour (start)</target>
+            </trans-unit>
+            <trans-unit id="Horariodiurnoinfin">
+                <source>Horariodiurnoinfin</source>
+                <target>Day hour (end)</target>
+            </trans-unit>
+            <trans-unit id="Horarionocturnoinicio">
+                <source>Horarionocturnoinicio</source>
+                <target>Night hour (start)</target>
+            </trans-unit>
+            <trans-unit id="Horarionocturnoinfin">
+                <source>Horarionocturnoinfin</source>
+                <target>Night hour (start)</target>
+            </trans-unit>
+            <trans-unit id="Tarifaprovincia">
+                <source>Tarifaprovincia</source>
+                <target>Tarifa por provincia</target>
+            </trans-unit>
+            <trans-unit id="Tarifaprovincia-List">
+                <source>Tarifaprovincia List</source>
+                <target>Tarifas por provincias</target>
+            </trans-unit>
+            <trans-unit id="Provincecode">
+                <source>Provincecode</source>
+                <target>Código de provincia</target>
+            </trans-unit>
+            <trans-unit id="Tarifadia">
+                <source>Tarifadia</source>
+                <target>Tarifa de día</target>
+            </trans-unit>
+            <trans-unit id="Tarifanoche">
+                <source>Tarifanoche</source>
+                <target>Tarifa de noche</target>
+            </trans-unit>
+            <trans-unit id="Cuotamensual">
+                <source>Cuotamensual</source>
+                <target>Cuota mensual</target>
+            </trans-unit>
+            <trans-unit id="Etecsacuota-List">
+                <source>Etecsacuota List</source>
+                <target>Cuotas</target>
+            </trans-unit>
+             <trans-unit id="Building">
+                <source>Building</source>
+                <target>Building</target>
+            </trans-unit>
+             <trans-unit id="export.nroReclamo">
+                <source>export.nroReclamo</source>
+                <target>Número de reclamo</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

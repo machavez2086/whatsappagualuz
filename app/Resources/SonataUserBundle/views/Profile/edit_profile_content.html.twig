@@ -1,0 +1,84 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+{% form_theme form  'SonataUserBundle::form_fields.html.twig' %}
+<form action="{{ path('sonata_user_profile_edit') }}" method="POST" class="" >
+    <div class="sonata-ba-collapsed-fields">
+        <div class="row">
+            <div class="col-xs-12 col-md-6">
+                <div class="form-group {% if form.firstname.vars.errors|length > 0 %} has-error{% endif %}">
+                    {{ form_label(form.firstname) }} <b>*</b> 
+                    {{ form_widget(form.firstname, {'attr':{'class': ' form-control'}}) }}
+                    {{ form_errors(form.firstname) }}
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-6">
+                <div class="form-group {% if form.lastname.vars.errors|length > 0 %} has-error{% endif %}">
+                    {{ form_label(form.lastname) }} <b>*</b> 
+                    {{ form_widget(form.lastname, {'attr':{'class': ' form-control'}}) }}
+                    {{ form_errors(form.lastname) }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-6">
+                <div class="form-group {% if form.dateOfBirth.vars.errors|length > 0 %} has-error{% endif %}">
+                    {#            {{ form_label(form.dateOfBirth) }}#}
+                    {{ form_row(form.dateOfBirth, {'attr':{'class': ' form-control hidden'}}) }}
+                    {{ form_errors(form.dateOfBirth) }}
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-6">
+                <div class="form-group">
+                    {#            {{ form_label(form.phone) }}#}
+                    {{ form_row(form.phone, {'attr':{'class': ' form-control hidden'}}) }}
+                    {{ form_errors(form.phone) }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-6">
+                <div class="form-group {% if form.dateOfBirth.vars.errors|length > 0 %} has-error{% endif %}">
+                    {{ form_label(form.gender) }}
+                    {{ form_widget(form.gender, {'attr':{'class': ' form-control'}}) }}
+                    {{ form_errors(form.gender) }}
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-6">
+                <div class="form-group {% if form.dateOfBirth.vars.errors|length > 0 %} has-error{% endif %}">
+                    {{ form_label(form.timezone) }}
+                    {{ form_widget(form.timezone, {'attr':{'class': ' timezone'}}) }}
+                    {{ form_errors(form.timezone) }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            {#            {{ form_errors(form.lastname) }}#}
+            {{ form_errors(form.website) }}
+            {{ form_errors(form.biography) }}
+            {{ form_errors(form.locale) }}
+            {{ form_errors(form.timezone) }}
+        </div>
+        {#            {{ form_widget(form.lastname, {'attr':{'class': ' hidden'}}) }}#}
+        {{ form_widget(form.website, {'attr':{'class': ' d-none'}}) }}
+        {{ form_widget(form.biography, {'attr':{'class': ' d-none'}}) }}
+        {{ form_widget(form.locale, {'attr':{'class': ' d-none'}}) }}
+{#        {{ form_row(form.timezone, {'attr':{'class': ' timezone'}}) }}#}
+        {{ form_rest(form) }}
+        <div class="text-center">
+        <div class="form-group">
+            <div class="form-actions">
+                <button type="submit" name="submit"  class="btn btn-primary btn-round btn-lg btn-block col-xs-12 col-md-6">Guardar</button>
+            </div>
+        </div>
+        </div>
+
+    </div>  
+</form>

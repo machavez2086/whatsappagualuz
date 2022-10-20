@@ -1,0 +1,50 @@
+{% extends 'WhatsappBundle::standard_layout.html.twig' %}
+{% block sonata_breadcrumb %}
+
+{% endblock sonata_breadcrumb %}
+{% block sonata_admin_content %}
+
+    {% include '@SonataCore/FlashMessage/render.html.twig' %}
+    <style type="text/css">
+        {##container {
+                min-width: 310px;
+                max-width: 800px;
+                height: 400px;
+                margin: 0 auto
+        }#}
+    </style>
+    holaasas
+<script src="{{ asset('bundles/goswebsocket/js/vendor/autobahn.min.js') }}"></script>
+    <script src="{{ asset('bundles/goswebsocket/js/gos_web_socket_client.js') }}"></script>
+
+    <script>
+        alert("asd");
+        jQuery(document).ready(function ($) {
+            
+            var websocket = WS.connect("ws://127.0.0.1:8080");
+            websocket.on("socket/connect", function (session) {
+                //session is an AutobahnJS WAMP session.
+                session.subscribe("acme/channel/2", function (uri, payload) {
+                    console.log("Received message", payload.msg);
+                    console.log("Param", payload.param);
+                });
+                session.publish("acme/channel/2", "This is a message!");
+
+                console.log("Successfully Connected!");
+            })
+
+            {#websocket.on("socket/disconnect", function (error) {
+                //error provides us with some insight into the disconnection: error.reason and error.code
+
+                console.log("Disconnected for " + error.reason + " with code " + error.code);
+            })#}
+            
+
+        });
+
+    </script>
+{% endblock %}
+
+{% block inlinejavascript %}
+    
+{% endblock %}

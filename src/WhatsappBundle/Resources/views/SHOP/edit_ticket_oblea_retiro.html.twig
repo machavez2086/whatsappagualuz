@@ -1,0 +1,150 @@
+{% extends 'WhatsappBundle::standard_layout.html.twig' %}
+{% block sonata_breadcrumb %}
+    <div class="hidden-xs">
+        <ol class="nav navbar-top-links breadcrumb">
+            <li>
+                <a href="{{ path('sonata_admin_dashboard', {action:"list"}) }}">
+                    <i class="fa fa-home"></i>
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('admin_whatsapp_peticion_list') }}">
+                    Tickets
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('show_peticion_panel', {peticion:peticion.id}) }}">
+                    Panel de ticket
+                </a>
+            </li>
+
+            <li class="active"><span>Editar oblea de retiro</span></li>
+        </ol>
+    </div>
+{% endblock sonata_breadcrumb %}
+{% block sonata_admin_content %}
+    
+    {% include '@SonataCore/FlashMessage/render.html.twig' %}
+    <style type="text/css">
+        {##container {
+                min-width: 310px;
+                max-width: 800px;
+                height: 400px;
+                margin: 0 auto
+        }#}
+    </style>
+    <div class="sonata-ba-form">
+
+
+        <form
+            {% if admin_pool.getOption('form_type') == 'horizontal' %}class="form-horizontal"{% endif %}
+            role="form"
+            action="{{ path('edit_ticket_oblea_retiro', {"obleaRetiro":obleaRetiro.id}) }}" {{ form_enctype(form) }}
+            method="POST"
+            {% if not admin_pool.getOption('html5_validate') %}novalidate="novalidate"{% endif %}
+            >
+            {% if form.vars.errors|length > 0 %}
+                <div class="sonata-ba-form-error">
+                    {{ form_errors(form) }}
+                </div>
+            {% endif %}
+            {% for flashMessage in app.session.flashbag.get('error') %} 
+                <div class="alert alert-warning">
+                    {{ flashMessage | trans({}, 'RegistroentradaBundle')}} 
+                </div>
+            {% endfor %}
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box box-primary">
+                                <div class="box-header">
+                                    <h4 class="box-title"> {{ 'Agregar mensaje a grupo'|trans({}, 'WhatsappBundle') }} </h4>
+                                </div>          
+
+                                <div class="box-body">
+                                    <div class="sonata-ba-collapsed-fields">
+                                        <div class="form-group">
+                                            {{ form_label(form.name)}}  
+                                            {{ form_widget(form.name, {attr: {'class': 'form-control '}}) }}  
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form_label(form.noReclamo)}}  
+                                                {{ form_widget(form.noReclamo) }}  
+                                        </div>
+                                        <div class="form-group" hidden>
+                                            {{ form_label(form.bulto)}}  
+                                                {{ form_widget(form.bulto) }}  
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            {{ form_label(form.peso)}}  
+                                                {{ form_widget(form.peso) }}  
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form_label(form.entregaEnDomicilio)}}  
+                                                {{ form_widget(form.entregaEnDomicilio) }}  
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            {{ form_label(form.destinatarioNames)}}  
+                                                {{ form_widget(form.destinatarioNames) }}  
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            {{ form_label(form.destinatarioEmails)}}  
+                                                {{ form_widget(form.destinatarioEmails) }}  
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            {{ form_label(form.destinatarioPhones)}}  
+                                                {{ form_widget(form.destinatarioPhones) }}  
+                                        </div>
+                                       
+                                        
+                                        {{ form_rest(form) }}  
+                                        <div class="row">
+
+                                            <div class="col-md-12">
+                                                {% block formactions %}
+                                                    {% block sonata_form_actions %}
+                                                        <button type="submit" class="btn btn-success" name="btn_update"><i class="fa fa-save"></i> {{ 'Crear'|trans({}, 'WhatsappBundle') }}</button>
+                                                        <a class="btn btn-info" href="{{ path('show_peticion_panel', {peticion:peticion.id}) }}">Cancelar</a>  
+                                                    {% endblock %}
+                                                {% endblock formactions %}
+                                            </div>
+
+                                            
+
+                                            <div class="col-md-5 hidden">
+                                                <div class="form-group">
+                                                    {#{{ form_label(form.trabajador) }}  #}
+                                                    <div class="">
+
+
+
+                                                    </div>  
+                                                </div> 
+                                            </div> 
+                                        </div>
+
+
+                                    </div>          
+                                </div>          
+                            </div>          
+                        </div>          
+                    </div>          
+            </div>    
+
+        </form>
+       
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block inlinejavascript %}
+
+{% endblock %}

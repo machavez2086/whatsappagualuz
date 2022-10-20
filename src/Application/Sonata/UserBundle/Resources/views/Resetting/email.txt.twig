@@ -1,0 +1,29 @@
+{% block subject %}
+
+{{ 'resetting.email.subject'|trans({'%username%': user.username, '%confirmationUrl%': confirmationUrl}, 'FOSUserBundle') }}
+
+{% endblock %}
+{% block body_text %}
+
+{% endblock %}
+{% block body_html %}
+<table style="width: 90%; margin: 0 auto; text-align: center;" >
+                {#<tr>
+                    <td style="">
+                        <img src="http://reclamos.cbse.com.ar/Reclamos-cbse.png" style=" width: 100%;height: auto;">
+                    </td>
+                </tr>#}
+                <tr>
+                    <td>
+                <div class="col-lg-12 datos">
+                                <p style="padding-top: 10px;font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;color:#333333">Hola <b>{{ user.username }}!</b>.</p>
+                                <p style="padding-top: 10px;font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;color:#333333">¿Ha olvidado su contraseña?.</p>
+                                <p style="padding-top: 10px;color:#333333;font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;text-align: left;">Para restablecer tu contraseña - por favor visita <a href="{{confirmationUrl}}">{{confirmationUrl}}</a></p>
+                    <p style="padding-top: 10px;color:#333333;font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;text-align: left;">Atentamente, equipo de trabajo de Reclamos CBSE.</p> 
+                    
+                </div>
+                    </td>
+                </tr>
+                
+            </table>
+{% endblock %}

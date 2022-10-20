@@ -1,0 +1,261 @@
+{% extends 'WhatsappBundle::standard_layout.html.twig' %}
+{% block sonata_breadcrumb %}
+    <div class="hidden-xs">
+        <ol class="nav navbar-top-links breadcrumb">
+            <li>
+                <a href="{{ path('sonata_admin_dashboard', {action:"list"}) }}">
+                    <i class="fa fa-home"></i>
+                </a>
+            </li>
+            <li class="active"><span>Sumario</span></li>
+        </ol>
+    </div>
+{% endblock sonata_breadcrumb %}
+{% block sonata_admin_content %}
+
+    {% include '@SonataCore/FlashMessage/render.html.twig' %}
+    <style type="text/css">
+        {##container {
+                min-width: 310px;
+                max-width: 800px;
+                height: 400px;
+                margin: 0 auto
+        }#}
+    </style>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination month-change">
+                    <li title="Evaluar" data-toggle="tooltip" class="page-item">
+                        <a href="{{ path('use_statics', {month:prevMonth}) }}" title="Mes anterior" class="anterior_periodo page-link arrow-period">
+                            <i class="fa fa-angle-left"></i>
+                        </a>
+                    </li> 
+                    <li data-toggle="tooltip" data-placement="top" title="{{actualMonth}}" class="page-item active">
+                        <a href="#" class="page-link">{{actualMonth}}</a>
+                    </li>
+                    <li class="page-item"><a href="{{ path('use_statics', {month:nextMonth}) }}" title="Mes siguiente" class="siguiente_periodo page-link arrow-period">
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="sonata-ba-form">
+        <div class="box box-primary">
+            <div class="row ">
+                <div class="col-md-12">
+
+                    <div class="col-lg-12 peticiones">
+
+                        <div class="row">
+                            <div class="col-lg-8 ">
+                                <div class="card-body">
+                                    <h3>Conversaciones en el mes</h3>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 ">
+                                <div class="card-body">
+                                    <h3 class="card-title peticiones"><b>Total de Conversaciones:</b> {{ cantConversationsThisMonth }}</h3>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-4 col-sm-4 mb-12 ">
+
+                        <div class="">
+                            <div class="card-body">
+
+                                <div class="box-body table-responsive no-padding">
+                                    <table class="table table-striped vm no-th-brd no-wrap pro-of-month">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Tipo </th>
+                                                <th scope="col">Cantidad</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for conv in groupConversationsThisMonthByConversationType %}
+                                                <tr>
+                                                    <td class="">{{conv["name"]}}</td>
+                                                    <td class="">{{conv["total"]}}</td>
+                                                </tr>
+                                            {%endfor%}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="piePeticionType" class="col-md-8 m-t-20"></div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="box box-primary">
+            <div class="row ">
+                <div class="col-md-12">
+
+                    <div class="col-lg-12 peticiones">
+                        <h3>Mensajes de WhatsApp en el mes</h3>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="well">
+                                    <div class="card-body">
+                                        <h4 class="card-title peticiones"><b>Total de Mensajes:</b> {{ countThisMonth }}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="well">
+                                    <div class="card-body">
+                                        <h4 class="card-title peticiones"><b>Mensajes enviados:</b> {{ countFromMeThisMonth }}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="well">
+                                    <div class="card-body">
+                                        <h4 class="card-title peticiones"><b>Mensajes recibidos:</b> {{ countNotFromMeThisMonth }}</h4>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div id="pieMensajesWhatsapp" class="col-md-8 m-t-20"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="box box-primary">
+            <div class="row">
+                <div class="col-lg-12 ">      
+
+                    <div class="col-lg-8">
+                        <h3>Clientes del mes</h3>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="">
+                            <h3 class="card-title peticiones"><b>Total de Clientes:</b> {{ cantClientsOfTheMonth }}</h3>
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-12 col-sm-12 mb-12 ">
+
+                        <div class="well">
+                            <div class="card-body">
+
+                                <div class="table-responsive m-t-20">
+                                    <table class="table table-striped vm no-th-brd no-wrap pro-of-month">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Nombre </th>
+                                                <th scope="col">Teléfono</th>
+                                                <th scope="col">Correo</th>
+                                                <th scope="col">Cantidad de tickets en el mes</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for client in countTicketsDistintWhatsappGroup %}
+                                                <tr>
+                                                    <td class="">{{client["name"]}}</td>
+                                                    <td class="">{{client["phoneNumber"]}}</td>
+                                                    <td class="">{{client["email"]}}</td>
+                                                    <td class="">{{client["total"]}}</td>
+                                                </tr>
+                                            {%endfor%}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+{% endblock %}
+
+{% block inlinejavascript %}
+    <script src="{{ asset('Highcharts-6.0.5/code/highcharts.js') }}"></script>
+    <script src="{{ asset('Highcharts-6.0.5/code/highcharts-3d.js') }}"></script>
+    <script src="{{ asset('Highcharts-6.0.5/code/modules/exporting.js') }}"></script>
+    <script type="text/javascript">
+        Highcharts.chart('piePeticionType', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Tipos de Conversaciones'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
+                    }
+                }
+            },
+            series: [{
+                    name: 'Brands',
+                    colorByPoint: true,
+                    data:{{ piegroupConversationsThisMonthByConversationType|json_encode|raw }}
+                }]
+        {#series: [{
+            name: 'Brands',
+            colorByPoint: true,
+            data: [{
+                name: 'IE',
+                y: 56.33
+            }, {
+                name: 'Chrome',
+                y: 24.03,
+                sliced: true,
+                selected: true
+            }, {
+                name: 'Firefox',
+                y: 10.38
+            }, {
+                name: 'Safari',
+                y: 4.77
+            }, {
+                name: 'Opera',
+                y: 0.91
+            }, {
+                name: 'Other',
+                y: 0.2
+            }]
+        }]#}
+            });
+    </script>
+
+
+
+{% endblock %}

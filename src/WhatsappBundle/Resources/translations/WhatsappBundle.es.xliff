@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" datatype="plaintext" original="">
+        <body>
+            <trans-unit id="Bad-credentials">
+                <source>Bad credentials.</source>
+                <target>Nombre de usuario o Contraseña inválido</target>
+            </trans-unit>
+            <trans-unit id="Dashboard">
+                <source>Dashboard</source>
+                <target>Administración</target>
+            </trans-unit>
+            <trans-unit id="Message List">
+                <source>Message List</source>
+                <target>Lista de mensajes</target>
+            </trans-unit>
+            <trans-unit id="Ticket List">
+                <source>Ticket List</source>
+                <target>Lista de peticiones</target>
+            </trans-unit>
+            <trans-unit id="Alert List">
+                <source>Alert List</source>
+                <target>Lista de alertas</target>
+            </trans-unit>
+            <trans-unit id="Client Member List">
+                <source>Client Member List</source>
+                <target>Lista de miembros clientes</target>
+            </trans-unit>
+            <trans-unit id="Whatsapp Group List">
+                <source>Whatsapp Group List</source>
+                <target>Lista de contactos</target>
+            </trans-unit>
+            <trans-unit id="Ticket Type List">
+                <source>Ticket Type List</source>
+                <target>Lista de tipos de petición</target>
+            </trans-unit>
+            <trans-unit id="Solution Type List">
+                <source>Solution Type List</source>
+                <target>Lista de tipos de solución</target>
+            </trans-unit>
+            <trans-unit id="First Answer Keyword List">
+                <source>First Answer Keyword List</source>
+                <target>Lista de palabras de primera respuesta</target>
+            </trans-unit>
+            <trans-unit id="Last Answer Keyword List">
+                <source>Last Answer Keyword List</source>
+                <target>Lista de palabras de cierre</target>
+            </trans-unit>
+            <trans-unit id="Ask And Answers List">
+                <source>Ask And Answers List</source>
+                <target>Lista de preguntas y respuesta</target>
+            </trans-unit>
+            <trans-unit id="Configuration List">
+                <source>Configuration List</source>
+                <target>Listado de Empresas</target>
+            </trans-unit>
+            <trans-unit id="Support Member List">
+                <source>Support Member List</source>
+                <target>Lista de recursos</target>
+            </trans-unit>
+            <trans-unit id="First No Follow Keyword List">
+                <source>First No Follow Keyword List</source>
+                <target>Lista de palabras de no registro de petición</target>
+            </trans-unit>
+            <trans-unit id="Contact List">
+                <source>Contact List</source>
+                <target>Lista de mensajes de contacto</target>
+            </trans-unit>
+            
+            <trans-unit id="Message Create">
+                <source>Message Create</source>
+                <target>Agregar mensaje</target>
+            </trans-unit>
+            <trans-unit id="Ticket Create">
+                <source>Ticket Create</source>
+                <target>Agregar petición</target>
+            </trans-unit>
+            <trans-unit id="Alert Create">
+                <source>Alert Create</source>
+                <target>Agregar alerta</target>
+            </trans-unit>
+            <trans-unit id="Support Member Create">
+                <source>Support Member Create</source>
+                <target>Agregar recurso</target>
+            </trans-unit>
+            <trans-unit id="Client Member Create">
+                <source>Client Member Create</source>
+                <target>Agregar miembro cliente</target>
+            </trans-unit>
+            <trans-unit id="Whatsapp Group Create">
+                <source>Whatsapp Group Create</source>
+                <target>Agregar contacto</target>
+            </trans-unit>
+            <trans-unit id="Ticket Type Create">
+                <source>Ticket Type Create</source>
+                <target>Agregar tipo de petición</target>
+            </trans-unit>
+            <trans-unit id="Solution Type Create">
+                <source>Solution Type Create</source>
+                <target>Agregar tipo de solución</target>
+            </trans-unit>
+            <trans-unit id="First Answer Keyword Create">
+                <source>First Answer Keyword Create</source>
+                <target>Agregar palabra primera respuesta</target>
+            </trans-unit>
+            <trans-unit id="Last Answer Keyword Create">
+                <source>Last Answer Keyword Create</source>
+                <target>Agregar palabra de cierre</target>
+            </trans-unit>
+            <trans-unit id="Ask And Answers Create">
+                <source>Ask And Answers Create</source>
+                <target>Agregar pregunta y respuesta</target>
+            </trans-unit>
+            <trans-unit id="Configuration Create">
+                <source>Configuration Create</source>
+                <target>Agregar empresa</target>
+            </trans-unit>
+            <trans-unit id="First No Follow Keyword Create">
+                <source>First No Follow Keyword Create</source>
+                <target>Agregar palabra de no registro de petición</target>
+            </trans-unit>
+            <trans-unit id="Contact Create">
+                <source>Contact Create</source>
+                <target>Agregar mensaje de contacto</target>
+            </trans-unit>
+            <trans-unit id="Message Delete">
+                <source>Message Delete</source>
+                <target>Eliminar mensaje</target>
+            </trans-unit>
+            <trans-unit id="Ticket Delete">
+                <source>Ticket Delete</source>
+                <target>Eliminar petición</target>
+            </trans-unit>
+            <trans-unit id="Alert Delete">
+                <source>Alert Delete</source>
+                <target>Eliminar alerta</target>
+            </trans-unit>
+            <trans-unit id="Support Member Delete">
+                <source>Support Member Delete</source>
+                <target>Eliminar recurso</target>
+            </trans-unit>
+            <trans-unit id="Client Member Delete">
+                <source>Client Member Delete</source>
+                <target>Eliminar miembro cliente</target>
+            </trans-unit>
+            <trans-unit id="Whatsapp Group Delete">
+                <source>Whatsapp Group Delete</source>
+                <target>Eliminar contacto</target>
+            </trans-unit>
+            <trans-unit id="Ticket Type Delete">
+                <source>Ticket Type Delete</source>
+                <target>Eliminar tipo de petición</target>
+            </trans-unit>
+            <trans-unit id="Solution Type Delete">
+                <source>Solution Type Delete</source>
+                <target>Eliminar tipo de solución</target>
+            </trans-unit>
+            <trans-unit id="First Answer Keyword Delete">
+                <source>First Answer Keyword Delete</source>
+                <target>Eliminar palabra primera respuesta</target>
+            </trans-unit>
+            <trans-unit id="Last Answer Keyword Delete">
+                <source>Last Answer Keyword Delete</source>
+                <target>Eliminar palabra de cierre</target>
+            </trans-unit>
+            <trans-unit id="Ask And Answers Delete">
+                <source>Ask And Answers Delete</source>
+                <target>Eliminar pregunta y respuesta</target>
+            </trans-unit>
+            <trans-unit id="Configuration Delete">
+                <source>Configuration Delete</source>
+                <target>Eliminar empresa</target>
+            </trans-unit>
+            <trans-unit id="First No Follow Keyword Delete">
+                <source>First No Follow Keyword Delete</source>
+                <target>Eliminar palabra de no registro de petición</target>
+            </trans-unit>
+            <trans-unit id="Contact Delete">
+                <source>Contact Delete</source>
+                <target>Eliminar mensaje de contacto</target>
+            </trans-unit>
+            <trans-unit id="published">
+                <source>Published</source>
+                <target>Publicado</target>
+            </trans-unit>
+            <trans-unit id="action_ticket_change">
+                <source>action_ticket_change</source>
+                <target>Cambiar petición</target>
+            </trans-unit>
+            <trans-unit id="action_group_change">
+                <source>action_group_change</source>
+                <target>Cambiar contacto</target>
+            </trans-unit>
+            <trans-unit id="export.configuration">
+                <source>export.configuration</source>
+                <target>Configuración</target>
+            </trans-unit>
+            <trans-unit id="export.id">
+                <source>export.id</source>
+                <target>Id</target>
+            </trans-unit>
+            <trans-unit id="export.name">
+                <source>export.name</source>
+                <target>Nombre</target>
+            </trans-unit>
+            <trans-unit id="export.startTime">
+                <source>export.startTime</source>
+                <target>Hora de inicio</target>
+            </trans-unit>
+            <trans-unit id="export.weekday">
+                <source>export.weekday</source>
+                <target>Día</target>
+            </trans-unit>
+            <trans-unit id="export.resolutionDate">
+                <source>export.resolutionDate</source>
+                <target>Hora de respuesta</target>
+            </trans-unit>
+            <trans-unit id="export.minutesAnswerTime">
+                <source>export.minutesAnswerTime</source>
+                <target>Tiempo de respuesta (min)</target>
+            </trans-unit>
+            <trans-unit id="export.solvedBySupportMember">
+                <source>export.solvedBySupportMember</source>
+                <target>Recurso</target>
+            </trans-unit>
+            <trans-unit id="export.ticketType">
+                <source>export.ticketType</source>
+                <target>Categoría</target>
+            </trans-unit>
+            <trans-unit id="export.endDate">
+                <source>export.endDate</source>
+                <target>Hora de resolución</target>
+            </trans-unit>
+            <trans-unit id="export.strmenssagetext">
+                <source>export.strmenssagetext</source>
+                <target>Mensaje</target>
+            </trans-unit>
+            <trans-unit id="export.dtmmessage">
+                <source>export.dtmmessage</source>
+                <target>Fecha</target>
+            </trans-unit>
+            <trans-unit id="export.supportFirstAnswer">
+                <source>export.supportFirstAnswer</source>
+                <target>Soporte primera respuesta?</target>
+            </trans-unit>
+            <trans-unit id="export.isValidationKeyword">
+                <source>export.isValidationKeyword</source>
+                <target>Validación?</target>
+            </trans-unit>
+            <trans-unit id="export.ticket">
+                <source>export.ticket</source>
+                <target>Petición</target>
+            </trans-unit>
+            <trans-unit id="export.whatsappNick">
+                <source>export.whatsappNick</source>
+                <target>Nick de WhatsApp</target>
+            </trans-unit>
+            <trans-unit id="export.supportMember">
+                <source>export.supportMember</source>
+                <target>Recurso</target>
+            </trans-unit>
+            <trans-unit id="export.message">
+                <source>export.message</source>
+                <target>Mensaje</target>
+            </trans-unit>
+            <trans-unit id="export.sendDate">
+                <source>export.sendDate</source>
+                <target>Fecha</target>
+            </trans-unit>
+            <trans-unit id="export.type">
+                <source>export.type</source>
+                <target>Tipo</target>
+            </trans-unit>
+            <trans-unit id="export.open">
+                <source>export.open</source>
+                <target>Abierta</target>
+            </trans-unit>            
+            <trans-unit id="export.phoneNumber">
+                <source>export.phoneNumber</source>
+                <target>Teléfono</target>
+            </trans-unit>            
+            <trans-unit id="export.keyword">
+                <source>export.keyword</source>
+                <target>Palabra clave</target>
+            </trans-unit>            
+            <trans-unit id="export.company">
+                <source>export.company</source>
+                <target>Nombre de la empresa</target>
+            </trans-unit>            
+            <trans-unit id="export.prefix">
+                <source>export.prefix</source>
+                <target>Sufijos de contactos</target>
+            </trans-unit>            
+            <trans-unit id="export.enabled">
+                <source>export.enabled</source>
+                <target>Habilitado</target>
+            </trans-unit>            
+            <trans-unit id="export.owner">
+                <source>export.owner</source>
+                <target>Dueño</target>
+            </trans-unit>            
+            <trans-unit id="export.minutesAnswerAlert">
+                <source>export.minutesAnswerAlert</source>
+                <target>Minutos para alerta de respuesta</target>
+            </trans-unit>            
+            <trans-unit id="export.minutesResolutionAlert">
+                <source>export.minutesResolutionAlert</source>
+                <target>Minutos para alerta de resolución</target>
+            </trans-unit>            
+            <trans-unit id="export.timeZone">
+                <source>export.timeZone</source>
+                <target>Zona Horaria</target>
+            </trans-unit>            
+            <trans-unit id="export.dayEndWeek">
+                <source>export.dayEndWeek</source>
+                <target>Último día de la semana</target>
+            </trans-unit>            
+            <trans-unit id="export.hourEndWeek">
+                <source>export.hourEndWeek</source>
+                <target>Hora del último día de la semana</target>
+            </trans-unit>            
+            <trans-unit id="export.enabledText">
+                <source>export.enabledText</source>
+                <target>Habilitada</target>
+            </trans-unit>            
+            <trans-unit id="export.user">
+                <source>export.user</source>
+                <target>Usuario</target>
+            </trans-unit>            
+            <trans-unit id="export.rol">
+                <source>export.rol</source>
+                <target>Rol</target>
+            </trans-unit>            
+            <trans-unit id="export.email">
+                <source>export.email</source>
+                <target>Correo</target>
+            </trans-unit>            
+            <trans-unit id="export.validationCount">
+                <source>export.validationCount</source>
+                <target>Número de validaciones</target>
+            </trans-unit>            
+            <trans-unit id="export.minutesDevTime">
+                <source>export.minutesDevTime</source>
+                <target>Tiempo de desarrollo (min)</target>
+            </trans-unit>            
+            <trans-unit id="export.minutesValidationWaitTime">
+                <source>export.minutesValidationWaitTime</source>
+                <target>Tiempo de espera (min)</target>
+            </trans-unit>            
+            <trans-unit id="export.minutesSolutionTime">
+                <source>export.minutesSolutionTime</source>
+                <target>Tiempo de solución (min)</target>
+            </trans-unit>            
+            <trans-unit id="export.question">
+                <source>export.question</source>
+                <target>Pregunta</target>
+            </trans-unit>            
+            <trans-unit id="export.answer">
+                <source>export.answer</source>
+                <target>Respuesta</target>
+            </trans-unit>            
+            <trans-unit id="export.normalizedQuestion">
+                <source>export.normalizedQuestion</source>
+                <target>Pregunta normalizada</target>
+            </trans-unit>   
+            <trans-unit id="export.nroReclamo">
+                <source>export.nroReclamo</source>
+                <target>Número de reclamo</target>
+            </trans-unit>         
+            <trans-unit id="export.whatsappGroup">
+                <source>export.whatsappGroup</source>
+                <target>Contacto</target>
+            </trans-unit>         
+            <trans-unit id="export.peticionType">
+                <source>export.peticionType</source>
+                <target>Tipo</target>
+            </trans-unit>         
+            <trans-unit id="export.category">
+                <source>export.category</source>
+                <target>Categoría</target>
+            </trans-unit>         
+            <trans-unit id="export.clientActitud">
+                <source>export.clientActitud</source>
+                <target>Actitud del cliente</target>
+            </trans-unit>         
+            <trans-unit id="export.clientName">
+                <source>export.clientName</source>
+                <target>Nombre y apellido</target>
+            </trans-unit>      
+            <trans-unit id="export.phone">
+                <source>export.phone</source>
+                <target>Celular</target>
+            </trans-unit>         
+            <trans-unit id="export.shop.email">
+                <source>export.shop.email</source>
+                <target>E-mail</target>
+            </trans-unit>         
+            <trans-unit id="export.domicilio">
+                <source>export.domicilio</source>
+                <target>Domicilio</target>
+            </trans-unit>         
+            <trans-unit id="export.localidad">
+                <source>export.localidad</source>
+                <target>Localidad</target>
+            </trans-unit>    
+           <trans-unit id="export.provincia">
+                <source>export.provincia</source>
+                <target>Provincia</target>
+            </trans-unit>         
+            <trans-unit id="export.codigoPostal">
+                <source>export.codigoPostal</source>
+                <target>Código postal</target>
+            </trans-unit>         
+            <trans-unit id="export.product">
+                <source>export.product</source>
+                <target>Producto</target>
+            </trans-unit>         
+            <trans-unit id="export.expirationDateStr">
+                <source>export.expirationDateStr</source>
+                <target>VTO</target>
+            </trans-unit>         
+            <trans-unit id="export.lote">
+                <source>export.lote</source>
+                <target>Lote</target>
+            </trans-unit>         
+            <trans-unit id="export.loteNo">
+                <source>export.loteNo</source>
+                <target>No.</target>
+            </trans-unit>         
+            <trans-unit id="export.loteHour">
+                <source>export.loteHour</source>
+                <target>Hora</target>
+            </trans-unit>         
+            <trans-unit id="export.loteMaquina">
+                <source>export.loteMaquina</source>
+                <target>Máquina</target>
+            </trans-unit>         
+            <trans-unit id="export.presentation">
+                <source>export.presentation</source>
+                <target>Presentación</target>
+            </trans-unit>         
+            <trans-unit id="export.cant">
+                <source>export.cant</source>
+                <target>Cantidad</target>
+            </trans-unit>         
+            <trans-unit id="export.motive">
+                <source>export.motive</source>
+                <target>Motivo del reclamo</target>
+            </trans-unit>         
+            <trans-unit id="export.area">
+                <source>export.area</source>
+                <target>Área</target>
+            </trans-unit>         
+            <trans-unit id="export.elementType">
+                <source>export.elementType</source>
+                <target>Apertura de Motivos</target>
+            </trans-unit>         
+            <trans-unit id="export.observations">
+                <source>export.observations</source>
+                <target>Observaciones</target>
+            </trans-unit>                             
+            <trans-unit id="export.conversationType">
+                <source>export.conversationType</source>
+                <target>Tipo de conversación</target>
+            </trans-unit>                             
+            <trans-unit id="export.peticion">
+                <source>export.peticion</source>
+                <target>Ticket</target>
+            </trans-unit>                             
+            <trans-unit id="export.expirationDate">
+                <source>export.expirationDate</source>
+                <target>Fecha de vencimiento</target>
+            </trans-unit>                             
+            <trans-unit id="export.packingDate">
+                <source>export.packingDate</source>
+                <target>Fecha de envasado</target>
+            </trans-unit>                             
+            <trans-unit id="export.recivedAt">
+                <source>export.recivedAt</source>
+                <target>Fecha de recibido</target>
+            </trans-unit>                             
+            <trans-unit id="export.sendedAt">
+                <source>export.sendedAt</source>
+                <target>Fecha de envío</target>
+            </trans-unit>                             
+            <trans-unit id="export.noReclamo">
+                <source>export.noReclamo</source>
+                <target>N° Reclamo</target>
+            </trans-unit>                             
+            <trans-unit id="export.bulto">
+                <source>export.bulto</source>
+                <target>Bulto</target>
+            </trans-unit>                             
+            <trans-unit id="export.paquetesRetirar">
+                <source>export.paquetesRetirar</source>
+                <target>Paquetes de envío</target>
+            </trans-unit>                             
+            <trans-unit id="export.peso">
+                <source>export.peso</source>
+                <target>Peso</target>
+            </trans-unit>                             
+            <trans-unit id="export.entregaEnDomicilio">
+                <source>export.entregaEnDomicilio</source>
+                <target>Entrega en domicilio</target>
+            </trans-unit>                             
+            <trans-unit id="export.cp">
+                <source>export.cp</source>
+                <target>CP</target>
+            </trans-unit>                             
+            <trans-unit id="export.destinatario">
+                <source>export.destinatario</source>
+                <target>Destinatario</target>
+            </trans-unit>                             
+            <trans-unit id="export.observaciones">
+                <source>export.observaciones</source>
+                <target>Observaciones de entrega</target>
+            </trans-unit>                             
+            <trans-unit id="export.remitente">
+                <source>export.remitente</source>
+                <target>Remitente</target>
+            </trans-unit>                             
+            <trans-unit id="export.remitenteContact">
+                <source>export.remitenteContact</source>
+                <target>Remitente datos de contacto</target>
+            </trans-unit>                             
+            <trans-unit id="export.destinatarioNames">
+                <source>export.destinatarioNames</source>
+                <target>Nombres de destinatario</target>
+            </trans-unit>                             
+            <trans-unit id="export.destinatarioEmails">
+                <source>export.destinatarioEmails</source>
+                <target>Emails de destinatario</target>
+            </trans-unit>                             
+            <trans-unit id="export.destinatarioPhones">
+                <source>export.destinatarioPhones</source>
+                <target>Teléfonos de destinatario</target>
+            </trans-unit>                             
+            <trans-unit id="export.cantPaquetesRetirar">
+                <source>export.cantPaquetesRetirar</source>
+                <target>Cantidad paquetes retiro</target>
+            </trans-unit>                             
+            <trans-unit id="export.phoneFixed">
+                <source>export.phoneFixed</source>
+                <target>Teléfono fijo</target>
+            </trans-unit>                             
+            <trans-unit id="export.createdAt">
+                <source>export.createdAt</source>
+                <target>Fecha</target>
+            </trans-unit>                             
+                                    
+        </body>
+    </file>
+</xliff>

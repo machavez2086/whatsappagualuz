@@ -1,0 +1,16 @@
+{% extends admin.getTemplate('base_list_field') %}
+
+{% block field %}
+    <div class="btn-group">
+                {% set myArray = [] %}
+                {% for conversation in object.conversations%}
+                    {%if conversation.conversationType is not null%}
+                        {% set myArray = myArray|merge([conversation.conversationType]) %}
+{#                             {{conversation.conversationType}}#}
+                    {%endif%}
+
+                {%endfor%}
+                {{myArray | join(', ')}}
+</div>
+        
+{% endblock %}

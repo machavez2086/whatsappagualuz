@@ -1,0 +1,412 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+    - { resource: services.yml }
+    - { resource: "@WhatsappBundle/Resources/config/services.yml" }
+    #- { resource: "@RegistroentradaBundle/Resources/config/services.yml" }
+    
+    
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: es
+
+framework:
+    #esi:             ~
+    translator:      { fallbacks: ["%locale%"] }
+    secret:          "%secret%"
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: ~
+    form:            ~
+    csrf_protection: ~
+    validation:      { enable_annotations: true }
+    #serializer:      { enable_annotations: true }
+    templating:
+        engines: ['twig']
+    default_locale:  "%locale%"
+    trusted_hosts:   ~
+    trusted_proxies: ~
+    session:
+        # handler_id set to null will use default session handler from php.ini
+        handler_id:  ~
+        name: "whatsappshop"
+        cookie_lifetime: 0
+        gc_maxlifetime: 10000000000000
+    fragments:       ~
+    http_method_override: true
+
+# Twig Configuration
+twig:
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+    form:
+        resources: 
+#            - 'bootstrap_3_layout.html.twig'
+            - 'SonataAdminBundle:Form:form_admin_fields.html.twig'
+            - 'SonataCoreBundle:Form:datepicker.html.twig'
+    globals:
+        gos_web_socket_port: '%gos_web_socket_port%'
+        gos_web_socket_url: '%gos_web_socket_url%'
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver:   pdo_mysql
+        host:     "%database_host%"
+        port:     "%database_port%"
+        dbname:   "%database_name%"
+        user:     "%database_user%"
+        password: "%database_password%"
+        charset:  UTF8
+        types:
+            json: Sonata\Doctrine\Types\JsonType
+        # if using pdo_sqlite as your database driver:
+        #   1. add the path in parameters.yml
+        #     e.g. database_path: "%kernel.root_dir%/data/data.db3"
+        #   2. Uncomment database_path in parameters.yml.dist
+        #   3. Uncomment next line:
+        #     path:     "%database_path%"
+
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+#        naming_strategy: doctrine.orm.naming_strategy.underscore
+#        auto_mapping: true
+        entity_managers:
+            default:
+                mappings:
+                    ApplicationSonataUserBundle: ~
+                    SonataUserBundle: ~
+                    FOSUserBundle: ~
+                    ApplicationSonataMediaBundle: ~
+                    SonataMediaBundle: ~
+                    SonataClassificationBundle: ~
+                    ApplicationSonataClassificationBundle: ~
+                    WhatsappBundle: ~
+
+# Swiftmailer Configuration
+swiftmailer:
+    transport: "%mailer_transport%"
+    host:      "%mailer_host%"
+    port:       "%mailer_port%"
+    encryption: "%mailer_encryption%"
+    username:  "%mailer_user%"
+    password:  "%mailer_password%"
+#    spool:     { type: memory }
+    
+sonata_block:
+    default_contexts: [cms]
+    blocks:
+        # enable the SonataAdminBundle block
+        sonata.admin.block.admin_list:
+            contexts: [admin]
+        sonata.block.service.text:
+        sonata.user.block.menu:    # used to display the menu in profile pages
+        sonata.user.block.account: # used to display menu option (login option)
+        sonata.admin.block.search_result:
+        sonata.block.service.rss:
+            
+sonata_user:
+    security_acl: true
+    manager_type: orm # can be orm or mongodb        
+    class:        
+        user: Application\Sonata\UserBundle\Entity\User
+        group: Application\Sonata\UserBundle\Entity\Group
+    admin:                  # Admin Classes
+        user:
+            class:          Application\Sonata\UserBundle\Admin\Entity\UserAdmin
+            controller:     SonataAdminBundle:CRUD
+            translation:    SonataUserBundle
+        group:
+            class:          Sonata\UserBundle\Admin\Entity\GroupAdmin
+            controller:     SonataAdminBundle:CRUD
+            translation:    SonataUserBundle
+
+    profile:  # Profile Form (firstname, lastname, etc ...)
+        form:
+            type:               sonata_user_profile1
+            handler:            sonata.user.profile.form.handler.default
+            name:               sonata_user_profile_form
+            validation_groups:  [Profile]
+    impersonating:
+        route: sonata_admin_dashboard
+    
+fos_user:
+    db_driver:      orm # can be orm or odm
+    firewall_name:  main
+    user_class:     Application\Sonata\UserBundle\Entity\User
+    from_email: # Use this node only if you don't want the global email address for the resetting email
+        address: macahvez@uci.cu
+        sender_name: Reclamos CBSE
+    registration:
+        confirmation:
+            enabled: true
+            from_email:
+                address:        machavez2086@gmail.com
+                sender_name:    Reclamos CBSE
+            
+            template: ApplicationSonataUserBundle:Registration:registration.email.twig
+    service:
+        mailer:  fos_user.mailer.twig_swift
+    profile:
+        form:
+            type:               fos_user_profile
+            handler:            fos_user.profile.form.handler.default
+            name:               fos_user_profile_form
+            validation_groups:  [Newvalidation, Profile, Authentication, Default]
+
+
+
+    group:
+        group_class:   Application\Sonata\UserBundle\Entity\Group
+        group_manager: sonata.user.orm.group_manager                    # If you're using doctrine orm (use sonata.user.mongodb.user_manager for mongodb)
+
+    service:
+        user_manager: sonata.user.orm.user_manager                      # If you're using doctrine orm (use sonata.user.mongodb.group_manager for mongodb)   
+        
+sonata_media:
+    # if you don't use default namespace configuration
+    #class:
+    #    media: MyVendor\MediaBundle\Entity\Media
+    #    gallery: MyVendor\MediaBundle\Entity\Gallery
+    #    gallery_has_media: MyVendor\MediaBundle\Entity\GalleryHasMedia
+    db_driver: doctrine_orm # or doctrine_mongodb, doctrine_phpcr it is mandatory to choose one here
+    default_context: default # you need to set a context
+    contexts:
+        default:  # the default context is mandatory
+            providers:
+                - sonata.media.provider.dailymotion
+                - sonata.media.provider.youtube
+                - sonata.media.provider.image
+                - sonata.media.provider.file
+                - sonata.media.provider.vimeo
+
+            formats:
+                small: { width: 100 , quality: 70}
+                big:   { width: 500 , quality: 70}
+
+    cdn:
+        server:
+            path: http://192.168.11.202/whatsappshop/web/uploads/media # http://media.sonata-project.org/
+#            path: http://127.0.0.1/whatsappshop/web/uploads/media # http://media.sonata-project.org/
+
+    filesystem:
+        local:
+            directory:  "%kernel.root_dir%/../web/uploads/media"
+            create:     false        
+sonata_admin:
+    templates:
+#        layout:  SonataAdminBundle::standard_layout.html.twig
+        layout:  WhatsappBundle::standard_layout.html.twig
+        ajax:    SonataAdminBundle::ajax_layout.html.twig
+
+        # default actions templates, should extend a global templates
+        list:    SonataAdminBundle:CRUD:list.html.twig
+        show:    SonataAdminBundle:CRUD:show.html.twig
+        edit:    SonataAdminBundle:CRUD:edit.html.twig
+
+        # search
+        search:              SonataAdminBundle:Core:search.html.twig
+        search_result_block: SonataAdminBundle:Block:block_search_result.html.twig
+#        user_block: ApplicationSonataUserBundle:Admin/Core:user_block.html.twig
+
+    dashboard:
+        blocks:
+            # display a dashboard block
+#            - { position: center, type: sonata.block.service.rss }
+            - { position: center, type: sonata.admin.block.admin_list }
+            
+        groups:
+            sonata.user.admin.groupname:
+                label: Administración
+                label_catalogue: SonataUserBundle
+                items:
+                    - sonata.user.admin.user
+#                    - sonata.media.admin.media
+#                    - sonata.admin.whatsapp.contact
+#                    - sonata.admin.whatsapp.usercompany
+                    - sonata.admin.whatsapp.generalconfiguration
+#                    - sonata.admin.whatsapp.configuration
+#                    - sonata.admin.whatsapp.usercompany
+#                    - sonata.admin.whatsapp.configurationalertphone
+#                    - sonata.admin.whatsapp.configurationalertemail
+#                    - sonata.admin.whatsapp.contact
+#                    - sonata.admin.whatsapp.ticketlog
+
+#                    - sonata.user.admin.group
+                    
+                roles: [  ROLE_SUPER_ADMIN ] 
+
+#            sonata.user.admin.actions:
+#                label: Acciones administrativas
+#                label_catalogue: SonataUserBundle
+#                items:
+#                    - route: close_pending_tickets
+#                      label: Cambios pendientes
+#
+#
+##                    - sonata.user.admin.group
+#                    
+#                roles: [  ROLE_SUPER_ADMIN ] 
+        
+            sonata.admin.whatsapp:
+                label: Call center
+                label_catalogue: WhatsappBundle
+                items:
+                    - sonata.admin.whatsapp.peticion
+                    - sonata.admin.whatsapp.message
+                    - sonata.admin.whatsapp.whatsappgroup
+                    - sonata.admin.whatsapp.conversation
+#                    - sonata.admin.whatsapp.alert
+                    
+                    
+                roles: [  ROLE_CALL_CENTER ] 
+        
+            sonata.admin.whatsapp.configuration:
+                label: Configuración
+                label_catalogue: WhatsappBundle
+                items:
+                    - sonata.admin.whatsapp.askandanswers
+#                    - sonata.admin.whatsapp.poll
+                    - sonata.admin.whatsapp.product
+                    - sonata.admin.whatsapp.area
+                    - sonata.admin.whatsapp.areauser
+#                    - sonata.admin.whatsapp.questionpoll
+                roles: [  ROLE_SUPER_ADMIN ]
+                
+            sonata.admin.whatsapp.nomenclature:
+                label: Nomencladores
+                label_catalogue: WhatsappBundle
+                items:
+                    
+#                    - route: my_companies
+#                      label: Mis empresas
+#                      route_params: { action: "list" }
+                    - sonata.admin.whatsapp.peticiontype
+                    - sonata.admin.whatsapp.category
+                    - sonata.admin.whatsapp.clientactitud
+#                    - sonata.admin.whatsapp.presentation
+                    - sonata.admin.whatsapp.motive
+                    - sonata.admin.whatsapp.elementtype
+                    - sonata.admin.whatsapp.conversationtype
+                    
+#                    - sonata.admin.whatsapp.claimtype
+                    - sonata.admin.whatsapp.peticionstatus
+                    
+#                    - sonata.admin.whatsapp.supportmember
+#                    - sonata.admin.whatsapp.clientmember
+#                    - sonata.admin.whatsapp.tickettype
+#                    - sonata.admin.whatsapp.solutiontype
+#                    - sonata.admin.whatsapp.evaluationconfig
+#                    - sonata.admin.whatsapp.repitlykeyword
+                    
+                roles: [  ROLE_SUPER_ADMIN ]
+            
+#            sonata.admin.whatsapp.keywords:
+#                label: Palabras claves
+#                label_catalogue: WhatsappBundle
+#                items:
+#                    - sonata.admin.whatsapp.firstanswerkeyword
+#                    - sonata.admin.whatsapp.firstnofollowkeyword
+#                    - sonata.admin.whatsapp.lastanswerkeyword
+#                    - sonata.admin.whatsapp.validationkeyword
+#                    - sonata.admin.whatsapp.ticketevaluationkeyword
+##                    - sonata.admin.whatsapp.askandanswers
+#                    
+#                roles: [  ROLE_ADMIN ]  
+
+#            sonata.admin.whatsapp.oblea:
+#                label: Obleas
+#                label_catalogue: WhatsappBundle
+#                items:
+#                    - sonata.admin.whatsapp.obleaenvio
+#                    - sonata.admin.whatsapp.oblearetiro
+#                    - sonata.admin.whatsapp.receptedstatus
+#                    - sonata.admin.whatsapp.sendedstatus
+#                roles: [  ROLE_OBLEA ]  
+                
+            sonata.admin.whatsapp.reports:
+                label: Reportes
+                label_catalogue: WhatsappBundle
+                items:
+                    - route: report_summary
+                      label: Resumen General
+                    - route: report_month
+                      label: Tickets del mes
+                    - route: use_statics
+                      label: Conversaciones del mes
+                roles: [  ROLE_OBLEA ]  
+                
+    title:      Call_Center
+    title_logo: apple-touch-icon.png
+    options:
+        html5_validate: false
+
+fos_rest:
+    param_fetcher_listener:
+        enabled: true
+    routing_loader:
+        default_format: json
+    view:
+        view_response_listener:
+            enabled: true
+            force: false
+    serializer:
+        serialize_null: true
+    format_listener:
+        rules:
+            - { path: '^/api/', fallback_format: json }
+            - { path: '^/', stop: true }
+nelmio_api_doc: ~                    
+
+sonata_intl:
+    timezone:
+        detectors:
+#            - sonata.intl.timezone_detector.user
+            - sonata.intl.timezone_detector.locale
+
+knp_snappy:
+    temporary_folder: "%kernel.cache_dir%/snappy"
+    pdf:
+        enabled:    true
+        binary:     "/var/www/html/whatsappshop/bin/wkhtmltopdf" #"\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\"" for Windows users
+#        binary:     "C:\\xampp\\htdocs\\pizarradigital\\bin\\wkhtmltopdf.exe" #"\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\"" for Windows users
+        options:
+            - { name: 'page-size', value: 'A4' }
+            - { name: 'margin-bottom', value: '20mm' }
+    image:
+        enabled:    true
+        binary:     /var/www/html/whatsappshop/bin/wkhtmltoimage #"\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltoimage.exe\"" for Windows users
+        options:    []      
+    
+gos_web_socket:
+    server:
+        port: %gos_web_socket_port%        # The port the socket server will listen on
+        host: %gos_web_socket_ip%   # The host ip to bind to    
+#        host: 127.0.0.1 # The host ip to bind to    
+        router:
+            resources:
+                - '%kernel.root_dir%/config/pubsub/routing.yml'
+    pushers:
+#        amqp:
+#            default: true # Flag to enable this pusher
+##            host: 127.0.0.1 # Host address for the AMQP server
+#            host: 192.168.11.202 # Host address for the AMQP server
+#            port: 5672 # Port the AMQP server is listening on
+#            login: guest # Required, the login for the AMQP server
+##            password: ~ # Required, the password for the AMQP server
+#            password: guest # Required, the password for the AMQP server
+#            vhost: / # The virtual host on the host, default `/`
+#            read_timeout: 0 # Timeout for incoming activity in seconds, default 0
+#            write_timeout: 0 # Timeout for outgoing activity in seconds, default 0
+#            connect_timeout: 0 # Connection timeout in seconds, default 0
+#            queue_name: gos_websocket # The name of the queue for messages, default `gos_websocket`
+#            exchange_name: gos_websocket_exchange # The name of the exchange for messages, default `gos_websocket`
+        wamp:
+#            enabled:              false
+            host:                 %gos_web_socket_url% # Required, Example: 127.0.0.1
+#            host:                 127.0.0.1 # Required, Example: 127.0.0.1
+            port:                 %gos_web_socket_port% # Required, Example: 1337
+            ssl:                  false
+            origin:               null

@@ -1,0 +1,16 @@
+{% extends 'WhatsappBundle:Default:home.html.twig' %}
+
+{% block contenido_especifico %}
+    <div class="page-header" filter-color="orange">
+        <div class="page-header-image" style="background-image: url({{ asset('bundles/whatsapp/img/img-home/img/whatsapp-2.jpg')  }});"></div>
+        <div class="container">
+            <div class="col-md-12 content-center">
+                <div class="card card-login card-plain">
+                    <p class="check-email-message">
+                        {{ 'resetting.check_email'|trans({'%email%': email}, 'FOSUserBundle') }}
+                    </p>                </div>
+                <a style="float: left;" class="nav-link" href="{{ path('home') }}"><i class="fa fa-arrow-circle-o-left"></i></a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

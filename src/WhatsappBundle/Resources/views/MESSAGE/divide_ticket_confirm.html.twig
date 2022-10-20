@@ -1,0 +1,80 @@
+{% extends 'WhatsappBundle::standard_layout.html.twig' %}
+
+{% block sonata_admin_content %}
+    
+    {% include '@SonataCore/FlashMessage/render.html.twig' %}
+  
+    <div class="sonata-ba-form">
+        <form
+            {% if admin_pool.getOption('form_type') == 'horizontal' %}class="form-horizontal"{% endif %}
+            role="form"
+            action="{{ path('divide_ticket_by_message_click', {message:message.id}) }}" {{ form_enctype(form) }}
+            method="POST"
+            {% if not admin_pool.getOption('html5_validate') %}novalidate="novalidate"{% endif %}
+            >
+            {% if form.vars.errors|length > 0 %}
+                <div class="sonata-ba-form-error">
+                    {{ form_errors(form) }}
+                </div>
+            {% endif %}
+            {% for flashMessage in app.session.flashbag.get('error') %} 
+                <div class="alert alert-warning">
+                    {{ flashMessage | trans({}, 'RegistroentradaBundle')}} 
+                </div>
+            {% endfor %}
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box box-danger">
+                                <div class="box-header">
+                                    <h4 class="box-title"> {{ 'Confirmar dividir petición'|trans({}, 'WhatsappBundle') }} </h4>
+                                </div>          
+
+                                <div class="box-body">
+                                    <div class="sonata-ba-collapsed-fields">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                ¿Está seguro de que quiere convertir este y los mensajes siguientes de la petición en una nueva petición? 
+                                            </div>
+                                        </div>
+                                        <br>
+                                        {{ form_rest(form) }}  
+                                        <div class="row">
+
+
+                                            <div class="col-md-8">
+                                                {% block formactions %}
+                                                    {% block sonata_form_actions %}
+                                                        <button type="submit" class="btn btn-danger" name="btn_update"><i class="fa fa-trash" aria-hidden="true"></i> Sí, dividir</button> o 
+                                                        <a class="btn btn-success" href="{{ path('admin_whatsapp_message_list')}}"><i class="fa fa-pencil" aria-hidden="true"></i> Cancelar</a>
+                                                    {% endblock %}
+                                                {% endblock formactions %}
+                                            </div>
+                                            <div class="col-md-5 hidden">
+                                                <div class="form-group">
+                                                    {#{{ form_label(form.trabajador) }}  #}
+                                                    <div class="">
+                                                    </div>  
+                                                </div> 
+                                            </div> 
+                                        </div>
+                                    </div>          
+                                </div>          
+                            </div>          
+                        </div>          
+                    </div>          
+            </div>    
+            </div>    
+
+        </form>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block inlinejavascript %}
+
+{% endblock %}

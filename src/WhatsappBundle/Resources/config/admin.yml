@@ -1,0 +1,398 @@
+services:
+    
+    
+    sonata.admin.whatsapp.message:
+        class: WhatsappBundle\Admin\MessageAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Mensajes" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\Message
+            - WhatsappBundle:MessageCRUD
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+  
+    
+    sonata.admin.whatsapp.ticket:
+        class: WhatsappBundle\Admin\TicketAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Conversaciones de WhatsApp" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\Ticket
+            - WhatsappBundle:TicketCRUD
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+    
+    sonata.admin.whatsapp.whatsappgroup:
+        class: WhatsappBundle\Admin\WhatsappGroupAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Contacto" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\WhatsappGroup
+            - WhatsappBundle:WhatsappGroupCRUD
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+    sonata.admin.whatsapp.tickettype:
+        class: WhatsappBundle\Admin\TicketTypeAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Tipos de peticiones" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\TicketType
+            - WhatsappBundle:WhatsappGenericCRUD
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+    sonata.admin.whatsapp.solutiontype:
+        class: WhatsappBundle\Admin\SolutionTypeAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Tipos de solución" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\SolutionType
+            - WhatsappBundle:WhatsappGenericCRUD
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+    sonata.admin.whatsapp.askandanswers:
+        class: WhatsappBundle\Admin\AskAndAnswersAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Preguntas & respuestas" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\AskAndAnswers
+            - WhatsappBundle:AskAndAnswersCRUD
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+                
+    sonata.admin.whatsapp.alert:
+        class: WhatsappBundle\Admin\AlertAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Alertas" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\Alert
+            - WhatsappBundle:AlertCRUD
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+                
+    sonata.admin.whatsapp.configuration:
+        class: WhatsappBundle\Admin\ConfigurationAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Empresas" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\Configuration
+            - WhatsappBundle:ConfigurationCRUD
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+                
+                
+    sonata.admin.whatsapp.generalconfiguration:
+        class: WhatsappBundle\Admin\GeneralConfigurationAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Configuración" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\GeneralConfiguration
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+                
+    sonata.admin.whatsapp.usercompany:
+        class: WhatsappBundle\Admin\UserCompanyAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Usuarios y empresas" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\UserCompany
+            - WhatsappBundle:WhatsappGenericCRUD
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+        
+                    
+    sonata.admin.whatsapp.contact:
+        class: WhatsappBundle\Admin\ContactAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Mensajes de contacto" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\Contact
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+       
+    sonata.admin.whatsapp.ticketlog:
+        class: WhatsappBundle\Admin\TicketLogAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Peticiones borradas" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\TicketLog
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+    sonata.admin.whatsapp.peticiontype:
+        class: WhatsappBundle\Admin\PeticionTypeAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Tipos de peticion" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\PeticionType
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+    sonata.admin.whatsapp.category:
+        class: WhatsappBundle\Admin\CategoryAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Categorias de peticiones" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\Category
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+    sonata.admin.whatsapp.clientactitud:
+        class: WhatsappBundle\Admin\ClientActitudAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Actitud de cliente" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\ClientActitud
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+    sonata.admin.whatsapp.product:
+        class: WhatsappBundle\Admin\ProductAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Servicios" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\Product
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+    sonata.admin.whatsapp.presentation:
+        class: WhatsappBundle\Admin\PresentationAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Presentaciones" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\Presentation
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+    sonata.admin.whatsapp.motive:
+        class: WhatsappBundle\Admin\MotiveAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Motivos" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\Motive
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+    sonata.admin.whatsapp.elementtype:
+        class: WhatsappBundle\Admin\ElementTypeAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Apertura de Motivos" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\ElementType
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+    sonata.admin.whatsapp.peticion:
+        class: WhatsappBundle\Admin\PeticionAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Orden de trabajo" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\Peticion
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+    sonata.admin.whatsapp.conversation:
+        class: WhatsappBundle\Admin\ConversationAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Conversaciones" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\Conversation
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+    sonata.admin.whatsapp.conversationtype:
+        class: WhatsappBundle\Admin\ConversationTypeAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Tipos de Conversaciones" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\ConversationType
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+    sonata.admin.whatsapp.questionpoll:
+        class: WhatsappBundle\Admin\QuestionPollAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Pregunta del cuestionario" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\QuestionPoll
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+    sonata.admin.whatsapp.poll:
+        class: WhatsappBundle\Admin\PollAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Cuestionarios" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\Poll
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+            
+    sonata.admin.whatsapp.area:
+        class: WhatsappBundle\Admin\AreaAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Áreas" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\Area
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+            
+    sonata.admin.whatsapp.areauser:
+        class: WhatsappBundle\Admin\AreaUserAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Responsables por Áreas" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\AreaUser
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+    sonata.admin.whatsapp.receptedstatus:
+        class: WhatsappBundle\Admin\ReceptedStatusAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Estados de producto recibido" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\ReceptedStatus
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+    sonata.admin.whatsapp.productrecepted:
+        class: WhatsappBundle\Admin\ProductReceptedAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Producto recibido" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\ProductRecepted
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+    sonata.admin.whatsapp.productsended:
+        class: WhatsappBundle\Admin\ProductSendedAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Producto enviado" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\ProductSended
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+    sonata.admin.whatsapp.sendedstatus:
+        class: WhatsappBundle\Admin\SendedStatusAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Estado de producto enviado" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\SendedStatus
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+    sonata.admin.whatsapp.claimtype:
+        class: WhatsappBundle\Admin\ClaimTypeAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Tipos de reclamo" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\ClaimType
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+            
+    sonata.admin.whatsapp.file:
+        class: WhatsappBundle\Admin\FileAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Recursos" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\File
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+    sonata.admin.whatsapp.peticionstatus:
+        class: WhatsappBundle\Admin\PeticionStatusAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Estados de petición" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\PeticionStatus
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+            
+    sonata.admin.whatsapp.obleaenvio:
+        class: WhatsappBundle\Admin\ObleaEnvioAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Obleas de envío" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\ObleaEnvio
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+            
+    sonata.admin.whatsapp.oblearetiro:
+        class: WhatsappBundle\Admin\ObleaRetiroAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Miembros", label: "Obleas de retiro" }
+        arguments:
+            - ~
+            - WhatsappBundle\Entity\ObleaRetiro
+            - ~
+        calls:
+            - [ setTranslationDomain, [WhatsappBundle]]
+            
+    
+            
+    

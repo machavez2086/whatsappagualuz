@@ -1,0 +1,479 @@
+{% extends 'WhatsappBundle::standard_layout.html.twig' %}
+{% block sonata_breadcrumb %}
+    <div class="hidden-xs">
+        <ol class="nav navbar-top-links breadcrumb">
+            <li>
+                <a href="{{ path('sonata_admin_dashboard', {action:"list"}) }}">
+                    <i class="fa fa-home"></i>
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('my_companies', {action:"list"}) }}">
+                    Mis empresas
+                </a>
+            </li>
+
+            <li class="active"><span>Configuraciones generales</span></li>
+        </ol>
+    </div>
+{% endblock sonata_breadcrumb %}
+{% block sonata_admin_content %}
+
+    {% include '@SonataCore/FlashMessage/render.html.twig' %}
+    <style type="text/css">
+        {##container {
+                min-width: 310px;
+                max-width: 800px;
+                height: 400px;
+                margin: 0 auto
+        }#}
+    </style>
+    <div class="sonata-ba-form">
+
+        <div class="row">
+            <div class="col-md-6">
+
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h4 class="box-title"> {{ 'Datos generales'|trans({}, 'WhatsappBundle') }} </h4>
+                    </div>          
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="box-body table-responsive no-padding">
+                                    <table class="table table-bordered table-striped sonata-ba-list">
+                                        <tbody>
+                                            <tr class="">
+                                                <td class="">
+                                                    <b>Nombre de empresa:</b>
+                                                </td>
+                                                <td class="">
+                                                    {{configuration.company}}
+                                                </td>
+                                            </tr>
+                                            {#<tr class="" >
+                                                <td class="">
+                                                    <b> Sufijo:</b> <i class="fa fa-question-circle" title="Todos los nombres de grupos de esta empresa deben terminar con este sufijo."></i>
+                                                </td>
+                                                <td class="">
+                                                    {{configuration.prefix}}
+                                                </td>
+                                            </tr>#}
+                                            <tr class="">
+                                                <td class="">
+                                                    <b>Estado:</b>
+                                                </td>
+                                                <td class="">
+                                                    {%if configuration.enabled%} Habilitada {%elseif configuration.demo %} Demo {%endif%}
+                                                </td>
+                                            </tr>
+                                            <tr class="">
+                                                <td class="">
+                                                    <b>Zona horaria:</b>
+                                                </td>
+                                                <td class="">
+                                                    {{configuration.timezone}}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+
+                                    </table>
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="box-body table-responsive no-padding">
+                                    <table class="table table-bordered table-striped sonata-ba-list">
+                                        <tbody>
+                                            <tr class="">
+                                                <td class="">
+                                                    <b>Alerta por correo:</b>
+                                                </td>
+                                                <td class="">
+                                                    {%if configuration.isAlertMail%} Sí{%else%} No{%endif%} 
+                                                </td>
+                                            </tr>
+                                            <tr class="">
+                                                <td class="">
+                                                    <b>Llamada de alerta:</b>
+                                                </td>
+                                                <td class="">
+                                                    {%if configuration.isAlertCall%} Sí{%else%} No{%endif%} 
+                                                </td>
+                                            </tr>
+                                            <tr class="">
+                                                <td class="">
+                                                    <b>Mensaje al telefono SMS:</b>
+                                                </td>
+                                                <td class="">
+                                                    {%if configuration.isAlertSms%} Sí{%else%} No{%endif%} 
+                                                </td>
+                                            </tr>
+                                            <tr class="">
+                                                <td class="">
+                                                    <b>Minutos de respuesta:</b>
+                                                </td>
+                                                <td class="">
+                                                    {{configuration.minutesAnswerAlert}}
+                                                </td>
+                                            </tr>
+                                            <tr class="">
+                                                <td class="">
+                                                    <b>Minutos de resolución:</b>
+                                                </td>
+                                                <td class="">
+                                                    {{configuration.minutesResolutionAlert}}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+
+                        <div class="box-footer">
+                            {%if myRole == "Administrador" or is_granted('ROLE_SUPER_ADMIN')%}
+                                <a class="btn btn-warning pull-right" href="{{ path('my_companies_edit_general_data', {id:configuration.id}) }}"><i class="fa fa-pencil" aria-hidden="true"></i> Editar</a>
+                            {%endif%}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h4 class="box-title"> {{ 'Usuarios'|trans({}, 'WhatsappBundle') }} </h4>
+                    </div>          
+
+
+                    <div class="box-body table-responsive no-padding">
+                        <table class="table table-bordered table-striped sonata-ba-list">
+
+                            <thead>
+                                <tr class="sonata-ba-list-field-header">
+                                    <th class="sonata-ba-list-field-header-">
+                                        {{ 'Usuario'|trans({}, 'WhatsappBundle') }}
+                                    </th>
+                                    <th class="sonata-ba-list-field-header-">
+                                        {{ 'Nombre'|trans({}, 'WhatsappBundle') }}
+                                    </th>
+                                    <th class="sonata-ba-list-field-header-">
+                                        {{ 'Rol'|trans({}, 'WhatsappBundle') }}
+                                    </th>
+                                    {%if myRole == "Administrador" or is_granted('ROLE_SUPER_ADMIN')%}
+                                        <th class="sonata-ba-list-field-header-">
+                                            {{ 'Acciones'|trans({}, 'WhatsappBundle') }}
+                                        </th>
+                                    {%endif%}
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for user in configuration.users%}
+                                    <tr class="">
+                                        <td class="">
+                                            {{user.user.username}}
+                                        </td>
+                                        <td class="">
+                                            {{user.user.firstname}}
+                                        </td>
+                                        <td class="">
+                                            {{user.rol}}
+                                        </td>
+                                        {%if authenticateUser.id == configuration.owner.id or is_granted('ROLE_SUPER_ADMIN')%}
+                                            {%if user.user.id != configuration.owner.id%}
+                                                <td class="">
+                                                    <a title="Editar" class="btn btn-sm btn-default edit_link" href="{{ path('my_companies_edit_user_company', {configuration:configuration.id, id:user.id}) }}">
+                                                        <i aria-hidden="true" class="fa fa-pencil"></i>
+                                                        Editar
+                                                    </a>
+                                                    <a title="Borrar" class="btn btn-sm btn-default delete_link" href="{{ path('delete_user_from_company_id', {configuration: configuration.id, userCompany:user.id})}}">
+                                                        <i aria-hidden="true" class="fa fa-times"></i>
+                                                        Borrar
+                                                    </a>
+                                                </td>
+                                            {%endif%}
+                                        {%endif%}
+
+                                    </tr>
+                                {%endfor%}
+                            </tbody>
+
+                        </table>
+                            
+                                <div class="box-footer">
+                                    {%if authenticateUser.id == configuration.owner.id or is_granted('ROLE_SUPER_ADMIN')%}
+                                        <a class="btn btn-success pull-right" href="{{ path('my_companies_add_user', {id:configuration.id}) }}">Agregar usuario</a>
+                                    {%endif%}
+                                </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h4 class="box-title"> {{ 'Notificaciones'|trans({}, 'WhatsappBundle') }} </h4>
+                    </div>          
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="box-body table-responsive no-padding">
+                                <table class="table table-bordered table-striped sonata-ba-list">
+
+                                    <thead>
+                                        <tr class="sonata-ba-list-field-header">
+                                            <th class="sonata-ba-list-field-header-">
+                                                {{ 'Correo'|trans({}, 'WhatsappBundle') }}
+                                            </th>
+                                            {%if myRole == "Administrador" or is_granted('ROLE_SUPER_ADMIN')%}
+                                                <th class="sonata-ba-list-field-header-">
+                                                    {{ 'Acciones'|trans({}, 'WhatsappBundle') }}
+                                                </th>
+                                            {%endif%}
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {% for user in configuration.configurationAlertEmails%}
+                                            <tr class="">
+                                                <td class="">
+                                                    {{user.email}}
+                                                </td>
+
+                                                {%if myRole == "Administrador" or is_granted('ROLE_SUPER_ADMIN')%}
+                                                    <td class="">
+                                                        <a title="Editar" class="btn btn-sm btn-default edit_link" href="{{ path('my_companies_edit_email_company', {configuration:configuration.id, id:user.id}) }}">
+                                                            <i aria-hidden="true" class="fa fa-pencil"></i>
+                                                            Editar
+                                                        </a>
+                                                        <a title="Borrar" class="btn btn-sm btn-default delete_link" href="{{ path('delete_email_from_company_id', {configuration: configuration.id, alertEmail:user.id})}}">
+                                                            <i aria-hidden="true" class="fa fa-times"></i>
+                                                            Borrar
+                                                        </a>
+                                                    </td>
+                                                {%endif%}
+                                            </tr>
+                                        {%endfor%}
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+                            <div class="box-body table-responsive no-padding">
+                                <table class="table table-bordered table-striped sonata-ba-list">
+
+                                    <thead>
+                                        <tr class="sonata-ba-list-field-header">
+                                            <th class="sonata-ba-list-field-header-">
+                                                {{ 'Teléfono'|trans({}, 'WhatsappBundle') }}
+                                            </th>
+                                            {%if myRole == "Administrador" or is_granted('ROLE_SUPER_ADMIN')%}
+                                                <th class="sonata-ba-list-field-header-">
+                                                    {{ 'Acciones'|trans({}, 'WhatsappBundle') }}
+                                                </th>
+                                            {%endif%}
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {% for user in configuration.configurationAlertPhones%}
+                                            <tr class="">
+                                                <td class="">
+                                                    {{user.phone}}
+                                                </td>
+
+                                                {%if myRole == "Administrador" or is_granted('ROLE_SUPER_ADMIN')%}
+                                                    <td class="">
+                                                        <a title="Editar" class="btn btn-sm btn-default edit_link" href="{{ path('my_companies_edit_phone_company', {configuration:configuration.id, id:user.id}) }}">
+                                                            <i aria-hidden="true" class="fa fa-pencil"></i>
+                                                            Editar
+                                                        </a>
+                                                        <a title="Borrar" class="btn btn-sm btn-default delete_link" href="{{ path('delete_phone_from_company_id', {configuration: configuration.id, alertPhone:user.id})}}">
+                                                            <i aria-hidden="true" class="fa fa-times"></i>
+                                                            Borrar
+                                                        </a>
+                                                    </td>
+                                                {%endif%}
+
+                                            </tr>
+                                        {%endfor%}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="box-footer">
+                                {%if myRole == "Administrador" or is_granted('ROLE_SUPER_ADMIN')%}
+                                    <a class="btn btn-success pull-right" href="{{ path('my_companies_add_email', {id:configuration.id}) }}">Agregar correo</a>
+                                {%endif%}
+
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="box-footer">
+                                {%if myRole == "Administrador" or is_granted('ROLE_SUPER_ADMIN')%}
+                                    <a class="btn btn-success pull-right" href="{{ path('my_companies_add_phone', {id:configuration.id}) }}">Agregar teléfono</a>
+                                {%endif%}
+                            </div>   
+                        </div>   
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h4 class="box-title"> {{ 'Grupos de WhatsApp'|trans({}, 'WhatsappBundle') }} </h4>
+                    </div>  
+                    <div class="row">
+                        <div class="col-md-12">
+                            Para agregar nuevos grupos de WhatsApp al sistema, es necesario agregar nuestro teléfono a su grupo y escribir el siguiente mensaje: 
+                            <br>
+                            <pre>Vincular empresa {{configuration.id}}</pre>
+                            Una vez escrito este mensaje en su grupo de WhatsApp, en esta sección aparecerá el grupo para ser confirmado o cancelar la solicitud de incorporarlo a la empresa.
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="box-body table-responsive no-padding">
+                                <table class="table table-bordered table-striped sonata-ba-list">
+
+                                    <thead>
+                                        <tr class="sonata-ba-list-field-header">
+                                            <th class="sonata-ba-list-field-header-">
+                                                {{ 'Nombre del grupo'|trans({}, 'WhatsappBundle') }}
+                                            </th>
+                                            <th class="sonata-ba-list-field-header-">
+                                                {{ 'Identificador del grupo'|trans({}, 'WhatsappBundle') }}
+                                            </th>
+                                            
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {% for group in configuration.whatsappGroups%}
+                                            {%if group.companyConfirmed%}
+                                            <tr class="">
+                                                <td class="">
+                                                    {{group.name}}
+                                                </td>
+                                                <td class="">
+                                                    {{group.chatId}}
+                                                </td>
+                                                {%if myRole == "Administrador" or is_granted('ROLE_SUPER_ADMIN')%}
+                                                    <td class="">
+                                                        <a title="Borrar" class="btn btn-sm btn-danger edit_link" href="{{ path('delete_group_from_company_id', {configuration:configuration.id, id:group.id}) }}">
+                                                            Borrar
+                                                        </a>                                                        
+                                                    </td>
+                                                {%endif%}
+                                            </tr>
+                                            {%endif%}
+                                        {%endfor%}
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+                            <div class="box-header">
+                                <h5 class="box-title"> {{ 'Pendientes a confirmación'|trans({}, 'WhatsappBundle') }} </h5>
+                            </div> 
+                            <div class="box-body table-responsive no-padding">
+                                <table class="table table-bordered table-striped sonata-ba-list">
+
+                                    <thead>
+                                        <tr class="sonata-ba-list-field-header">
+                                            <th class="sonata-ba-list-field-header-">
+                                                {{ 'Nombre del grupo'|trans({}, 'WhatsappBundle') }}
+                                            </th>
+                                            {%if myRole == "Administrador" or is_granted('ROLE_SUPER_ADMIN')%}
+                                                <th class="sonata-ba-list-field-header-">
+                                                    {{ 'Acciones'|trans({}, 'WhatsappBundle') }}
+                                                </th>
+                                            {%endif%}
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {% for group in configuration.whatsappGroups%}
+                                            {%if not group.companyConfirmed%}
+                                                <tr class="">
+                                                    <td class="">
+                                                        {{group.name}}
+                                                    </td>
+                                                    {%if myRole == "Administrador" or is_granted('ROLE_SUPER_ADMIN')%}
+                                                        <td class="">
+                                                            <a title="Editar" class="btn btn-sm btn-success edit_link" href="{{ path('my_companies_confirm_group_company', {configuration:configuration.id, id:group.id}) }}">
+                                                               
+                                                                Confirmar
+                                                            </a>
+                                                            <a title="Borrar" class="btn btn-sm btn-default delete_link" href="{{ path('my_companies_cancel_group_company', {configuration: configuration.id, id:group.id})}}">
+                                                                <i aria-hidden="true" class="fa fa-times"></i>
+                                                                Cancelar
+                                                            </a>
+                                                        </td>
+                                                    {%endif%}
+                                                </tr>
+                                            {%endif%}
+                                        {%endfor%}
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+    {%if is_granted('ROLE_SUPER_ADMIN')%}
+        <script>
+            jQuery(document).ready(function ($) {
+                var a = $("html body.sonata-bc.skin-black.fixed div.wrapper aside.main-sidebar div.slimScrollDiv section.sidebar ul.sidebar-menu li.treeview:nth-child(4)");
+                console.log(a);
+                a.toggleClass("active")
+                $("html body.sonata-bc.skin-black.fixed div.wrapper aside.main-sidebar div.slimScrollDiv section.sidebar ul.sidebar-menu li.treeview.active ul.active.treeview-menu.menu_level_1 li.first").toggleClass("active");
+                a.trigger("click");
+            });
+
+        </script>
+    {%else%}
+        <script>
+            jQuery(document).ready(function ($) {
+
+                var a = $("html body.sonata-bc.skin-black.fixed div.wrapper aside.main-sidebar div.slimScrollDiv section.sidebar ul.sidebar-menu li.treeview:nth-child(2)");
+                console.log(a);
+                a.toggleClass("active")
+                $("html body.sonata-bc.skin-black.fixed div.wrapper aside.main-sidebar div.slimScrollDiv section.sidebar ul.sidebar-menu li.treeview.active ul.active.treeview-menu.menu_level_1 li.first").toggleClass("active");
+                a.trigger("click");
+            });
+
+        </script>
+    {%endif%}
+{% endblock %}
+
+{% block inlinejavascript %}
+
+
+{% endblock %}

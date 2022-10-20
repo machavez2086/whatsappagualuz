@@ -1,0 +1,343 @@
+{% extends 'WhatsappBundle::standard_layout.html.twig' %}
+{% block sonata_breadcrumb %}
+    <div class="hidden-xs">
+        <ol class="nav navbar-top-links breadcrumb">
+            <li>
+                <a href="{{ path('sonata_admin_dashboard', {action:"list"}) }}">
+                    <i class="fa fa-home"></i>
+                </a>
+            </li>
+            <li class="active"><span>Sumario</span></li>
+        </ol>
+    </div>
+{% endblock sonata_breadcrumb %}
+{% block sonata_admin_content %}
+    
+    {% include '@SonataCore/FlashMessage/render.html.twig' %}
+    <style type="text/css">
+        {##container {
+                min-width: 310px;
+                max-width: 800px;
+                height: 400px;
+                margin: 0 auto
+        }#}
+    </style>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination month-change">
+                    <li title="Evaluar" data-toggle="tooltip" class="page-item">
+                        <a href="{{ path('report_summary', {month:prevMonth}) }}" title="Mes anterior" class="anterior_periodo page-link arrow-period">
+                            <i class="fa fa-angle-left"></i>
+                        </a>
+                    </li> 
+                    <li data-toggle="tooltip" data-placement="top" title="{{actualMonth}}" class="page-item active">
+                        <a href="#" class="page-link">{{actualMonth}}</a>
+                    </li>
+                    <li class="page-item"><a href="{{ path('report_summary', {month:nextMonth}) }}" title="Mes siguiente" class="siguiente_periodo page-link arrow-period">
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="sonata-ba-form">
+        <div class="row">
+        <div class="col-md-12">
+
+            <div class="row">
+             <div class="col-lg-4 col-xlg-4 time">
+                 <h3 class="card-title"></h3>
+                 <div class="well">
+                     <div class="card-body grande">
+                         <div class="row">
+                             <div class="col-lg-12">
+                                 <h6 class="text-muted m-t-10 m-b-0">Tiempo desde la última petición</h6>
+                                 <div class="card">
+                                     <div class="card-body transcurrido">
+                                         <div class="d-flex no-block">
+                                             <div class="align-self-center">
+                                                 <h1 class="m-t-0 reloj"><i class="fa fa-clock-o fa-lg "></i> {{ minutesSinceLastTicket }}</h1>
+                                             </div>
+                                         </div>
+
+                                         
+                                     </div>
+                                 </div>
+                             </div>
+                             {#<div class="col-lg-8 tablas">
+                                 <h6 class="text-muted m-t-10 m-b-0">Promedios</h6>
+                                 <div class="card">
+                                     <div class="card-body">
+                                         <div class="d-flex">
+                                         </div>
+                                         <div class="table-responsive m-t-20">
+                                             <table class="table vm no-th-brd no-wrap pro-of-month peticiones_abiertas">
+                                                 <thead>
+                                                 <tr>
+                                                     <th scope="col"></th>
+                                                     <th scope="col dia">Día</th>
+                                                     <th scope="col semana">Semana</th>
+                                                 </tr>
+                                                 </thead>
+                                                 <tbody>
+                                                     <tr class="respuesta">
+                                                         <td><span class="label label-info">Tiempo de Respuesta</span></td>
+                                                         <td class="dia">{{mediaAnswerTimeThisDay}} min</td>
+                                                         <td class="semana">{{mediaAnswerTimeThisWeek}} min</td>
+                                                     </tr>
+                                                     <tr class="resolucion">
+                                                         <td ><span class="label label-primary">Tiempo de Desarrollo</span></td>
+                                                         <td class="dia">{{mediaDevelopTimeThisDay}} min</td>
+                                                         <td class="semana">{{mediaDevelopTimeThisWeek}} min</td>
+                                                     </tr>
+                                                     <tr class="desarrollo">
+                                                         <td><span class="label label-danger">Tiempo de Validación</span></td>
+                                                         <td class="dia">{{mediaValidationTimeThisDay}} min</td>
+                                                         <td class="semana">{{mediaValidationTimeThisWeek}} min</td>
+                                                     </tr>
+                                                     <tr class="validacion">
+                                                         <td><span class="label label-success">Tiempo de Resolución</span></td>
+                                                         <td class="dia">{{mediaResolutionTimeThisDay}} min</td>
+                                                         <td class="semana">{{mediaResolutionTimeThisWeek}} min</td>
+                                                     </tr>
+                                                     <tr class="sentiment">
+                                                         <td><span class="label label-orange">Análisis de Sentimiento</span></td>
+                                                         <td class="dia{%if sumSentimentThisDay < 50%} sentiment-neg-color {%elseif sumSentimentThisDay > 60 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}">{{sumSentimentThisDay}} %</td>
+                                                         <td class="semana{%if mediaSentimentThisWeek < 50%} sentiment-neg-color {%elseif mediaSentimentThisWeek > 60 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}">{{mediaSentimentThisWeek}} %</td>
+                                                     </tr>
+                                                     <tr class="evaluation">
+                                                         <td><span class="label label-warning">Evaluación</span></td>
+                                                         <td class="columna_resolucion{%if mediaEvaluationThisDay > 0%} {%if mediaEvaluationThisDay <= 7%} sentiment-neg-color {%elseif mediaEvaluationThisDay >= 9 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}{%endif%}">{%if mediaEvaluationThisDay > 0%}{{mediaEvaluationThisDay}} ({{cantEvaluationThisDay}}){%else%}-{%endif%} </td>
+                                                         <td class="columna_resolucion{%if mediaEvaluationThisWeek > 0%} {%if mediaEvaluationThisWeek <= 7%} sentiment-neg-color {%elseif mediaEvaluationThisWeek >= 9 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}{%endif%}">{%if mediaEvaluationThisWeek > 0%}{{mediaEvaluationThisWeek}} ({{cantEvaluationThisWeek}}){%else%}-{%endif%} </td>
+                                                     </tr>
+                                                 </tbody>
+                                             </table>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>#}
+                         </div>
+                     </div>
+                 </div>
+             </div>
+
+             {#Peticiones#}
+             <div class="col-lg-8 peticiones">
+                 <h3>Total Peticiones</h3>
+                 <div class="row">
+                     <div class="col-lg-3">
+                         <div class="well">
+                             <div class="card-body">
+                                 <h4 class="card-title peticiones"><b>Día:</b> {{ cantTicketsThisDay }}</h4>
+                             </div>
+                         </div>
+                     </div>
+                     <div class="col-lg-3">
+                         <div class="well">
+                             <div class="card-body">
+                                 <h4 class="card-title peticiones"><b>Semana:</b> {{ cantTicketsThisWeek }}</h4>
+                                 
+                             </div>
+                         </div>
+                     </div>
+                     <div class="col-lg-3">
+                         <div class="well">
+                             <div class="card-body">
+                                 <h4 class="card-title peticiones"><b>Mes:</b> {{ cantTicketsThisMonth }}</h4>
+                                 
+                             </div>
+                         </div>
+                     </div>
+                     <div class="col-lg-3 ">
+                         <div class="well {%if cantTicketsOpened > 0%} ticket-opened {%endif%}">
+                             <div class="card-body">
+                                 <h4 class="card-title peticiones {%if cantTicketsOpened > 0%} ticket-opened {%endif%}"><b>Abiertas:</b> {{ cantTicketsOpened }}</h4>
+                                 
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+
+        
+            </div>
+                <div class="col-lg-6 peticiones">
+                 <h3>Total de obleas de envío</h3>
+                 <div class="row">
+                     <div class="col-lg-4">
+                         <div class="well">
+                             <div class="card-body">
+                                 <h4 class="card-title peticiones"><b>Día:</b> {{ cantObleasEnvioDia }}</h4>
+                             </div>
+                         </div>
+                     </div>
+                     <div class="col-lg-4">
+                         <div class="well">
+                             <div class="card-body">
+                                 <h4 class="card-title peticiones"><b>Semana:</b> {{ cantObleasEnvioWeek }}</h4>
+                                 
+                             </div>
+                         </div>
+                     </div>
+                     <div class="col-lg-4">
+                         <div class="well">
+                             <div class="card-body">
+                                 <h4 class="card-title peticiones"><b>Mes:</b> {{ cantObleasEnvioMonth }}</h4>
+                                 
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+            <div class="col-lg-6 peticiones">
+                 <h3>Total de obleas de retiro</h3>
+                 <div class="row">
+                     <div class="col-lg-4">
+                         <div class="well">
+                             <div class="card-body">
+                                 <h4 class="card-title peticiones"><b>Día:</b> {{ cantObleasRetiroDia }}</h4>
+                             </div>
+                         </div>
+                     </div>
+                     <div class="col-lg-4">
+                         <div class="well">
+                             <div class="card-body">
+                                 <h4 class="card-title peticiones"><b>Semana:</b> {{ cantObleasRetiroWeek }}</h4>
+                                 
+                             </div>
+                         </div>
+                     </div>
+                     <div class="col-lg-4">
+                         <div class="well">
+                             <div class="card-body">
+                                 <h4 class="card-title peticiones"><b>Mes:</b> {{ cantObleasRetiroMonth }}</h4>
+                                 
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>            
+            <div class="col-lg-6 peticiones">
+                 <h3>Total de mensajes a areas</h3>
+                 <div class="row">
+                     <div class="col-lg-4">
+                         <div class="well">
+                             <div class="card-body">
+                                 <h4 class="card-title peticiones"><b>Día:</b> {{ cantTicketSendedAreaDia }}</h4>
+                             </div>
+                         </div>
+                     </div>
+                     <div class="col-lg-4">
+                         <div class="well">
+                             <div class="card-body">
+                                 <h4 class="card-title peticiones"><b>Semana:</b> {{ cantTicketSendedAreaWeek }}</h4>
+                                 
+                             </div>
+                         </div>
+                     </div>
+                     <div class="col-lg-4">
+                         <div class="well">
+                             <div class="card-body">
+                                 <h4 class="card-title peticiones"><b>Mes:</b> {{ cantTicketSendedAreaMonth }}</h4>
+                                 
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+            <div class="col-lg-6 peticiones">
+                 <h3>Total de mensajes a areas respondidos</h3>
+                 <div class="row">
+                     <div class="col-lg-4">
+                         <div class="well">
+                             <div class="card-body">
+                                 <h4 class="card-title peticiones"><b>Día:</b> {{ cantTicketSendedAreaAnsweredDia }}</h4>
+                             </div>
+                         </div>
+                     </div>
+                     <div class="col-lg-4">
+                         <div class="well">
+                             <div class="card-body">
+                                 <h4 class="card-title peticiones"><b>Semana:</b> {{ cantTicketSendedAreaAnsweredWeek }}</h4>
+                                 
+                             </div>
+                         </div>
+                     </div>
+                     <div class="col-lg-4">
+                         <div class="well">
+                             <div class="card-body">
+                                 <h4 class="card-title peticiones"><b>Mes:</b> {{ cantTicketSendedAreaAnsweredMonth }}</h4>
+                                 
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>            
+            {%if openedTickets | length > 0 %}
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 mb-12 ">
+                    <h3 class="card-title">Peticiones abiertas</h3>
+                    <div class="well">
+                        <div class="card-body">
+                            <div class="d-flex">
+                            </div>
+                            <div class="table-responsive m-t-20">
+                                <table class="table table-striped vm no-th-brd no-wrap pro-of-month">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Nº de ticket </th>
+                                             <th scope="col">Contacto</th>
+                                             <th scope="col">Fecha</th>
+                                             <th scope="col">Tiempo transcurrido</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for ticket in openedTickets %}
+                                         <tr>
+                                             <td class="">{{ticket.nroReclamo}}</td>
+                                             <td class="">{{ticket.whatsappGroup}}</td>
+                                             <td class="">{{ticket.createdAt | date("d-m-Y H:i")}}</td>
+
+                                             <td class="graficas">
+                                                 {% set leftDays = "" %}
+                                                 {% set difference = date("now").diff(date(ticket.createdAt)) %}
+                                                 {%if difference.days > 0%}
+                                                    {% set leftDays = difference.days~" d, "%}
+                                                 {%endif%}
+                                                 {%if difference.h > 0%}
+                                                    {% set leftDays = leftDays~difference.h~" h, "%}
+                                                 {%endif%}
+                                                 {% set leftDays = leftDays~difference.i~" min "%}
+
+                                                 {{ leftDays }}
+                                             </td>
+
+                                         </tr>
+                                         {%endfor%}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            {%endif%}
+            
+
+            </div>
+            </div>
+
+        
+        
+        </div>
+
+    </div>
+   
+
+{% endblock %}
+
+{% block inlinejavascript %}
+
+{% endblock %}

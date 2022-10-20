@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Application\Sonata\UserBundle\Entity\User" table="fos_user_user" repository-class="Application\Sonata\UserBundle\Repository\UserRepository">
+
+        <id name="id" column="id" type="integer">
+            <generator strategy="AUTO" />
+        </id>
+        <one-to-many field="configurations" target-entity="WhatsappBundle\Entity\UserCompany" mapped-by="user" orphan-removal="false">
+            <cascade>
+                <cascade-all />
+            </cascade>
+        </one-to-many>
+        <one-to-many field="companies" target-entity="WhatsappBundle\Entity\Configuration" mapped-by="owner" orphan-removal="false">
+            <cascade>
+                <cascade-all />
+            </cascade>
+        </one-to-many>
+        <one-to-many field="areaUsers" target-entity="WhatsappBundle\Entity\AreaUser" mapped-by="user" orphan-removal="false">
+            <cascade>
+                <cascade-all />
+            </cascade>
+        </one-to-many>
+        <one-to-many field="userConversations" target-entity="WhatsappBundle\Entity\UserConversation" mapped-by="user" orphan-removal="false">
+            <cascade>
+                <cascade-all />
+            </cascade>
+        </one-to-many>
+        <one-to-many field="messages" target-entity="WhatsappBundle\Entity\Message" mapped-by="user" orphan-removal="false">
+            <cascade>
+                <cascade-all />
+            </cascade>
+        </one-to-many>
+        <one-to-many field="messageSendeds" target-entity="WhatsappBundle\Entity\MessageSended" mapped-by="user" orphan-removal="false">
+            <cascade>
+                <cascade-all />
+            </cascade>
+        </one-to-many>
+        <one-to-many field="ticketSendedAreas" target-entity="WhatsappBundle\Entity\TicketSendedArea" mapped-by="user" orphan-removal="false">
+            <cascade>
+                <cascade-all />
+            </cascade>
+        </one-to-many>
+        <one-to-many field="ticketSendedAreaUpdateds" target-entity="WhatsappBundle\Entity\TicketSendedArea" mapped-by="updatedBy" orphan-removal="false">
+            <cascade>
+                <cascade-all />
+            </cascade>
+        </one-to-many>
+        <one-to-many field="ticketSendedAreaCreateds" target-entity="WhatsappBundle\Entity\TicketSendedArea" mapped-by="createdBy" orphan-removal="false">
+            <cascade>
+                <cascade-all />
+            </cascade>
+        </one-to-many>
+        <one-to-many field="productReceptedUpdateds" target-entity="WhatsappBundle\Entity\ProductRecepted" mapped-by="updatedBy" orphan-removal="false">
+            <cascade>
+                <cascade-all />
+            </cascade>
+        </one-to-many>
+        <one-to-many field="productReceptedCreateds" target-entity="WhatsappBundle\Entity\ProductRecepted" mapped-by="createdBy" orphan-removal="false">
+            <cascade>
+                <cascade-all />
+            </cascade>
+        </one-to-many>
+        <one-to-many field="productSendedUpdateds" target-entity="WhatsappBundle\Entity\ProductSended" mapped-by="updatedBy" orphan-removal="false">
+            <cascade>
+                <cascade-all />
+            </cascade>
+        </one-to-many>
+        <one-to-many field="productSendedCreateds" target-entity="WhatsappBundle\Entity\ProductSended" mapped-by="createdBy" orphan-removal="false">
+            <cascade>
+                <cascade-all />
+            </cascade>
+        </one-to-many>
+        <one-to-many field="obleaEnvioUpdateds" target-entity="WhatsappBundle\Entity\ObleaEnvio" mapped-by="updatedBy" orphan-removal="false">
+            <cascade>
+                <cascade-all />
+            </cascade>
+        </one-to-many>
+        <one-to-many field="obleaEnvioCreateds" target-entity="WhatsappBundle\Entity\ObleaEnvio" mapped-by="createdBy" orphan-removal="false">
+            <cascade>
+                <cascade-all />
+            </cascade>
+        </one-to-many>
+        <one-to-many field="obleaRetiroUpdateds" target-entity="WhatsappBundle\Entity\ObleaRetiro" mapped-by="updatedBy" orphan-removal="false">
+            <cascade>
+                <cascade-all />
+            </cascade>
+        </one-to-many>
+        <one-to-many field="obleaRetiroCreateds" target-entity="WhatsappBundle\Entity\ObleaRetiro" mapped-by="createdBy" orphan-removal="false">
+            <cascade>
+                <cascade-all />
+            </cascade>
+        </one-to-many>
+        <field name="aprovedplan"             type="boolean"       column="aprovedplan"          nullable="true" />
+        <field name="plantype"             type="string"       column="plantype"         nullable="true"  />
+    </entity>
+
+</doctrine-mapping>

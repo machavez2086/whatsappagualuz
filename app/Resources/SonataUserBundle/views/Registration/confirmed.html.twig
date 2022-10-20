@@ -1,0 +1,20 @@
+{% extends 'WhatsappBundle:Default:home.html.twig' %}
+
+
+{% block contenido_especifico %}
+    <div class="page-header" filter-color="orange">
+        <div class="page-header-image" style="background-image: url({{ asset('bundles/whatsapp/img/img-home/img/whatsapp-2.jpg')  }});"></div>
+        <div class="container">
+            <div class="col-md-4 content-center">
+                <div class="card card-login card-plain">
+                    <p>{{ 'registration.confirmed'|trans({'%username%': user.username}, 'FOSUserBundle') }}</p>
+                    {% if app.session is not empty %}
+                        {% set targetUrl = app.session.get('_security.' ~ app.security.token.providerKey ~ '.target_path') %}
+                        {% if targetUrl is not empty %}<p><a href="{{ targetUrl }}">{{ 'registration.back'|trans({}, 'FOSUserBundle') }}</a></p>{% endif %}
+                        {% endif %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock%}

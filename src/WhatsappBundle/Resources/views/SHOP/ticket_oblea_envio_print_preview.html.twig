@@ -1,0 +1,230 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <!--
+      Modified from the Debian original for Ubuntu
+      Last updated: 2016-11-16
+      See: https://launchpad.net/bugs/1288690
+    -->
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Apache2 Ubuntu Default Page: It works</title>
+        <style type="text/css" media="screen">
+            @media print {
+                table {
+                    margin-left: auto;
+                    margin-right: auto;
+                    border-collapse:collapse;
+                    {#                padding: 3px 3px 3px 3px;#}
+
+
+                    font-family: Verdana, sans-serif;
+                    font-size: 11pt;
+                    text-align: center;
+                    border: solid 2px black;
+                    width: 500px;
+                }
+                .border-top {
+                    border-top: solid 2px black;
+                }
+                .border-1{
+                    border: 1pt solid black;
+                }
+                .background{
+                    background-color: #DDD;
+                }
+                td{
+                    width: 25%;   
+                }
+            }
+            table {
+                margin-left: auto;
+                margin-right: auto;
+                border-collapse:collapse;
+                {#                padding: 3px 3px 3px 3px;#}
+
+
+                font-family: Verdana, sans-serif;
+                font-size: 11pt;
+                    text-align: center;
+                    border: solid 2px black;
+                    width: 500px;
+            }
+            .border-top {
+                border-top: solid 2px black;
+            }
+            .border-1{
+                border: 1pt solid black;
+            }
+            .background{
+                background-color: #DDD;
+            }
+            td{
+                width: 25%;   
+            }
+            .image{
+                width: 100px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="main_page">
+            <div class="page_header floating_element">
+
+                <table class="table">
+                    <tbody>
+                        <tr class="">
+                            <td class="" colspan="4">
+                                <h3>OBLEA DE ENVÍO</h3>
+                            </td>
+                        </tr>  
+                        <tr class="border-top">
+                            <td class="border-1" colspan="3">
+                                {{obleaEnvio.name}}
+                            </td>
+
+                            <td class="border-1 ">
+                                <img class='image' src="http://192.168.11.202/whatsappshop/web/seprit2.png" alt="Ubuntu Logo" class="floating_element"/>
+                            </td>
+                        </tr>
+                        <tr class="border-top">
+                            <td class="" colspan="4">
+                                Número Operativo 384375
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <td class="background border-1" >
+                                <b>N° Reclamo</b>
+                            </td>
+
+                            <td class="background border-1" >
+                                <b>Bulto</b>
+                            </td>
+
+                            <td class="background border-1" >
+                                <b>Paquetes a retirar</b>
+                            </td>
+
+                            <td class="background border-1" >
+                                <b>Peso</b>
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <td class=" border-1" >
+                                {{obleaEnvio.noReclamo}}
+                            </td>
+
+                            <td class=" border-1" >
+                                {{obleaEnvio.bulto}}
+                            </td>
+
+                            <td class=" border-1" >
+                                {{obleaEnvio.paquetesRetirar}}
+                            </td>
+
+                            <td class=" border-1" >
+                                {{obleaEnvio.peso}}
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <td class=" background border-1" >
+                                <b>Entrega en domicilio:</b>
+                            </td>
+
+                            <td class=" border-1" colspan="3" style="font-size: 14pt;">
+                                {{obleaEnvio.entregaEnDomicilio}}
+                            </td>
+
+                        </tr>
+                        <tr class="">
+                            <td class="background border-1" colspan="2">
+                                <b>Localidad</b>
+                            </td>
+
+                            <td class="background border-1" >
+                                <b>Provincia</b>
+                            </td>
+
+                            <td class="background border-1" >
+                                <b>CP</b>
+                            </td>
+
+                        </tr>
+                        <tr class="">
+                            <td class=" border-1" colspan="2">
+                                {{obleaEnvio.localidad}}
+                            </td>
+
+                            <td class=" border-1" >
+                                {{obleaEnvio.provincia}}
+                            </td>
+
+                            <td class=" border-1" >
+                                {{obleaEnvio.cp}}
+                            </td>
+
+                        </tr>
+                        <tr class="">
+                            <td class="background border-1" colspan="4">
+                                <b>DESTINATARIO</b>
+                            </td>
+                        </tr>
+                        <tr class="border-top">
+                            <td class=" border-1" colspan="4">
+                                {{obleaEnvio.destinatario}}
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <td class="background border-1" colspan="4">
+                                <b>OBSERVACIONES DE ENTREGA</b>
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <td class=" border-1" colspan="4">
+                                {{obleaEnvio.observaciones}}
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <td class="background border-1" colspan="4">
+                                <b>Producto</b>
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <td class=" border-1" colspan="4">
+                                <b>{{obleaEnvio.product}}</b>
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <td class="background border-1" colspan="4">
+                                <b>Cantidad de productos reclamados</b>
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <td class=" border-1" colspan="4">
+                                <b>{{obleaEnvio.peticion.cant}}</b>
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <td class="background border-1" colspan="4">
+                                <b>REMITENTE</b>
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <td class=" border-1" colspan="4">
+                                {{obleaEnvio.remitente}}
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <td class=" border-1" colspan="4">
+                                {{obleaEnvio.remitenteContact}}
+                            </td>
+                        </tr>
+                        {#                                                {%endif%}#}
+                    </tbody>
+
+                </table
+            </div>
+        </div>
+
+    </body>
+</html>

@@ -1,0 +1,1468 @@
+{% extends 'WhatsappBundle::report_layout.html.twig' %}
+{% block stylesheets_inline %}
+    <link href="{{ asset('bundles/whatsapp/css/sb-admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('bundles/whatsapp/css/bootstrap-datetimepicker.css') }}" rel="stylesheet">
+{% endblock %}
+{% block child_title %}Reportes por fechas{% endblock %}
+{% block content %}
+
+    <div class="container-fluid">
+        {#        {% include '@SonataCore/FlashMessage/render.html.twig' %}#}
+        
+        <form id="rango_fechas" role="form" action="{{ path('report_by_date_range') }}" {{ form_enctype(form1) }} method="POST">
+            {% if form1.vars.errors|length > 0 %}
+                <div class="sonata-ba-form-error">
+                    {{ form_errors(form1) }}
+                </div>
+            {% endif %}
+            {% for flashMessage in app.session.flashbag.get('error') %}
+                <div class="alert alert-warning">
+                    {{ flashMessage | trans({}, 'WhatsappBundle') }}
+                </div>
+            {% endfor %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                            <div class="box box-primary">
+                                <div class="box-body">
+                                    <div class="sonata-ba-collapsed-fields">
+                                        <div class="row">
+                                            <div class="form-group col-6">
+                                                {{ form_label(form1.fechainicial) }}
+                                                {{ form_widget(form1.fechainicial, {attr: {'class': 'form-control '}}) }}
+                                            </div>
+                                            <div class="form-group col-6">
+                                                {{ form_label(form1.fechafinal) }}
+                                                {{ form_widget(form1.fechafinal, {attr: {'class': 'form-control '}}) }}
+                                            </div>
+                                        </div>
+                                        {{ form_rest(form1) }}
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    {% block formactions %}
+                        {% block sonata_form_actions %}
+                            <button type="submit" class="btn btn-primary pull-right" name="btn_update">
+                                <i class="fa fa-newspaper-o"></i> {{ 'Hacer reporte'|trans({}, 'WhatsappBundle') }}
+                            </button>
+                        {% endblock %}
+                    {% endblock formactions %}
+                </div>
+            </div>
+        </form>
+
+            {#Tables#}
+
+                <div class="row">
+                    <h3 class="card-title titulo_tablas_rango_fechas"><i class="fa fa-calendar"></i>Incidencias por <strong>Día</strong></h3>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 col-mb-12 tablas_rango_fechas">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                </div>
+                                <div class="table-responsive m-t-20">
+                                    <table class="table vm no-th-brd no-wrap pro-of-month">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">Día de la semana</th>
+                                            <th scope="col">Incidencias</th>
+                                            <th scope="col">Tiempo de Respuesta</th>
+                                            <th scope="col">Tiempo de Desarrollo</th>
+                                            <th scope="col">Tiempo de Validación</th>
+                                            <th scope="col">Tiempo de Resolución</th>
+{#                                            <th scope="col">Análisis de Sentimiento (Cliente)</th>#}
+{#                                            <th scope="col">Análisis de Sentimiento (Recurso)</th>#}
+                                            <th scope="col">Análisis de Sentimiento</th>
+                                            <th scope="col">Evaluación</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% set totalPromedioinsidenciasPorRecursocantEvaluation = 0%}
+                                        {% for insidencia in insidenciasPorDia %}
+                                            <tr>
+                                                <td class="columna_dia">{{ insidencia.dayWeek }}</td>
+                                                <td class="columna_incidencias">{{ insidencia.tickets }}</td>
+                                                <td class="columna_respuesta">{{ insidencia.answer }} min</td>
+                                                <td class="columna_respuesta">{{ insidencia.develop }} min</td>
+                                                <td class="columna_respuesta">{{ insidencia.validation }} min</td>
+                                                <td class="columna_resolucion">{{ insidencia.resolution }} min</td>
+{#                                                <td class="columna_resolucion{%if insidencia.sentimentClient < 50%} sentiment-neg-color {%elseif insidencia.sentimentClient > 60 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}" >{{ insidencia.sentimentClient}} %</td>#}
+{#                                                <td class="columna_resolucion{%if insidencia.sentimentSupport < 50%} sentiment-neg-color {%elseif insidencia.sentimentSupport > 60 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}">{{ insidencia.sentimentSupport}} %</td>#}
+                                                <td class="columna_resolucion{%if insidencia.sentiment < 50%} sentiment-neg-color {%elseif insidencia.sentiment > 60 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}">{{ insidencia.sentiment}} %</td>
+                                                <td class="columna_resolucion{%if insidencia.evaluation > 0%}{%if insidencia.evaluation <= 7%} sentiment-neg-color {%elseif insidencia.evaluation >= 9 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}{%endif%}">{%if insidencia.evaluation > 0%}{{insidencia.evaluation}} ({{insidencia.cantEvaluation}}){%else%}-{%endif%} </td>
+                                                {% set totalPromedioinsidenciasPorRecursocantEvaluation = totalPromedioinsidenciasPorRecursocantEvaluation+insidencia.cantEvaluation%}
+                                            </tr>
+                                        {% endfor %}
+                                        <tr>
+                                            <td class="columna_dia"><em>Total/Promedio</em></td>
+                                            <td class="columna_incidencias">{{ totalPromedioinsidenciasPorDia.totalInsidencias }}</td>
+                                            <td class="columna_respuesta">{{ totalPromedioinsidenciasPorDia.promedioRespuesta }} min</td>
+                                            <td class="columna_respuesta">{{ totalPromedioinsidenciasPorDia.promedioDevelop }} min</td>
+                                            <td class="columna_respuesta">{{ totalPromedioinsidenciasPorDia.promedioValidation }} min</td>
+                                            <td class="columna_resolucion">{{ totalPromedioinsidenciasPorDia.promedioResolucion }} min</td>
+{#                                            <td class="columna_resolucion{%if totalPromedioinsidenciasPorDia.promedioSentimentClient < 50%} sentiment-neg-color {%elseif totalPromedioinsidenciasPorDia.promedioSentimentClient > 60 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}">{{ totalPromedioinsidenciasPorDia.promedioSentimentClient }} %</td>#}
+{#                                            <td class="columna_resolucion{%if totalPromedioinsidenciasPorDia.promedioSentimentSupport < 50%} sentiment-neg-color {%elseif totalPromedioinsidenciasPorDia.promedioSentimentSupport > 60 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}">{{ totalPromedioinsidenciasPorDia.promedioSentimentSupport }} %</td>#}
+                                            <td class="columna_resolucion{%if totalPromedioinsidenciasPorDia.promedioSentiment < 50%} sentiment-neg-color {%elseif totalPromedioinsidenciasPorDia.promedioSentiment > 60 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}">{{ totalPromedioinsidenciasPorDia.promedioSentiment }} %</td>
+                                            <td class="columna_resolucion{%if totalPromedioinsidenciasPorDia.promedioEvaluation > 0%}{%if totalPromedioinsidenciasPorDia.promedioEvaluation <= 7%} sentiment-neg-color {%elseif totalPromedioinsidenciasPorDia.promedioEvaluation >= 9 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}{%endif%}">{%if totalPromedioinsidenciasPorDia.promedioEvaluation > 0%}{{totalPromedioinsidenciasPorDia.promedioEvaluation}} ({{totalPromedioinsidenciasPorRecursocantEvaluation}}){%else%}-{%endif%} </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 graficos">
+                        <div class="row">
+                            <!-- Example Bar Chart Card-->
+                            <div class="graficas card col-lg-4 col-sm-12 col-mb-12 ml-auto mr-auto">
+                                <div class="card-header">
+                                    <h6 class="text-muted m-t-10 m-b-0">Incidencias por días</h6>
+                                </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-sm-12 my-auto">
+                                            <div id="graphicticketday" style="height: 400px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="graficas card col-lg-4 col-sm-12 col-mb-12 ml-auto mr-auto">
+                                <div class="card-header">
+                                    <h6 class="text-muted m-t-10 m-b-0">Tiempos de Respuesta por días</h6>
+                                </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-sm-12 my-auto">
+                                            <div id="graphicanswerday" style="height: 400px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="graficas card col-lg-4 col-sm-12 col-mb-12 ml-auto mr-auto">
+                                <div class="card-header">
+                                    <h6 class="text-muted m-t-10 m-b-0">Tiempos de Desarrollo por días</h6>
+                                </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-sm-12 my-auto">
+                                            <div id="graphicdevelopday" style="height: 400px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="graficas card col-lg-4 col-sm-12 col-mb-12 ml-auto mr-auto">
+                                <div class="card-header">
+                                    <h6 class="text-muted m-t-10 m-b-0">Tiempos de Validación por días</h6>
+                                </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-sm-12 my-auto">
+                                            <div id="graphicvalidationday" style="height: 400px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="graficas card col-lg-4 col-sm-12 col-mb-12 ml-auto mr-auto">
+                                <div class="card-header">
+                                    <h6 class="text-muted m-t-10 m-b-0">Tiempos de Resolución por días</h6>
+                                </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-sm-12 my-auto">
+                                            <div id="graphicresolutionday" style="height: 400px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="graficas card col-lg-4 col-sm-12 col-mb-12 ml-auto mr-auto">
+                                <div class="card-header">
+                                    <h6 class="text-muted m-t-10 m-b-0">Análisis de Sentimiento por días</h6>
+                                </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-sm-12 my-auto">
+                                            <div id="graphicsentimentday" style="height: 400px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+          
+                <div class="row">
+                    <h3 class="card-title titulo_tablas_rango_fechas"><i class="fa fa-users"></i> Grupos de <strong>Whatsapp</strong></h3>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 col-mb-12 tablas_rango_fechas">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                </div>
+                                <div class="table-responsive m-t-20">
+                                    <table class="table vm no-th-brd no-wrap pro-of-month">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">Cliente</th>
+                                            <th scope="col">Incidencias</th>
+                                            <th scope="col">Tiempo de Respuesta</th>
+                                            <th scope="col">Tiempo de Desarrollo</th>
+                                            <th scope="col">Tiempo de Validación</th>
+                                            <th scope="col">Tiempo de Resolución</th>
+{#                                            <th scope="col">Análisis de Sentimiento (Clientes)</th>#}
+{#                                            <th scope="col">Análisis de Sentimiento (Recursos)</th>#}
+                                            <th scope="col">Análisis de Sentimiento</th>
+                                            <th scope="col">Evaluación</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% set totalPromedioinsidenciasPorRecursocantEvaluation = 0%}
+                                        {% for insidencia in insidenciasPorGrupo %}
+                                            <tr>
+                                                <td class="columna_cliente">{{ insidencia.client }}</td>
+                                                <td class="columna_incidencias">{{ insidencia.tickets }}</td>
+                                                <td class="columna_respuesta">{{ insidencia.answer }} min</td>
+                                                <td class="columna_respuesta">{{ insidencia.develop }} min</td>
+                                                <td class="columna_respuesta">{{ insidencia.validation }} min</td>
+                                                <td class="columna_resolucion">{{ insidencia.resolution }} min</td>
+{#                                                <td class="columna_resolucion{%if insidencia.sentimentClient < 50%} sentiment-neg-color {%elseif insidencia.sentimentClient > 60 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}">{{ insidencia.sentimentClient }} %</td>#}
+{#                                                <td class="columna_resolucion{%if insidencia.sentimentSupport < 50%} sentiment-neg-color {%elseif insidencia.sentimentSupport > 60 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}">{{ insidencia.sentimentSupport }} %</td>#}
+                                                <td class="columna_resolucion{%if insidencia.sentiment < 50%} sentiment-neg-color {%elseif insidencia.sentiment > 60 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}">{{ insidencia.sentiment }} %</td>
+                                                <td class="columna_resolucion{%if insidencia.evaluation > 0%}{%if insidencia.evaluation <= 7%} sentiment-neg-color {%elseif insidencia.evaluation >= 9 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}{%endif%}">{%if insidencia.evaluation > 0%}{{insidencia.evaluation}} ({{insidencia.cantEvaluation}}){%else%}-{%endif%} </td>
+                                                {% set totalPromedioinsidenciasPorRecursocantEvaluation = totalPromedioinsidenciasPorRecursocantEvaluation+insidencia.cantEvaluation%}
+                                            </tr>
+                                        {% endfor %}
+                                        <tr>
+                                            <td class="columna_dia"><em>Total/Promedio</em></td>
+                                            <td class="columna_incidencias">{{ totalPromedioinsidenciasPorGrupos.totalInsidencias }}</td>
+                                            <td class="columna_respuesta">{{ totalPromedioinsidenciasPorGrupos.promedioRespuesta }} min</td>
+                                            <td class="columna_resolucion">{{ totalPromedioinsidenciasPorGrupos.promedioDevelop }} min</td>
+                                            <td class="columna_resolucion">{{ totalPromedioinsidenciasPorGrupos.promedioValidation }} min</td>
+                                            <td class="columna_resolucion">{{ totalPromedioinsidenciasPorGrupos.promedioResolucion }} min</td>
+{#                                            <td class="columna_resolucion{%if totalPromedioinsidenciasPorGrupos.promedioSentimentClient < 50%} sentiment-neg-color {%elseif totalPromedioinsidenciasPorGrupos.promedioSentimentClient > 60 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}">{{ totalPromedioinsidenciasPorGrupos.promedioSentimentClient }} %</td>#}
+{#                                            <td class="columna_resolucion{%if totalPromedioinsidenciasPorGrupos.promedioSentimentSupport < 50%} sentiment-neg-color {%elseif totalPromedioinsidenciasPorGrupos.promedioSentimentSupport > 60 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}">{{ totalPromedioinsidenciasPorGrupos.promedioSentimentSupport }} %</td>#}
+                                            <td class="columna_resolucion{%if totalPromedioinsidenciasPorGrupos.promedioSentiment < 50%} sentiment-neg-color {%elseif totalPromedioinsidenciasPorGrupos.promedioSentiment > 60 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}">{{ totalPromedioinsidenciasPorGrupos.promedioSentiment }} %</td>
+                                            <td class="columna_resolucion{%if totalPromedioinsidenciasPorGrupos.promedioEvaluation > 0%}{%if totalPromedioinsidenciasPorGrupos.promedioEvaluation <= 7%} sentiment-neg-color {%elseif totalPromedioinsidenciasPorGrupos.promedioEvaluation >= 9 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}{%endif%}">{%if totalPromedioinsidenciasPorGrupos.promedioEvaluation > 0%}{{totalPromedioinsidenciasPorGrupos.promedioEvaluation}} ({{totalPromedioinsidenciasPorRecursocantEvaluation}}){%else%}-{%endif%} </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 graficos">
+                        <div class="row">
+                            <!-- Example Bar Chart Card-->
+                            <div class="graficas card col-lg-4 col-sm-12 col-mb-12 ml-auto mr-auto">
+                                <div class="card-header">
+                                    <h6 class="text-muted m-t-10 m-b-0">Incidencias por clientes</h6>
+                                </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-sm-12 my-auto">
+                                            <div id="graphicticketgroup" style="height: 400px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="graficas card col-lg-4 col-sm-12 col-mb-12 ml-auto mr-auto">
+                                <div class="card-header">
+                                    <h6 class="text-muted m-t-10 m-b-0">Tiempos de Respuesta por clientes</h6>
+                                </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-sm-12 my-auto">
+                                            <div id="graphicanswergroup" style="height: 400px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="graficas card col-lg-4 col-sm-12 col-mb-12 ml-auto mr-auto">
+                                <div class="card-header">
+                                    <h6 class="text-muted m-t-10 m-b-0">Tiempos de Desarrollo por clientes</h6>
+                                </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-sm-12 my-auto">
+                                            <div id="graphicdevelopgroup" style="height: 400px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="graficas card col-lg-4 col-sm-12 col-mb-12 ml-auto mr-auto">
+                                <div class="card-header">
+                                    <h6 class="text-muted m-t-10 m-b-0">Tiempos de Validación por clientes</h6>
+                                </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-sm-12 my-auto">
+                                            <div id="graphicvalidationgroup" style="height: 400px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="graficas card col-lg-4 col-sm-12 col-mb-12 ml-auto mr-auto">
+                                <div class="card-header">
+                                    <h6 class="text-muted m-t-10 m-b-0">Tiempos de Resolución por clientes</h6>
+                                </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-sm-12 my-auto">
+                                            <div id="graphicresolutiongroup" style="height: 400px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="graficas card col-lg-4 col-sm-12 col-mb-12 ml-auto mr-auto">
+                                <div class="card-header">
+                                    <h6 class="text-muted m-t-10 m-b-0">Análisis de Sentimiento por clientes</h6>
+                                </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-sm-12 my-auto">
+                                            <div id="graphicsentimentgroup" style="height: 400px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+     
+                <div class="row">
+                    <h3 class="card-title titulo_tablas_rango_fechas"><i class="fa fa-briefcase"></i>Incidencias por <strong>Recurso</strong></h3>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 col-mb-12 tablas_rango_fechas">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                </div>
+                                <div class="table-responsive m-t-20">
+                                    <table class="table vm no-th-brd no-wrap pro-of-month">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">Recurso</th>
+                                            <th scope="col">Incidencias</th>
+                                            <th scope="col">Tiempos de Respuesta</th>
+                                            <th scope="col">Tiempos de Desarrollo</th>
+                                            <th scope="col">Tiempos de Validación</th>
+                                            <th scope="col">Tiempos de Resolución</th>
+{#                                            <th scope="col">Análisis de Sentimiento (Cliente)</th>#}
+{#                                            <th scope="col">Análisis de Sentimiento (Recurso)</th>#}
+                                            <th scope="col">Análisis de Sentimiento</th>
+                                            <th scope="col">Evaluación</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% set totalPromedioinsidenciasPorRecursocantEvaluation = 0%}
+                                        {% for insidencia in insidenciasPorRecursos %}
+                                            <tr>
+                                                <td class="columna_cliente">{{ insidencia.client }}</td>
+                                                <td class="columna_incidencias">{{ insidencia.tickets }}</td>
+                                                <td class="columna_respuesta">{{ insidencia.answer }} min</td>
+                                                <td class="columna_resolucion">{{ insidencia.develop }} min</td>
+                                                <td class="columna_resolucion">{{ insidencia.validation }} min</td>
+                                                <td class="columna_resolucion">{{ insidencia.resolution }} min</td>
+{#                                                <td class="columna_resolucion{%if insidencia.sentimentClient < 50%} sentiment-neg-color {%elseif insidencia.sentimentClient > 60 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}">{{ insidencia.sentimentClient }} %</td>#}
+{#                                                <td class="columna_resolucion{%if insidencia.sentimentSupport < 50%} sentiment-neg-color {%elseif insidencia.sentimentSupport > 60 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}">{{ insidencia.sentimentSupport }} %</td>#}
+                                                <td class="columna_resolucion{%if insidencia.sentiment < 50%} sentiment-neg-color {%elseif insidencia.sentiment > 60 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}">{{ insidencia.sentiment }} %</td>
+                                                <td class="columna_resolucion{%if insidencia.evaluation > 0%}{%if insidencia.evaluation <= 7%} sentiment-neg-color {%elseif insidencia.evaluation >= 9 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}{%endif%}">{%if insidencia.evaluation > 0%}{{insidencia.evaluation}} ({{insidencia.cantEvaluation}}){%else%}-{%endif%} </td>
+                                                {% set totalPromedioinsidenciasPorRecursocantEvaluation = totalPromedioinsidenciasPorRecursocantEvaluation+insidencia.cantEvaluation%}
+                                            </tr>
+                                        {% endfor %}
+                                        <tr>
+                                            <td class="columna_dia"><em>Total/Promedio</em></td>
+                                            <td class="columna_incidencias">{{ totalPromedioinsidenciasPorRecurso.totalInsidencias }}</td>
+                                            <td class="columna_respuesta">{{ totalPromedioinsidenciasPorRecurso.promedioRespuesta }} min</td>
+                                            <td class="columna_resolucion">{{ totalPromedioinsidenciasPorRecurso.promedioDevelop }} min</td>
+                                            <td class="columna_resolucion">{{ totalPromedioinsidenciasPorRecurso.promedioValidation }} min</td>
+                                            <td class="columna_resolucion">{{ totalPromedioinsidenciasPorRecurso.promedioResolucion }} min</td>
+{#                                            <td class="columna_resolucion{%if totalPromedioinsidenciasPorRecurso.promedioSentimentClient < 50%} sentiment-neg-color {%elseif totalPromedioinsidenciasPorRecurso.promedioSentimentClient > 60 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}">{{ totalPromedioinsidenciasPorRecurso.promedioSentimentClient }} %</td>#}
+{#                                            <td class="columna_resolucion{%if totalPromedioinsidenciasPorRecurso.promedioSentimentSupport < 50%} sentiment-neg-color {%elseif totalPromedioinsidenciasPorRecurso.promedioSentimentSupport > 60 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}">{{ totalPromedioinsidenciasPorRecurso.promedioSentimentSupport }} %</td>#}
+                                            <td class="columna_resolucion{%if totalPromedioinsidenciasPorRecurso.promedioSentiment < 50%} sentiment-neg-color {%elseif totalPromedioinsidenciasPorRecurso.promedioSentiment > 60 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}">{{ totalPromedioinsidenciasPorRecurso.promedioSentiment }} %</td>
+                                            <td class="columna_resolucion{%if totalPromedioinsidenciasPorRecurso.promedioEvaluation > 0%}{%if totalPromedioinsidenciasPorRecurso.promedioEvaluation <= 7%} sentiment-neg-color {%elseif totalPromedioinsidenciasPorRecurso.promedioEvaluation >= 9 %} sentiment-pos-color {%else%} sentiment-neu-color {%endif%}{%endif%}">{%if totalPromedioinsidenciasPorRecurso.promedioEvaluation > 0%}{{totalPromedioinsidenciasPorRecurso.promedioEvaluation}} ({{totalPromedioinsidenciasPorRecursocantEvaluation}}){%else%}-{%endif%} </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 graficos">
+                        <div class="row">
+                            <!-- Example Bar Chart Card-->
+                            <div class="graficas card col-lg-4 col-sm-12 col-mb-12 ml-auto mr-auto">
+                                <div class="card-header">
+                                    <h6 class="text-muted m-t-10 m-b-0">Incidencias por recursos</h6>
+                                </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-sm-12 my-auto">
+                                            <div id="graphicticketresource" style="height: 400px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="graficas card col-lg-4 col-sm-12 col-mb-12 ml-auto mr-auto">
+                                <div class="card-header">
+                                    <h6 class="text-muted m-t-10 m-b-0">Tiempos de Respuesta por recursos</h6>
+                                </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-sm-12 my-auto">
+                                            <div id="graphicanswerresource" style="height: 400px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="graficas card col-lg-4 col-sm-12 col-mb-12 ml-auto mr-auto">
+                                <div class="card-header">
+                                    <h6 class="text-muted m-t-10 m-b-0">Tiempos de Desarrollo por recursos</h6>
+                                </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-sm-12 my-auto">
+                                            <div id="graphicdevelopresource" style="height: 400px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="graficas card col-lg-4 col-sm-12 col-mb-12 ml-auto mr-auto">
+                                <div class="card-header">
+                                    <h6 class="text-muted m-t-10 m-b-0">Tiempos de Validación por recursos</h6>
+                                </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-sm-12 my-auto">
+                                            <div id="graphicvalidationresource" style="height: 400px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="graficas card col-lg-4 col-sm-12 col-mb-12 ml-auto mr-auto">
+                                <div class="card-header">
+                                    <h6 class="text-muted m-t-10 m-b-0">Tiempos de Resolución por recursos</h6>
+                                </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-sm-12 my-auto">
+                                            <div id="graphicresolutionresource" style="height: 400px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="graficas card col-lg-4 col-sm-12 col-mb-12 ml-auto mr-auto">
+                                <div class="card-header">
+                                    <h6 class="text-muted m-t-10 m-b-0">Incidencias y validaciones por recursos</h6>
+                                </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-sm-12 my-auto">
+                                            <div id="graphicticketandvalidationresource" style="height: 400px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+           
+                <div class="row">
+                    <h3 class="card-title titulo_tablas_rango_fechas"><i class="fa fa-book"></i>Incidencias por <strong>Categorías</strong></h3>
+                </div>
+                <div class="col-lg-12 col-sm-12 col-mb-12 tablas">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex">
+                            </div>
+                            <div class="table-responsive m-t-20">
+                                <table class="table vm no-th-brd no-wrap pro-of-month">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">Categoría</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for insidencia in insidenciasPorCategorias %}
+                                        <tr>
+                                            <td class="columna_cliente">{{ insidencia.client }}</td>
+                                            <td class="columna_incidencias">{{ insidencia.tickets }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td class="columna_dia"><em>Suma</em></td>
+                                        <td class="columna_incidencias">{{ sumaInsidenciasPorCategoria }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+           
+                <div class="row">
+                    <h3 class="card-title titulo_tablas_rango_fechas"><i class="fa fa-book"></i>Incidencias por <strong>Horas</strong></h3>
+                </div>
+                <div class="row">                        
+                    <div class="col-lg-12 graficos">
+                        <div class="row">      
+                            <!-- Example Bar Chart Card-->
+                            <div class="graficas card col-lg-12 col-sm-12 col-mb-12 ml-auto mr-auto">
+                                <div class="card-header">
+                                    <h6 class="text-muted m-t-10 m-b-0">Incidencias por horas</h6>
+                                </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-sm-12 my-auto">
+                                            <div id="graphichours" style="height: 400px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+           
+    </div>
+
+
+{% endblock %}
+{% block inlinejavascript %}
+    <script src="{{ asset('bundles/whatsapp/js/bootstrap-datetimepicker.js') }}"></script>
+    <script src="{{ asset('bundles/whatsapp/js/bootstrap-datetimepicker.fr.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#fecharangetype_fechainicial").datetimepicker({
+                format: "yyyy-mm-dd hh:ii:ss",
+                autoclose: true,
+                todayBtn: true,
+    {#            startDate: "{{inicial | date("Y-m-d H:i")}}",#}
+                minuteStep: 10
+            });
+        });
+    </script>
+{#
+    <script type="text/javascript">
+        $("#fecharangetype_fechainicial").datetimepicker({
+            format: "yyyy-mm-dd HH:mm:ss",
+            autoclose: true,
+            todayBtn: true,
+            startDate: "{{inicial | date("yyyy-mm-dd HH:mm:ss")}}",
+            minuteStep: 10
+        });
+    </script>#}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#fecharangetype_fechafinal").datetimepicker({
+                format: "yyyy-mm-dd hh:ii:ss",
+                autoclose: true,
+                todayBtn: true,
+    {#            startDate: "{{finalDay | date("Y-m-d H:i")}}",#}
+                minuteStep: 10
+            });
+        });
+    </script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+        Highcharts.chart('graphicticketday', {
+           
+        
+
+            chart: {
+                type: 'line',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               } 
+            }, title: {
+                text: ''
+            },
+            xAxis: {
+                categories: {{ insidenciasPorDiaGraphicCategories|json_encode|raw }},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Cantidad'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series:{{ insidenciasPorDiaGraphic|json_encode|raw }}
+        });
+
+        Highcharts.chart('graphicanswerday', {
+            chart: {
+                type: 'line',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               }
+            }, title: {
+                text: ''
+            },
+            xAxis: {
+                categories: {{ insidenciasPorDiaGraphicCategories|json_encode|raw }},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Tiempo promedio (min)'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series:{{ respuestasPorDiaGraphic|json_encode|raw }}
+        });
+        Highcharts.chart('graphicdevelopday', {
+            chart: {
+                type: 'line'
+            }, title: {
+                text: ''
+            },
+            xAxis: {
+                categories: {{ insidenciasPorDiaGraphicCategories|json_encode|raw }},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Tiempo promedio (min)'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series:{{ developPorDiaGraphic|json_encode|raw }}
+        });
+        Highcharts.chart('graphicvalidationday', {
+            chart: {
+                type: 'line',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               }
+            }, title: {
+                text: ''
+            },
+            xAxis: {
+                categories: {{ insidenciasPorDiaGraphicCategories|json_encode|raw }},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Tiempo promedio (min)'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series:{{ validationPorDiaGraphic|json_encode|raw }}
+        });
+
+        Highcharts.chart('graphicresolutionday', {
+            chart: {
+                type: 'line',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               }
+            }, title: {
+                text: ''
+            },
+            xAxis: {
+                categories: {{ insidenciasPorDiaGraphicCategories|json_encode|raw }},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Tiempo promedio (min)'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series:{{ resolucionPorDiaGraphic|json_encode|raw }}
+        });
+        Highcharts.chart('graphicsentimentday', {
+            chart: {
+                type: 'line',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               }
+            }, title: {
+                text: ''
+            },
+            xAxis: {
+                categories: {{ insidenciasPorDiaGraphicCategories|json_encode|raw }},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Sentimiento promedio (%)'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b> {point.y:.1f} % </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series:{{ sentimentPorDiaGraphic|json_encode|raw }}
+    });
+
+    });
+
+        
+    </script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+        Highcharts.chart('graphicticketgroup', {
+            chart: {
+                type: 'column',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               }
+            }, title: {
+                text: ''
+            },
+            xAxis: {
+                categories: {{ insidenciasPorGrupoGraphicCategories|json_encode|raw }},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Tiempo promedio (min)'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series:{{ insidenciasPorGrupoGraphic|json_encode|raw }}
+        });
+
+        Highcharts.chart('graphicanswergroup', {
+            chart: {
+                type: 'column',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               }
+            }, title: {
+                text: ''
+            },
+            xAxis: {
+                categories: {{ insidenciasPorGrupoGraphicCategories|json_encode|raw }},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Tiempo promedio (min)'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series:{{ respuestasPorGrupoGraphic|json_encode|raw }}
+        });
+        Highcharts.chart('graphicdevelopgroup', {
+            chart: {
+                type: 'column',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               }
+            }, title: {
+                text: ''
+            },
+            xAxis: {
+                categories: {{ insidenciasPorGrupoGraphicCategories|json_encode|raw }},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Tiempo promedio (min)'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series:{{ developPorGrupoGraphic|json_encode|raw }}
+        });
+        Highcharts.chart('graphicvalidationgroup', {
+            chart: {
+                type: 'column',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               }
+            }, title: {
+                text: ''
+            },
+            xAxis: {
+                categories: {{ insidenciasPorGrupoGraphicCategories|json_encode|raw }},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Tiempo promedio (min)'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series:{{ validationPorGrupoGraphic|json_encode|raw }}
+        });
+
+        Highcharts.chart('graphicresolutiongroup', {
+            chart: {
+                type: 'column',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               }
+            }, title: {
+                text: ''
+            },
+            xAxis: {
+                categories: {{ insidenciasPorGrupoGraphicCategories|json_encode|raw }},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Tiempo promedio (min)'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series:{{ resolucionPorGrupoGraphic|json_encode|raw }}
+        });
+        Highcharts.chart('graphicsentimentgroup', {
+            chart: {
+                type: 'column',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               }
+            }, title: {
+                text: ''
+            },
+            xAxis: {
+                categories: {{ insidenciasPorGrupoGraphicCategories|json_encode|raw }},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Análisis de Sentimiento (%)'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} %</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series:{{ sentimentPorGrupoGraphic|json_encode|raw }}
+        });
+
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+        Highcharts.chart('graphicticketresource', {
+            chart: {
+                type: 'column',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               }
+            }, title: {
+                text: ''
+            },
+            xAxis: {
+                categories: {{ insidenciasPorRecursosGraphicCategories|json_encode|raw }},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Tiempo promedio (min)'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+                    
+            series:{{ insidenciasPorRecursosGraphic|json_encode|raw }},
+            
+        });
+        Highcharts.chart('graphicticketandvalidationresource', {
+            chart: {
+                type: 'column',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               }
+            }, title: {
+                text: ''
+            },
+            xAxis: {
+                categories: {{ insidenciasPorRecursosGraphicCategories|json_encode|raw }},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Cantidad'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+                    
+            series:{{ insidenciasvalidationsPorRecursosGraphic|json_encode|raw }},
+            colors: [
+                '#2f7ed8', '#f28f43'
+            ]
+        });
+        Highcharts.chart('graphicanswerresource', {
+            chart: {
+                type: 'column',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               }
+            }, title: {
+                text: ''
+            },
+            xAxis: {
+                categories: {{ insidenciasPorRecursosGraphicCategories|json_encode|raw }},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Tiempo promedio (min)'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series:{{ respuestasPorRecursosGraphic|json_encode|raw }}
+        });
+
+        Highcharts.chart('graphicdevelopresource', {
+            chart: {
+                type: 'column',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               }
+            }, title: {
+                text: ''
+            },
+            xAxis: {
+                categories: {{ insidenciasPorRecursosGraphicCategories|json_encode|raw }},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Tiempo promedio (min)'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series:{{ developPorRecursosGraphic|json_encode|raw }}
+        });
+        
+        Highcharts.chart('graphicvalidationresource', {
+            chart: {
+                type: 'column',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               }
+            }, title: {
+                text: ''
+            },
+            xAxis: {
+                categories: {{ insidenciasPorRecursosGraphicCategories|json_encode|raw }},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Tiempo promedio (min)'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series:{{ validationPorRecursosGraphic|json_encode|raw }}
+        });
+
+        Highcharts.chart('graphicresolutionresource', {
+            chart: {
+                type: 'column',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               }
+            }, title: {
+                text: ''
+            },
+            xAxis: {
+                categories: {{ insidenciasPorRecursosGraphicCategories|json_encode|raw }},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Tiempo promedio (min)'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series:{{ resolucionPorRecursosGraphic|json_encode|raw }}
+        });
+        });
+
+
+    </script>
+    
+    <script type="text/javascript">
+        $(document).ready(function(){
+        Highcharts.chart('graphichours', {
+            chart: {
+                type: 'column',
+                events: { 
+                load: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                }, 
+                redraw: function() { 
+                 $(".highcharts-data-label tspan").attr('stroke-width', 1); 
+                } 
+               }
+            }, title: {
+                text: ''
+            },
+            xAxis: {
+                categories: {{ insidenciasPorHorasCategories |json_encode|raw }},
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Tiempo promedio (min)'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series:{{ insidenciasPorHorasSeries|json_encode|raw }}
+        });
+        });
+        
+
+    </script>
+{% endblock %}

@@ -1,0 +1,226 @@
+{% extends 'WhatsappBundle::report_layout.html.twig' %}
+{% block stylesheets_inline %}
+    <link href="{{ asset('bundles/whatsapp/css/now-ui-kit.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block inlinejavascript %}
+    <script src="{{ asset('bundles/whatsapp/js/popper.min.js') }}"></script>
+    <script src="{{ asset('bundles/whatsapp/js/bootstrap-switch.js') }}"></script>
+    <script src="{{ asset('bundles/whatsapp/js/nouislider.min.js') }}"></script>
+    <script src="{{ asset('bundles/whatsapp/js/bootstrap-datetimepicker.js') }}"></script>
+    <script src="{{ asset('bundles/whatsapp/js/now-ui-kit.js') }}"></script>
+
+{% endblock %}
+
+{% block child_title %}Bienvenido Tresite-Whatsapp{% endblock %}
+
+{% block content %}
+    
+    <body class="landing-page sidebar-collapse">
+        {% block navbar %}
+            {% include 'WhatsappBundle:Default:navbar.html.twig' %}
+        {% endblock %}
+        {% block flashbag %}
+            {% if app.session.flashbag.peekAll|length > 0 %}
+                {% for type, messages in app.session.flashbag.all %}
+                    {% for message in messages %}
+                        <div class="{{ type ? type : '' }} {% if type == "sonata_flash_success" %}toastr-success {%else%}toastr-error {%endif%}d-none">
+                            {% if type == "fos_user_success" %}
+                                {{ message|trans({}, 'FOSUserBundle') }}
+                            {% else %}
+{#                                {{ message|trans({}, domain|default('messages')) }}#}
+                                {{ message|trans({}, 'SonataUserBundle') }}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+        {% endblock %}
+        {% block contenido_especifico %}
+            <div class="wrapper">
+            <div class="page-header page-header-small">
+                <div class="page-header-image" data-parallax="true"
+                     style="background-image: url({{ asset('bundles/whatsapp/img/img-home/img/whatsapp-2.jpg') }});">
+                </div>
+                <div class="container">
+                    <div class="content-center home">
+                        <h1 class="title">Registro de tickets y atención al cliente</h1>
+                        <span class="subtitulo">Servicios especializados en soporte a través de Whatsapp</span>
+                        <div class="text-center redes-banner">
+                            {% if not app.user %}
+                            {#<a href="{{ path('fos_user_registration_register') }}"
+                               class="btn btn-primary btn-icon btn-round registro" title="Registrarse">
+                                <i class="fa fa-user-plus"></i>
+                            </a>#}
+                            <a href="{{ path('fos_user_security_login') }}"
+                               class="btn btn-primary btn-icon btn-round registro" title="Autenticación">
+                                <i class="fa fa-user"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <section class="section section-about-us">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8 ml-auto mr-auto text-center">
+                            <h2 class="title">Quiénes somos?</h2>
+                            <h5 class="description">Empresa con más de 14 años compartiendo casos de éxito y consolidando
+                                relaciones de confianza con nuestros clientes.
+                                Adictos al sentimiento de éxito de nuestros clientes y comprometidos con el servicio.</h5>
+                        </div>
+                    </div>
+                    <div class="separator separator-primary"></div>
+                    {#<div class="section-story-overview">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="image-container image-left"
+                                     style="background-image: url({{ asset('bundles/whatsapp/img/img-home/img/1.png') }})">
+                                    <!-- First image on the left side -->
+                                    <p class="blockquote blockquote-primary">"Nuestras gráficas le brindrán la posibilidad
+                                        de tomar la decisión correcta y preservar a sus clientes"
+                                        <br>
+                                        <br>
+                                        <small>-Tresite</small>
+                                    </p>
+                                </div>
+                                <!-- Second image on the left side of the article -->
+                                <div class="image-container"
+                                     style="background-image: url({{ asset('bundles/whatsapp/img/img-home/img/2.png') }})"></div>
+                            </div>
+                            <div class="col-md-5">
+                                <!-- First image on the right side, above the article -->
+                                <div class="image-container image-right"
+                                     style="background-image: url({{ asset('bundles/whatsapp/img/img-home/img/3.png') }})"></div>
+                                <h3>¿Que puedes hacer con nuestro servicio Tresite-Whatsapp?</h3>
+                                <p> Configuración de los datos del personal de una empresa.</p>
+                                <p>Registro automático de tickets de soporte mediante envíos de mensajes de Whatsapp.</p>
+                                <p> Recibir alertas de respuesta y resolución asociadas a un soporte para evitar perdidas de
+                                    clientes por demoras.</p>
+                                <p> Reportes estadísticos, gráficos y tablas que incluyen estadísticas de alertas, atención
+                                    a clientes y frecuencias de soporte.</p>
+                                </p>
+                                <p>
+                                    Puede medir la atención a sus clientes mediante los reportes que brindamos. Podrá
+                                    establecer rangos de fechas y observar los horarios en que mejor se atiende a sus
+                                    clientes.
+                                </p>
+                            </div>
+                        </div>
+                    </div>#}
+                </div>
+            </section>
+            {#<section class="section section-team text-center">
+                <div class="container">
+                    <h2 class="title">Parte de nuestro equipo</h2>
+                    <div class="team">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="team-player">
+                                    <img src="{{ asset('bundles/whatsapp/img/img-home/img/carlos2.png') }}"
+                                         alt="Thumbnail Image" class="rounded-circle img-fluid img-raised">
+                                    <h4 class="title">Carlos Enrique</h4>
+                                    <p class="category text-primary">Dirección Operaciones</p>
+                                    <p class="description">Reseña de Carlos Flores
+                                        <a href="#">links</a> Contactar.</p>
+                                    <a href="https://twitter.com/carlosfloresv"
+                                       class="btn btn-primary btn-icon btn-round"><i class="fa fa-twitter"></i></a>
+                                    <a href="https://www.linkedin.com/in/carlosfloresv/?locale=en_US"
+                                       class="btn btn-primary btn-icon btn-round"><i class="fa fa-linkedin-square"></i></a>
+                                    <a href="https://www.facebook.com/carlos.e.virues"
+                                       class="btn btn-primary btn-icon btn-round"><i class="fa fa-facebook-square"></i></a>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="team-player">
+                                    <img src="{{ asset('bundles/whatsapp/img/img-home/img/marco2.png') }}"
+                                         alt="Thumbnail Image" class="rounded-circle img-fluid img-raised">
+                                    <h4 class="title">Marco Flores</h4>
+                                    <p class="category text-primary">Dirección Desarrollo SACS/Azure</p>
+                                    <p class="description">Reseña de Marco Flores
+                                        <a href="#">links</a> Contactar.</p>
+                                    <a href="https://twitter.com/marco_flores" class="btn btn-primary btn-icon btn-round"><i
+                                                class="fa fa-twitter"></i></a>
+                                    <a href="https://www.linkedin.com/in/marco-antonio-flores-viru%C3%A9s-50436436/?locale=en_US"
+                                       class="btn btn-primary btn-icon btn-round"><i class="fa fa-linkedin-square"></i></a>
+                                    <a href="https://www.facebook.com/profile.php?id=665602493"
+                                       class="btn btn-primary btn-icon btn-round"><i class="fa fa-facebook-square"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>#}
+            <section class="section section-contact-us text-center" id="services">
+                <div class="container">
+                    <h2 class="title"> ¿Quiere hacernos alguna pregunta?</h2>
+                    <p class="description">Contáctenos mediante este formulario</p>
+                    <form action="{{ path("send_contact_message") }}" method="post" role="form"
+                          class="form-horizontal">
+                        <div class="row">
+                            <div class="col-lg-6 text-center col-md-8 ml-auto mr-auto">
+                                <div class="input-group input-lg">
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-file-text"></i>
+                                    </span>
+                                    <input type="text" class="form-control text-black" name="name" placeholder="Nombre...">
+                                </div>
+                                <div class="input-group input-lg">
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-envelope"></i>
+                                    </span>
+                                    <input type="text" class="form-control text-black" name="email" placeholder="Email...">
+                                </div>
+                                <div class="textarea-container">
+                                    <textarea class="form-control text-black" name="message" rows="4" cols="80"
+                                              placeholder="Mensaje..."></textarea>
+                                </div>
+                                <div class="send-button">
+                                    <button href="#pablo" class="btn btn-primary btn-round btn-block btn-lg" type="submit">Enviar Mensaje</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+        {% endblock %}
+    </body>
+{% endblock %}
+
+{% block footer %}
+    <footer class="footer footer-default">
+        <div class="container">
+            {#<nav>
+                <ul>
+                    <li>
+                        <a href="#">
+                            Equipo
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Acerca de nosotros
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Servicios de Tresite
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Clientes
+                        </a>
+                    </li>
+                </ul>
+            </nav>#}
+            <div class="copyright">
+                Copyright ©2019. Todos los derechos reservados
+            </div>
+        </div>
+    </footer>
+    
+{% endblock %}
+

@@ -1,0 +1,15 @@
+{% extends 'WhatsappBundle::standard_layout.html.twig' %}
+
+
+{% block sonata_admin_content %}
+<!DOCTYPE html>
+    <body>
+        <h1>¡Ha ocurrido un error!</h1>
+        <h2>El servidor ha retornado "{{ status_code }} {{ status_text }}".</h2>
+
+        <div>
+            Por favor, háganos saber lo que estaba haciendo cuando ocurrió este error. Lo arreglaremos lo más pronto posible. Pedimos disculpas por cualquier inconveniente causado.
+        </div>
+    </body>
+</html>
+{% endblock %}

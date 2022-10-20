@@ -1,0 +1,38 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_host: 127.0.0.1
+    database_port: null
+#    database_name: whatsappcompanies
+    database_name: whatsappshop
+    database_user: root
+    database_password: root
+#    mailer_transport: smtp
+#    mailer_host: smtp.uci.cu
+#    mailer_port: 25
+#    mailer_encryption: tls
+#    mailer_user: machavez@uci.cu
+#    mailer_password: +++12
+
+    mailer_transport: smtp
+    #mailer_host: mail.tresite.com
+    mailer_host: smtp.gmail.com
+    mailer_port: 587
+    mailer_encryption: tls
+    #mailer_user: servicio@tresite.com
+    #mailer_password: SEtres2018@
+    mailer_user: machavez2086@gmail.com
+    mailer_password: Adm11381****
+    
+    secret: ThisTokenIsNotSoSecretChangeIt
+    timezone_default: America/Havana
+    oblea_name: Establecimiento Santa Ana S.A.
+    oblea_image_url: http://google.com
+    oblea_envio_remitente: Establecimiento Santa Ana S.A. CBSé - RUTA N19 Km 127
+    oblea_envio_remitente_contacto: Contacto:Laura Ostertag-Virginia Urquiza  - Tel: 03564 475900
+    oblea_retiro_entrega_domicilio: RUTA N19 Km 127 - CP 2438 Frontera - Santa Fe
+    oblea_retiro_entrega_destinatario_nombre: Laura Ostertag - Virginia Urquiza 
+    oblea_retiro_entrega_destinatario_correo: lostertag@cbse.com.ar - lgioda@cbse.com.ar 
+    oblea_retiro_entrega_destinatario_phone: Tel: 03564-475900
+    gos_web_socket_url: 192.168.11.202
+    gos_web_socket_ip: 192.168.11.202
+    gos_web_socket_port: 8085
