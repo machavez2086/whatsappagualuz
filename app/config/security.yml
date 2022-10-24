@@ -15,8 +15,8 @@ security:
 
     # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
-        in_memory:
-            memory: ~
+#        in_memory:
+#            memory: ~
         fos_userbundle:
             id: fos_user.user_provider.username_email
 
@@ -25,7 +25,39 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        login:
+            pattern:  ^/api/login
+            stateless: true
+            anonymous: true
+            form_login:
+                provider:       fos_userbundle
+                check_path:               /api/login_check
+                success_handler:          lexik_jwt_authentication.handler.authentication_success
+                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+                require_previous_session: false
 
+            
+        api:
+            pattern:   ^/api
+            stateless: true
+            lexik_jwt:
+                authorization_header: # check token in Authorization Header
+                    enabled: true
+                    prefix:  Bearer
+                    name:    Authorization
+                cookie:               # check token in a cookie
+                    enabled: false
+                    name:    BEARER
+                query_parameter:      # check token in query string parameter
+                    enabled: false
+                    name:    bearer
+                throw_exceptions:        true     # When an authentication failure occurs, return a 401 response immediately
+                create_entry_point:      true      # When no authentication details are provided, create a default entry point that returns a 401 response
+                authentication_provider: lexik_jwt_authentication.security.authentication.provider
+                authentication_listener: lexik_jwt_authentication.security.authentication.listener
+
+            provider:       fos_userbundle
+            
         main:
             pattern:             .*
             context:             user
@@ -41,6 +73,9 @@ security:
             anonymous:          true
             switch_user:
                 provider: fos_userbundle
+        
+            
+        
             # activate different ways to authenticate
 
             # http_basic: ~
@@ -65,6 +100,7 @@ security:
         
     access_control:
         # URL of FOSUserBundle which need to be available to anonymous users
+        - { path: ^/api/getopenstickets, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
@@ -84,4 +120,7 @@ security:
         - { path: ^/admin/synchronize_mail, role: [ROLE_SUPER_ADMIN] }
         - { path: ^/admin/, role: [ROLE_ADMIN] }
         - { path: ^/frontend, role: [ROLE_USER] }
+        
+        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/.*, role: IS_AUTHENTICATED_ANONYMOUSLY }

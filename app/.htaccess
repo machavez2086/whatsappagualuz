@@ -1,7 +1,13 @@
 <IfModule mod_authz_core.c>
+    
     Require all denied
 </IfModule>
 <IfModule !mod_authz_core.c>
+    RewriteCond %{HTTP:Authorization} ^(.*)
+    RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+
     Order deny,allow
     Deny from all
 </IfModule>
+    RewriteCond %{HTTP:Authorization} ^(.*)
+    RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]

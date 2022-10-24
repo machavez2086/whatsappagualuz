@@ -1988,5 +1988,33 @@ class DefaultController extends Controller {
         }
         return '23:59:59';
     }
+    
+    
+    /**
+     * 
+     * @Route("/api/send_contact_message_test", name="send_contact_message_test" )
+     */
+    public function sendContactMessage1Action() {
+        $request = $this->getRequest();
+        if ($request->getMethod() == 'POST') {
+            $request = $this->getRequest();
+            $name = $request->get("name");
+            $email = $request->get("email");
+            $message = $request->get("message");
+            $contact = new Contact();
+            $contact->setEmail($email);
+            $contact->setName($name);
+            $contact->setMessage($message);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($contact);
+            $em->flush();
+            $this->addFlash('sonata_flash_error', "Mensaje recibido. Pronto nos pondremos en contacto con usted.");
+            return $this->redirectToRoute('home');
+
+        }
+        
+        
+        
+    }
 
 }

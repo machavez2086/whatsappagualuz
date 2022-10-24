@@ -57,3 +57,6 @@ NelmioApiDocBundle:
 nelmio_api_swagger:
         resource: "@NelmioApiDocBundle/Resources/config/swagger_routing.yml"
         prefix: /api-docs    
+
+api_login_check:
+    path: /api/login_check

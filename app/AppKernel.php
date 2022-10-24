@@ -41,13 +41,14 @@ class AppKernel extends Kernel
             new Application\Sonata\MediaBundle\ApplicationSonataMediaBundle(),
             new WhatsappBundle\WhatsappBundle(),
             new FOS\RestBundle\FOSRestBundle(),
-//            new Nelmio\CorsBundle\NelmioCorsBundle(),
+            new Nelmio\CorsBundle\NelmioCorsBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
             new Sonata\IntlBundle\SonataIntlBundle(),
             new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),            
             new Gos\Bundle\PubSubRouterBundle\GosPubSubRouterBundle(),
             new Gos\Bundle\WebSocketBundle\GosWebSocketBundle(),
+            new Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
