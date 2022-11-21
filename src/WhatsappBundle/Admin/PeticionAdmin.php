@@ -107,8 +107,8 @@ class PeticionAdmin extends Admin {
                 ->with('General', array('class' => 'col-md-6'))->end()
                 ->with('Contacto', array('class' => 'col-md-6'))->end()
                 ->with('Estados', array('class' => 'col-md-6'))->end()
-                ->with('Producto', array('class' => 'col-md-6'))->end()
-                ->with('Lote', array('class' => 'col-md-6'))->end()
+//                ->with('Producto', array('class' => 'col-md-6'))->end()
+//                ->with('Lote', array('class' => 'col-md-6'))->end()
                 
                 ->with('Conversaciones', array('class' => 'col-md-12'))->end()
         ;
@@ -268,7 +268,7 @@ class PeticionAdmin extends Admin {
 //            ->add('codigoPostal', null, array('label' => 'Código postal'))
                 ->add('product', null, array('label' => 'Producto'))
                 ->add('expirationDateStr', null, array('label' => 'VTO'))
-                ->add('lote', null, array('label' => 'Lote'))
+//                ->add('lote', null, array('label' => 'Lote'))
 //                ->add('presentation', null, array('label' => 'Presentación'))
                 ->add('cant', null, array('label' => 'Cantidad'))
                 ->add('motive', null, array('label' => 'Motivo del reclamo'))
@@ -305,7 +305,7 @@ class PeticionAdmin extends Admin {
 //            ->add('localidad', null, array('label' => 'Localidad'))
 //            ->add('provincia', null, array('label' => 'Provincia'))
 //            ->add('codigoPostal', null, array('label' => 'Código postal'))
-                ->add('product', null, array('label' => 'Producto'))
+//                ->add('product', null, array('label' => 'Producto'))
 //            ->add('expirationDate', null, array('label' => 'Fecha de vencimiento'))
 //            ->add('lote', null, array('label' => 'Lote'))
 //            ->add('presentation', null, array('label' => 'Presentación'))
@@ -317,9 +317,9 @@ class PeticionAdmin extends Admin {
                 
                 ->add('sumaryObservations', null, array('label' => 'Observaciones'))
                 ->add('expirationDateStr', null, array('label' => 'Fecha de exp.'))
-                ->add('loteNo', null, array('label' => 'No.'))
-                ->add('loteHour', null, array('label' => 'Hora'))
-                ->add('loteMaquina', null, array('label' => 'Máquina'))
+//                ->add('loteNo', null, array('label' => 'No.'))
+//                ->add('loteHour', null, array('label' => 'Hora'))
+//                ->add('loteMaquina', null, array('label' => 'Máquina'))
                 ->add('isFininshed', null, array('label' => 'Terminado'))
                 ->add('filesUploads', null, array('label' => 'Adjuntos',
                     'template' => 'WhatsappBundle:SHOP:files_tickets.html.twig'

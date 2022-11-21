@@ -107,8 +107,8 @@ class ProductAdmin extends Admin
 //                ))
             ->add('name', null, array('label' => 'Nombre'))
             ->add('lote', null, array('label' => 'Lote'))
-            ->add('expirationDate', null, array('label' => 'Fecha de vencimiento'))
-            ->add('packingDate', null, array('label' => 'Fecha de envasado'))    
+            ->add('expirationDate', null, array('label' => 'Fecha de inicio'))
+            ->add('packingDate', null, array('label' => 'Fecha de finalización'))    
             
         ;
     }
@@ -121,8 +121,8 @@ class ProductAdmin extends Admin
 //            ->add('configuration', "text", array('label' => 'Empresa'))
             ->addIdentifier('name', null, array('label' => 'Nombre'))
             ->add('lote', null, array('label' => 'Lote'))
-            ->add('expirationDate', null, array('label' => 'Fecha de vencimiento'))
-            ->add('packingDate', null, array('label' => 'Fecha de envasado'))
+            ->add('expirationDate', null, array('label' => 'Fecha de inicio'))
+            ->add('packingDate', null, array('label' => 'Fecha de finalización'))
         ;
         $listMapper
                 ->add('_action', 'actions', array(
