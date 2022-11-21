@@ -63,8 +63,8 @@ class ProductAdmin extends Admin
         $formMapper
             ->add('name', null, array('label' => 'Nombre'))
             ->add('lote', null, array('label' => 'Lote'))
-            ->add('expirationDate', null, array('label' => 'Fecha de vencimiento'))
-            ->add('packingDate', null, array('label' => 'Fecha de envasado'))
+            ->add('expirationDate', null, array('label' => 'Fecha de inicio'))
+            ->add('packingDate', null, array('label' => 'Fecha de finalización'))
 //            ->add('configuration', 'entity', array('label' => 'Empresa',
 //                'class' => 'WhatsappBundle:Configuration',
 //                'query_builder' => function(ConfigurationRepository $er) use ($configurations) {

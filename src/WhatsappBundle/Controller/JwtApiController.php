@@ -109,16 +109,71 @@ class JwtApiController extends FOSRestController implements ClassResourceInterfa
      */
     public function getTicketsListAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
-//        $findAll = $em->getRepository('WhatsappBundle:ObleaEnvio')->findAll(1);
-        $result = new \WhatsappBundle\Entity\Peticion();
-        $findAll = array();
-        $findAll[] = $result;
+        $findAll = $em->getRepository('WhatsappBundle:Peticion')->findAll();
+        $result = array();
+        foreach ($findAll as $value) {
+            $p = new \WhatsappBundle\Entity\Peticion();
+            $p->setId($value->getId()); 
+            $result[] = $p;
+        }
+        //$findAll = array();
+        //$findAll[] = $result;
         
-        $view = $this->view($findAll);
+        $view = $this->view($result);
 //                dump($view);die;
         return $view;
     }
     
+    
+    /**
+     * @Route("/api/messages-list-by-peticion/{id}", name="jwtapiticketslist")
+     * @Method({"GET", "POST"})
+     * 
+     * @View(
+     *  templateVar="",
+     *  statusCode=null,
+     *  serializerGroups={},
+     *  populateDefaultVars=true,
+     *  serializerEnableMaxDepthChecks=false
+     * )
+     *     
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Retorna perfil del usuario", resource=true,
+     *  output={
+     *   "class"   = "WhatsappBundle\Model\OpenTicketListResponse",
+     *   "parsers" = {
+     *       "Nelmio\ApiDocBundle\Parser\JmsMetadataParser",
+     *       "Nelmio\ApiDocBundle\Parser\ValidationParser"
+     *   }
+     * },
+     *  filters={
+
+     *  },
+     * statusCodes = {
+     *     200 = "Returned when successful",
+     *     500 = "Internal error"
+     *   },
+     * 
+     * )
+     */
+    public function getMessageByPeticionAction(Request $request, $id) {
+        $em = $this->getDoctrine()->getManager();
+        $findAll = $em->getRepository('WhatsappBundle:Message')->findByTicketOrderDt($id);
+        $result = array();
+        foreach ($findAll as $value) {
+            $p = new \WhatsappBundle\Entity\Message();
+            $p->setId($value->getId()); 
+            $p->setStrmenssagetext($value->getStrmenssagetext()); 
+            $result[] = $p;
+        }
+        //$findAll = array();
+        //$findAll[] = $result;
+        
+        $view = $this->view($result);
+//                dump($view);die;
+        return $view;
+    }
     
 
 }

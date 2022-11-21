@@ -136,17 +136,17 @@ class PeticionAdmin extends Admin {
 //            ->add('localidad', null, array('label' => 'Localidad'))
 //            ->add('provincia', null, array('label' => 'Provincia'))
 //            ->add('codigoPostal', null, array('label' => 'Código postal'))
-                ->with('Producto')
-//                ->add('product', null, array('label' => 'Producto'))
-                ->add('product', 'entity', array('label' => 'Producto', 'required' => false,
-                    'class' => 'WhatsappBundle:Product',
-                    'query_builder' => function(ProductRepository $er) {
-                        return $er->createQueryBuilder('c')->orderBy('c.name', 'ASC');
-                    }
-                ))
-                ->add('cant', null, array('label' => 'Cantidad'))
-//                ->add('presentation', null, array('label' => 'Presentación'))
-                ->end()
+//                ->with('Producto')
+////                ->add('product', null, array('label' => 'Producto'))
+//                ->add('product', 'entity', array('label' => 'Producto', 'required' => false,
+//                    'class' => 'WhatsappBundle:Product',
+//                    'query_builder' => function(ProductRepository $er) {
+//                        return $er->createQueryBuilder('c')->orderBy('c.name', 'ASC');
+//                    }
+//                ))
+//                ->add('cant', null, array('label' => 'Cantidad'))
+////                ->add('presentation', null, array('label' => 'Presentación'))
+//                ->end()
                 ->with('Estados')
 //                ->add('firsConversationType', 'entity', array('label' => 'Tipo de Conversación', 'required' => false,
 //                    'class' => 'WhatsappBundle:ConversationType',
@@ -180,13 +180,13 @@ class PeticionAdmin extends Admin {
                 ->add('peticionStatus', null, array('label' => 'Estado de petición'))
                 ->add('isFininshed', null, array('label' => 'Terminado'))
                 ->end()
-                ->with('Lote')
-                ->add('expirationDateStr', 'text', array('label' => 'VTO', 'required' => false))
-//            ->add('lote', new LoteType(), array('label' => 'No', 'attr' => array('class' => 'col-md-4')))
-                ->add('loteNo', null, array('label' => 'No', 'attr' => array('class' => 'col-md-4')))
-                ->add('loteHour', null, array('label' => 'Hora'))
-                ->add('loteMaquina', null, array('label' => 'Máquina'))
-                ->end()
+//                ->with('Lote')
+//                ->add('expirationDateStr', 'text', array('label' => 'VTO', 'required' => false))
+////            ->add('lote', new LoteType(), array('label' => 'No', 'attr' => array('class' => 'col-md-4')))
+//                ->add('loteNo', null, array('label' => 'No', 'attr' => array('class' => 'col-md-4')))
+//                ->add('loteHour', null, array('label' => 'Hora'))
+//                ->add('loteMaquina', null, array('label' => 'Máquina'))
+//                ->end()
                 
                 
                 ->with('Conversaciones')
